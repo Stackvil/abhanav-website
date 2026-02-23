@@ -1,0 +1,47 @@
+@import "tailwindcss";
+
+@theme {
+  --color-magenta-600: #C2187A;
+  --color-magenta-700: #8E0E5A;
+  --color-gold-400: #FFD700;
+  --color-gold-500: #E6C200;
+  --color-soft-pink: #F7E9EC;
+
+  --font-playfair: "Playfair Display", serif;
+  --font-poppins: "Poppins", sans-serif;
+
+  --shadow-luxury: 0 20px 50px rgba(0, 0, 0, 0.15);
+  --shadow-gold-glow: 0 0 30px rgba(255, 215, 0, 0.3);
+}
+
+@layer base {
+  body {
+    @apply font-poppins bg-soft-pink text-slate-900 antialiased;
+  }
+}
+
+@layer utilities {
+  .glass {
+    @apply bg-white/70 backdrop-blur-lg border border-white/20;
+  }
+
+  .gradient-luxury {
+    background: linear-gradient(135deg, var(--color-magenta-600), var(--color-magenta-700));
+  }
+
+  .animate-float {
+    animation: float 6s ease-in-out infinite;
+  }
+}
+
+@keyframes float {
+
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(-20px);
+  }
+}
