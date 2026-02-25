@@ -1,9 +1,8 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import lakshmi from '../assets/lakshmi.png';
-import WaveDivider from './WaveDivider';
-import SpotRatesCard from './SpotRatesCard';
 import { useRates } from '../context/RateContext';
+import SpotRatesCard from './SpotRatesCard';
+import SpotBar from './SpotBar';
 
 const Hero = () => {
     const { rates } = useRates();
@@ -13,73 +12,89 @@ const Hero = () => {
         return val.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
     };
 
-    const goldRate = rates.spot?.[0]?.ask || '-';
-    const silverRate = rates.spot?.[1]?.ask || '-';
-    const usdRate = rates.spot?.[2]?.ask || '-';
-
     return (
-        <section className="relative min-height-[650px] w-full gradient-luxury overflow-hidden pt-12">
-            <div className="max-w-7xl mx-auto px-6 grid md:grid-cols-2 items-center relative z-20">
+        <div className="w-full inventory-section">
+            {/* Full Header Image Section - Edge to Edge */}
+            <section className="relative w-full overflow-hidden">
+                <motion.img
+                    initial={{ opacity: 1 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ duration: 0.5 }}
+                    src="/Your paragraph text.png"
+                    alt="Abhinav Gold & Silver Header"
+                    className="w-full h-auto block"
+                />
 
-                {/* Left Side: Goddess Lakshmi */}
+                {/* Overlaid Spot Rates Bar - Positioned under branding text */}
+                <div className="absolute top-[65%] md:top-[60%] left-0 w-full z-20">
+                    <SpotBar />
+                </div>
+            </section>
+
+            {/* Rates Table Section - Restored for detailed data */}
+            <section className="max-w-7xl mx-auto px-6 w-full -mt-24 md:-mt-40 relative z-10 mb-0 pb-0">
                 <motion.div
-                    initial={{ opacity: 0, x: -100 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ duration: 1.2, ease: "easeOut" }}
-                    className="relative flex justify-center md:justify-start pt-12"
+                    initial={{ opacity: 0, y: 30 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.5, duration: 1 }}
+                    className="flex flex-col gap-12"
                 >
-                    <div className="relative group">
-                        {/* Vibrant Gold Glow */}
-                        <div className="absolute inset-0 bg-gold-400 opacity-30 blur-[120px] group-hover:opacity-50 transition-opacity"></div>
+                    <div className="grid lg:grid-cols-2 gap-10">
+                        {/* Detailed Spot Rates */}
+                        <div className="flex flex-col gap-6">
+                            <div className="flex items-center gap-4">
+                                <div className="p-2 bg-magenta-50 rounded-lg">
+                                    <div className="w-2 h-2 rounded-full bg-magenta-600 animate-pulse"></div>
+                                </div>
+                                <h3 className="text-lg font-poppins font-black text-slate-800 uppercase tracking-widest">Market Bid/Ask</h3>
+                            </div>
+                            <SpotRatesCard />
+                        </div>
 
-                        <motion.img
-                            src={lakshmi}
-                            alt="Goddess Lakshmi"
-                            className="relative z-20 w-full max-w-[550px] drop-shadow-[0_35px_35px_rgba(0,0,0,0.6)] animate-float"
-                        />
-
-                        {/* Coins/Petals shadow */}
-                        <div className="absolute -bottom-4 left-1/2 -translate-x-1/2 w-[80%] h-12 bg-black/40 blur-3xl rounded-full"></div>
+                        {/* Physical Inventory Column */}
+                        <div className="flex flex-col gap-6">
+                            <div className="flex items-center gap-4">
+                                <div className="p-2 bg-gold-50 rounded-lg">
+                                    <div className="w-2 h-2 rounded-full bg-gold-600"></div>
+                                </div>
+                                <h3 className="text-lg font-poppins font-black text-slate-800 uppercase tracking-widest">Physical Inventory (RTGS)</h3>
+                            </div>
+                            <div className="glass rounded-2xl overflow-hidden shadow-luxury border-white/40">
+                                <div className="gradient-luxury p-3">
+                                    <span className="text-white font-poppins font-bold text-xs uppercase tracking-widest">Inventory Rates</span>
+                                </div>
+                                <div className="p-4">
+                                    <table className="w-full text-left border-collapse">
+                                        <thead>
+                                            <tr className="border-b border-slate-200">
+                                                <th className="py-2 text-[11px] font-extrabold text-magenta-700 uppercase tracking-widest text-left">Item Name</th>
+                                                <th className="py-2 text-[11px] font-extrabold text-magenta-700 uppercase tracking-widest text-center">Buy (INR)</th>
+                                                <th className="py-2 text-[11px] font-extrabold text-magenta-700 uppercase tracking-widest text-center">Sell (INR)</th>
+                                                <th className="py-2 text-[11px] font-extrabold text-magenta-700 uppercase tracking-widest text-right">Stock</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody className="divide-y divide-slate-100">
+                                            {rates.rtgs.map((item, idx) => (
+                                                <tr key={idx} className="hover:bg-magenta-50/50 transition-colors group">
+                                                    <td className="py-3 text-[13px] font-bold text-slate-800 font-poppins">{item.name}</td>
+                                                    <td className="py-3 text-[13px] font-black text-slate-600 text-center font-poppins">₹{fmt(item.buy)}</td>
+                                                    <td className="py-3 text-[13px] font-black text-magenta-600 text-center font-poppins group-hover:text-gold-500 transition-colors">₹{fmt(item.sell)}</td>
+                                                    <td className="py-3 text-right">
+                                                        <span className={`px-2 py-0.5 rounded-full text-[10px] font-black uppercase ${item.stock ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}`}>
+                                                            {item.stock ? 'In Stock' : 'Out'}
+                                                        </span>
+                                                    </td>
+                                                </tr>
+                                            ))}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </motion.div>
-
-                {/* Right Side: Title & Rates */}
-                <motion.div
-                    initial={{ opacity: 0, x: 100 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ duration: 1.2, delay: 0.3, ease: "easeOut" }}
-                    className="text-center md:text-right flex flex-col items-center md:items-end gap-10"
-                >
-                    <div className="flex flex-col gap-0">
-                        <h1 className="text-7xl md:text-9xl font-playfair font-black text-white leading-[0.85] tracking-tighter drop-shadow-2xl">
-                            ABHINAV
-                        </h1>
-                        <p className="text-xl md:text-2xl font-poppins font-black text-gold-400 tracking-[0.5em] uppercase mt-2 drop-shadow-lg">
-                            GOLD & SILVER
-                        </p>
-                    </div>
-
-                    {/* Quick Rates Column */}
-                    <div className="flex gap-12 md:gap-16 text-white border-b border-white/20 pb-6">
-                        <div className="flex flex-col items-center md:items-end">
-                            <span className="text-[10px] font-black text-gold-400/80 uppercase tracking-widest">Gold</span>
-                            <span className="text-4xl font-playfair font-black drop-shadow-md">${fmt(goldRate)}</span>
-                        </div>
-                        <div className="flex flex-col items-center md:items-end">
-                            <span className="text-[10px] font-black text-pink-300 uppercase tracking-widest">Silver</span>
-                            <span className="text-4xl font-playfair font-black text-magenta-600 brightness-200 drop-shadow-md">${fmt(silverRate)}</span>
-                        </div>
-                        <div className="flex flex-col items-center md:items-end">
-                            <span className="text-[10px] font-black text-slate-300 uppercase tracking-widest">USD</span>
-                            <span className="text-4xl font-playfair font-black drop-shadow-md">₹{fmt(usdRate)}</span>
-                        </div>
-                    </div>
-                    <SpotRatesCard />
-                </motion.div>
-            </div>
-
-            <WaveDivider />
-        </section>
+            </section>
+        </div>
     );
 };
 

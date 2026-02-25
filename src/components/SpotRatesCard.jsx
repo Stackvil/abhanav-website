@@ -30,11 +30,11 @@ const SpotRatesCard = () => {
                 <table className="w-full text-left border-collapse">
                     <thead>
                         <tr className="border-b border-slate-200">
-                            <th className="py-2 text-[9px] font-extrabold text-magenta-700 uppercase tracking-widest">Product</th>
-                            <th className="py-2 text-[9px] font-extrabold text-magenta-700 uppercase tracking-widest text-center">Bid</th>
-                            <th className="py-2 text-[9px] font-extrabold text-magenta-700 uppercase tracking-widest text-center">Ask</th>
-                            <th className="py-2 text-[9px] font-extrabold text-magenta-700 uppercase tracking-widest text-center">High</th>
-                            <th className="py-2 text-[9px] font-extrabold text-magenta-700 uppercase tracking-widest text-right">Low</th>
+                            <th className="py-2 text-[11px] font-extrabold text-magenta-700 uppercase tracking-widest">Product</th>
+                            <th className="py-2 text-[11px] font-extrabold text-magenta-700 uppercase tracking-widest text-center">Bid</th>
+                            <th className="py-2 text-[11px] font-extrabold text-magenta-700 uppercase tracking-widest text-center">Ask</th>
+                            <th className="py-2 text-[11px] font-extrabold text-magenta-700 uppercase tracking-widest text-center">High</th>
+                            <th className="py-2 text-[11px] font-extrabold text-magenta-700 uppercase tracking-widest text-right">Low</th>
                         </tr>
                     </thead>
                     <tbody className="divide-y divide-slate-100">
@@ -45,11 +45,11 @@ const SpotRatesCard = () => {
 
                             return (
                                 <tr key={idx} className="hover:bg-magenta-50/50 transition-colors group">
-                                    <td className="py-3 text-[11px] font-bold text-slate-800 font-poppins">{rate.name}</td>
-                                    <td className="py-3 text-[11px] font-black text-slate-600 text-center font-poppins">{symbol}{fmt(rate.bid)}</td>
-                                    <td className="py-3 text-[11px] font-black text-magenta-600 text-center font-poppins group-hover:text-gold-500 transition-colors">{symbol}{fmt(rate.ask)}</td>
-                                    <td className="py-3 text-[11px] font-bold text-slate-500 text-center font-poppins">{symbol}{fmt(rate.high)}</td>
-                                    <td className="py-3 text-[11px] font-bold text-slate-500 text-right font-poppins">{symbol}{fmt(rate.low)}</td>
+                                    <td className="py-3 text-[13px] font-bold text-slate-800 font-poppins">{rate.name}</td>
+                                    <td className="py-3 text-[13px] font-black text-slate-600 text-center font-poppins">{symbol}{fmt(rate.bid)}</td>
+                                    <td className="py-3 text-[13px] font-black text-magenta-600 text-center font-poppins group-hover:text-gold-500 transition-colors">{symbol}{fmt(rate.ask)}</td>
+                                    <td className="py-3 text-[13px] font-bold text-slate-500 text-center font-poppins">{symbol}{fmt(rate.high)}</td>
+                                    <td className="py-3 text-[13px] font-bold text-slate-500 text-right font-poppins">{symbol}{fmt(rate.low)}</td>
                                 </tr>
                             );
                         })}

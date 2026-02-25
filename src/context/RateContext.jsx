@@ -4,14 +4,31 @@ const RateContext = createContext();
 
 const RATE_ENDPOINT = 'https://bcast.rbgoldspot.com:7768/VOTSBroadcastStreaming/Services/xml/GetLiveRateByTemplateID/rbgold';
 const CORS_PROXIES = [
-    url => `https://api.allorigins.win/raw?url=${encodeURIComponent(url)}`,
-    url => `https://api.codetabs.com/v1/proxy?url=${encodeURIComponent(url)}`,
-    url => `https://corsproxy.org/?${encodeURIComponent(url)}`,
+    url => `https://api.allorigins.win/get?url=${encodeURIComponent(url)}`,
     url => `https://thingproxy.freeboard.io/fetch/${url}`,
+    url => `https://corsproxy.org/?${encodeURIComponent(url)}`,
+    url => `https://allorigins.win/get?url=${encodeURIComponent(url)}`,
 ];
 
+const INITIAL_SPOT_CONFIG = [
+    { id: '3101', name: 'GOLD ($)' },
+    { id: '3107', name: 'SILVER ($)' },
+    { id: '3103', name: 'USD-INR (₹)' }
+];
+
+const INITIAL_RTGS_CONFIG = [
+    { id: '945', name: 'Gold 999' },
+    { id: '2966', name: 'Silver 999 (30 Kgs)' },
+    { id: '2987', name: 'Silver 999 (5 Kgs)' }
+];
+
+const getPlaceholders = () => ({
+    spot: INITIAL_SPOT_CONFIG.map(it => ({ ...it, bid: '-', ask: '-', high: '-', low: '-', stock: false })),
+    rtgs: INITIAL_RTGS_CONFIG.map(it => ({ ...it, buy: '-', sell: '-', stock: false }))
+});
+
 export const RateProvider = ({ children }) => {
-    const [rawRates, setRawRates] = useState({ spot: [], rtgs: [] });
+    const [rawRates, setRawRates] = useState(getPlaceholders());
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const isFetching = React.useRef(false);
@@ -45,7 +62,7 @@ export const RateProvider = ({ children }) => {
         }
     };
 
-    const fetchWithTimeout = async (url, ms = 2000) => {
+    const fetchWithTimeout = async (url, ms = 1500) => {
         const controller = new AbortController();
         const id = setTimeout(() => controller.abort(), ms);
         try {
@@ -59,38 +76,57 @@ export const RateProvider = ({ children }) => {
     };
 
     const parseRateText = (text) => {
+        if (!text || typeof text !== 'string') return getPlaceholders();
         const rows = text.trim().split('\n');
         const dataMap = {};
-        rows.forEach(rawRow => {
-            // Robust split: first try tabs, then multiple spaces
-            let cols = rawRow.trim().split('\t').map(c => c.trim()).filter(Boolean);
-            if (cols.length < 4) {
-                cols = rawRow.trim().split(/\s{2,}/).map(c => c.trim()).filter(Boolean);
-            }
 
-            if (cols.length >= 4) {
-                const id = cols[0], name = cols[1];
-                // The remaining columns could be bid, ask, high, low, stock
-                // We need to be careful if bid is '-'
-                const bid = cols[2], ask = cols[3], high = cols[4], low = cols[5], stock = cols[6];
+        rows.forEach(rawRow => {
+            const trimmed = rawRow.trim();
+            if (!trimmed) return;
+
+            // Split by all whitespace (tabs or spaces)
+            const parts = trimmed.split(/\s+/);
+
+            // Expected format: ID, Name (1+ words), Bid, Ask, High, Low, Stock
+            // Minimal parts: 1 (ID) + 1 (Name) + 4 (Rates) + 1 (Stock) = 7
+            if (parts.length >= 7) {
+                const id = parts[0];
+                const stockStr = parts[parts.length - 1];
+                const low = parts[parts.length - 2];
+                const high = parts[parts.length - 3];
+                const ask = parts[parts.length - 4];
+                const bid = parts[parts.length - 5];
+
+                // Name is everything in between
+                const name = parts.slice(1, parts.length - 5).join(' ');
+
+                const parseVal = (v) => {
+                    if (v === '-' || !v) return '-';
+                    return parseFloat(v.replace(/,/g, ''));
+                };
 
                 dataMap[id] = {
                     id, name,
-                    bid: bid === '-' ? '-' : parseFloat(bid),
-                    ask: ask === '-' ? '-' : parseFloat(ask),
-                    high: high === '-' ? '-' : parseFloat(high),
-                    low: low === '-' ? '-' : parseFloat(low),
-                    stock: (stock || '').toLowerCase().includes('instock'),
+                    bid: parseVal(bid),
+                    ask: parseVal(ask),
+                    high: parseVal(high),
+                    low: parseVal(low),
+                    stock: (stockStr || '').toLowerCase().includes('instock'),
                 };
             }
         });
-        const spotIds = ['3101', '3107', '3103', '945', '2966', '2987'];
-        const spot = spotIds.map(id => dataMap[id]).filter(Boolean);
-        const rtgs = ['945', '2966', '2987'].map(id => {
-            const it = dataMap[id];
-            if (!it) return null;
+
+        const spot = INITIAL_SPOT_CONFIG.map(conf => {
+            const it = dataMap[conf.id];
+            return it ? it : { ...conf, bid: '-', ask: '-', high: '-', low: '-', stock: false };
+        });
+
+        const rtgs = INITIAL_RTGS_CONFIG.map(conf => {
+            const it = dataMap[conf.id];
+            if (!it) return { ...conf, buy: '-', sell: '-', stock: false };
             return { id: it.id, name: it.name, buy: '-', sell: it.ask, stock: it.stock };
-        }).filter(Boolean);
+        });
+
         return { spot, rtgs };
     };
 
@@ -99,45 +135,61 @@ export const RateProvider = ({ children }) => {
         isFetching.current = true;
 
         let lastError;
-        const endpoint = `${RATE_ENDPOINT}?t=${Date.now()}`;
+        // Super aggressive cache busting
+        const salt = Math.random().toString(36).substring(7);
+        const endpoint = `${RATE_ENDPOINT}?t=${Date.now()}&s=${salt}&cb=${Math.floor(Math.random() * 10000)}`;
 
-        // Try last successful proxy first, then others
         const proxyCount = CORS_PROXIES.length;
+        // Start from last successful proxy to maintain speed
         for (let i = 0; i < proxyCount; i++) {
             const idx = (lastProxyIndex.current + i) % proxyCount;
             const makeUrl = CORS_PROXIES[idx];
             try {
                 const url = makeUrl(endpoint);
-                const res = await fetchWithTimeout(url, 2000);
+                const res = await fetchWithTimeout(url, 2000); // 2s timeout for reliability
                 if (!res.ok) throw new Error(`HTTP ${res.status}`);
-                const text = await res.text();
-                if (!text || text.trim().length < 10) throw new Error('Empty response');
-                const parsed = parseRateText(text);
 
-                if (parsed.spot.length === 0) throw new Error('Parsing failed or empty data');
+                let text = await res.text();
+
+                // Handle JSON-wrapped responses
+                try {
+                    if (text.trim().startsWith('{')) {
+                        const json = JSON.parse(text);
+                        if (json.contents) text = json.contents;
+                        else if (json.Error) throw new Error(json.Error);
+                    }
+                } catch (e) { }
+
+                if (!text || text.trim().length < 5) throw new Error('Short response');
+                const parsed = parseRateText(text);
 
                 setRawRates(parsed);
                 setError(null);
                 setLoading(false);
-                lastProxyIndex.current = idx; // Remember success
+                lastProxyIndex.current = idx;
                 isFetching.current = false;
                 return;
             } catch (e) {
                 lastError = e;
-                console.warn(`Proxy ${idx} failed: ${e.message}`);
+                // Move to next proxy index for next round if this one fails
+                lastProxyIndex.current = (idx + 1) % proxyCount;
             }
         }
 
-        setError(lastError?.message || 'Failed to fetch rates');
+        setError(lastError?.message || 'Update failed');
         setLoading(false);
         isFetching.current = false;
     };
 
+
     useEffect(() => {
         fetchAllRates();
-        const interval = setInterval(fetchAllRates, 1000);
+        // 500ms interval ensures we check often, 
+        // but isFetching ref prevents overlapping requests.
+        const interval = setInterval(fetchAllRates, 500);
         return () => clearInterval(interval);
     }, []);
+
 
 
     const rates = React.useMemo(() => {

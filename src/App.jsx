@@ -3,14 +3,18 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { RateProvider } from './context/RateContext';
 import Navbar from './components/Navbar';
 import Hero from './components/Hero';
+import FooterBanner from './components/FooterBanner';
 import BottomNav from './components/BottomNav';
-import Ticker from './components/Ticker';
 import RatesPage from './pages/RatesPage';
 import AlertsPage from './pages/AlertsPage';
 import VideosPage from './pages/VideosPage';
 import AdminPage from './pages/AdminPage';
 
-const Home = () => <Hero />;
+const Home = () => (
+  <>
+    <Hero />
+  </>
+);
 
 function App() {
   return (
@@ -27,8 +31,7 @@ function App() {
             <Route path="/admin" element={<AdminPage />} />
           </Routes>
 
-          <BottomNav />
-          <Ticker />
+          <FooterBanner />
         </main>
       </Router>
     </RateProvider>

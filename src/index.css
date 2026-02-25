@@ -32,6 +32,16 @@
   .animate-float {
     animation: float 6s ease-in-out infinite;
   }
+
+  /* Forced Zero-Gap Transitions */
+  .welcome-rangoli-section {
+    margin-top: 0 !important;
+    padding-top: 0 !important;
+  }
+
+  .inventory-section {
+    margin-bottom: 0 !important;
+  }
 }
 
 @keyframes float {

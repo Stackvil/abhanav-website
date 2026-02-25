@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useRates } from '../context/RateContext';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Lock, LogOut, TrendingUp, Settings, Video, MessageSquare, Play, Trash2, Save, RefreshCw } from 'lucide-react';
+import { Lock, LogOut, TrendingUp, Settings, Video, MessageSquare, Play, Trash2, Save, RefreshCw, CheckCircle2, AlertCircle } from 'lucide-react';
 
 const AdminPage = () => {
     const { rates, rawRates, adj, showModified, updateSettings, refreshRates, loading, error } = useRates();
@@ -44,8 +44,26 @@ const AdminPage = () => {
         setVideos(v);
     };
 
+    const getYouTubeId = (url) => {
+        if (!url) return '';
+        if (url.length === 11 && !url.includes('/') && !url.includes('.')) return url;
+        const regExp = /^.*(?:(?:youtu\.be\/|v\/|vi\/|u\/\w\/|embed\/|shorts\/)|(?:(?:watch)?\?v(?:i)?=|\&v(?:i)?=))([^#\&\?]*).*/;
+        const match = url.match(regExp);
+        return (match && match[1].length === 11) ? match[1] : '';
+    };
+
     const saveVideos = () => {
-        localStorage.setItem('ag_videos', JSON.stringify(videos));
+        const processed = videos.map(v => ({
+            ...v,
+            videoId: getYouTubeId(v.videoId)
+        })).filter(v => v.videoId); // Filter out invalid ones
+
+        if (processed.length < videos.length) {
+            if (!window.confirm("Some video links are invalid and will be removed. Continue?")) return;
+        }
+
+        localStorage.setItem('ag_videos', JSON.stringify(processed));
+        setVideos(processed);
         alert('Videos updated!');
     };
 
@@ -209,41 +227,63 @@ const AdminPage = () => {
                                     </div>
 
                                     <div className="flex flex-col gap-6">
-                                        {videos.map((vid, i) => (
-                                            <div key={i} className="bg-slate-50 p-6 rounded-3xl flex flex-col md:flex-row gap-4 items-center">
-                                                <div className="w-12 h-12 bg-magenta-100 text-magenta-600 rounded-2xl flex items-center justify-center shrink-0">
-                                                    <Play size={20} />
+                                        {videos.map((vid, i) => {
+                                            const extractedId = getYouTubeId(vid.videoId);
+                                            const isValid = extractedId.length === 11;
+
+                                            return (
+                                                <div key={i} className="bg-slate-50 p-6 rounded-3xl flex flex-col gap-4">
+                                                    <div className="flex flex-col md:flex-row gap-4 items-center">
+                                                        <div className={`w-12 h-12 rounded-2xl flex items-center justify-center shrink-0 ${isValid ? 'bg-green-100 text-green-600' : 'bg-magenta-100 text-magenta-600'}`}>
+                                                            {isValid ? <CheckCircle2 size={24} /> : <Video size={20} />}
+                                                        </div>
+                                                        <div className="relative flex-1 w-full">
+                                                            <input
+                                                                className={`w-full bg-white border px-4 py-3 rounded-xl font-poppins text-sm outline-none transition-all ${vid.videoId && !isValid ? 'border-red-300 ring-2 ring-red-50' : 'border-slate-200'}`}
+                                                                placeholder="YouTube Link or ID"
+                                                                value={vid.videoId}
+                                                                onChange={(e) => {
+                                                                    const v = [...videos];
+                                                                    v[i].videoId = e.target.value;
+                                                                    setVideos(v);
+                                                                }}
+                                                            />
+                                                            {vid.videoId && (
+                                                                <div className="absolute right-3 top-3">
+                                                                    {isValid ? <CheckCircle2 size={18} className="text-green-500" /> : <AlertCircle size={18} className="text-red-400" />}
+                                                                </div>
+                                                            )}
+                                                        </div>
+                                                        <input
+                                                            className="flex-[2] w-full bg-white border border-slate-200 px-4 py-3 rounded-xl font-poppins text-sm"
+                                                            placeholder="Video Title"
+                                                            value={vid.title}
+                                                            onChange={(e) => {
+                                                                const v = [...videos];
+                                                                v[i].title = e.target.value;
+                                                                setVideos(v);
+                                                            }}
+                                                        />
+                                                        <button onClick={() => removeVideo(i)} className="p-3 text-slate-300 hover:text-red-500 hover:bg-red-50 rounded-xl transition-all">
+                                                            <Trash2 size={20} />
+                                                        </button>
+                                                    </div>
+                                                    {vid.videoId && !isValid && (
+                                                        <p className="text-[10px] font-bold text-red-500 uppercase tracking-widest ml-16">Invalid YouTube Link. Please check the URL.</p>
+                                                    )}
+                                                    {isValid && extractedId !== vid.videoId && (
+                                                        <p className="text-[10px] font-bold text-green-600 uppercase tracking-widest ml-16 flex items-center gap-1">
+                                                            <Play size={10} /> Extracted ID: {extractedId}
+                                                        </p>
+                                                    )}
                                                 </div>
-                                                <input
-                                                    className="flex-1 bg-white border border-slate-200 px-4 py-3 rounded-xl font-poppins text-sm"
-                                                    placeholder="YouTube ID"
-                                                    value={vid.videoId}
-                                                    onChange={(e) => {
-                                                        const v = [...videos];
-                                                        v[i].videoId = e.target.value;
-                                                        setVideos(v);
-                                                    }}
-                                                />
-                                                <input
-                                                    className="flex-[2] bg-white border border-slate-200 px-4 py-3 rounded-xl font-poppins text-sm"
-                                                    placeholder="Video Title"
-                                                    value={vid.title}
-                                                    onChange={(e) => {
-                                                        const v = [...videos];
-                                                        v[i].title = e.target.value;
-                                                        setVideos(v);
-                                                    }}
-                                                />
-                                                <button onClick={() => removeVideo(i)} className="p-3 text-slate-300 hover:text-red-500 hover:bg-red-50 rounded-xl transition-all">
-                                                    <Trash2 size={20} />
-                                                </button>
-                                            </div>
-                                        ))}
+                                            );
+                                        })}
                                     </div>
 
                                     <button
                                         onClick={saveVideos}
-                                        className="mt-10 flex items-center gap-3 px-8 py-4 gradient-luxury text-white rounded-2xl font-poppins font-black uppercase tracking-widest shadow-gold-glow hover:scale-105 transition-all w-full justify-center"
+                                        className="mt-10 flex items-center gap-3 px-8 py-4 gradient-luxury text-white rounded-2xl font-poppins font-black uppercase tracking-widest shadow-gold-glow hover:scale-105 transition-all w-full justify-center disabled:opacity-50"
                                     >
                                         <Save size={20} />
                                         Save Video Library
