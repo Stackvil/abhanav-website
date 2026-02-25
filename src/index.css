@@ -42,6 +42,10 @@
     background: linear-gradient(135deg, rgba(194, 24, 122, 0.2), rgba(142, 14, 90, 0.2));
   }
 
+  .gradient-vibrant {
+    background: linear-gradient(135deg, #C2187A, #8E0E5A);
+  }
+
   .animate-float {
     animation: float 6s ease-in-out infinite;
   }

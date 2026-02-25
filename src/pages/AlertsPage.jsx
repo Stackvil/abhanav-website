@@ -13,7 +13,7 @@ const AlertsPage = () => {
         <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="pb-32 px-6 pt-10 max-w-4xl mx-auto"
+            className="pb-32 px-6 pt-4 max-w-4xl mx-auto"
         >
             <div className="flex items-center gap-4 mb-10 justify-center">
                 <div className="p-3 bg-white/5 rounded-2xl shadow-gold-glow border border-white/20">

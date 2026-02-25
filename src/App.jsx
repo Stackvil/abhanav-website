@@ -1,40 +1,72 @@
 import React from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
 import { RateProvider } from './context/RateContext';
 import Navbar from './components/Navbar';
+import { motion } from 'framer-motion';
+import SpotBar from './components/SpotBar';
+import Ticker from './components/Ticker';
 import Hero from './components/Hero';
-import FooterBanner from './components/FooterBanner';
 import RatesPage from './pages/RatesPage';
 import AlertsPage from './pages/AlertsPage';
 import VideosPage from './pages/VideosPage';
 import AdminPage from './pages/AdminPage';
 
+const AppLayout = () => {
+  const location = useLocation();
+  const isHomePage = location.pathname === '/';
+  const isAdminPage = location.pathname === '/admin';
+
+  return (
+    <main
+      className="min-h-screen Selection:bg-gold-400 Selection:text-magenta-800 relative bg-soft-pink pb-10"
+      style={!isHomePage ? {
+        backgroundImage: 'url("/Untitled design (14).png")',
+        backgroundAttachment: 'fixed',
+        backgroundPosition: 'center',
+        backgroundRepeat: 'no-repeat',
+        backgroundSize: 'cover'
+      } : {}}
+    >
+      <Navbar />
+
+      {/* Global Header Section - Appears on every page except Admin */}
+      {!isAdminPage && (
+        <section className="relative w-full overflow-hidden bg-transparent">
+          <motion.img
+            initial={{ opacity: 1 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.5 }}
+            src="/Untitled design (17).png"
+            alt="Abhinav Gold & Silver Header"
+            className="w-full h-auto min-h-[120px] md:h-auto object-contain md:object-cover object-center block"
+          />
+
+          {/* Overlaid Spot Rates Bar */}
+          <div className="absolute top-[60%] md:top-[60%] lg:top-[60%] left-0 w-full z-20">
+            <SpotBar />
+          </div>
+        </section>
+      )}
+
+      {/* Global Scrolling Ticker */}
+      <Ticker />
+
+      <Routes>
+        <Route path="/" element={<Hero />} />
+        <Route path="/rates" element={<RatesPage />} />
+        <Route path="/alerts" element={<AlertsPage />} />
+        <Route path="/videos" element={<VideosPage />} />
+        <Route path="/admin" element={<AdminPage />} />
+      </Routes>
+    </main>
+  );
+};
+
 function App() {
   return (
     <RateProvider>
       <Router>
-        <main
-          className="min-h-screen Selection:bg-gold-400 Selection:text-magenta-800 relative bg-soft-pink pb-10"
-          style={{
-            backgroundImage: 'url("/Untitled%20design%20(10).png")',
-            backgroundAttachment: 'fixed',
-            backgroundPosition: 'center',
-            backgroundRepeat: 'no-repeat',
-            backgroundSize: 'cover'
-          }}
-        >
-          <Navbar />
-
-          <Routes>
-            <Route path="/" element={<Hero />} />
-            <Route path="/rates" element={<RatesPage />} />
-            <Route path="/alerts" element={<AlertsPage />} />
-            <Route path="/videos" element={<VideosPage />} />
-            <Route path="/admin" element={<AdminPage />} />
-          </Routes>
-
-          <FooterBanner />
-        </main>
+        <AppLayout />
       </Router>
     </RateProvider>
   );

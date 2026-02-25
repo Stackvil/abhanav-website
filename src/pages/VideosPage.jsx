@@ -1,12 +1,92 @@
-import React, { useState, useEffect } from 'react';
-import { Play, PlayCircle, Clock, ChevronRight, Settings, AlertCircle } from 'lucide-react';
+import React, { useState, useEffect, useRef } from 'react';
+import { Play, PlayCircle, Clock, ChevronLeft, ChevronRight, Settings, AlertCircle, Volume2, VolumeX, Maximize2 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Link } from 'react-router-dom';
 
+const VideoCard = ({ video, isActive, position, onClick }) => {
+    const [isMuted, setIsMuted] = useState(true);
+
+    // Calculate position and scale based on index distance from activeIndex
+    const isNext = position === 1 || position === 2;
+    const isPrev = position === -1 || position === -2;
+
+    const variants = {
+        center: { x: '0%', scale: 1, zIndex: 10, opacity: 1, rotateY: 0 },
+        prev: { x: '-60%', scale: 0.75, zIndex: 5, opacity: 0.6, rotateY: 30 },
+        prevFar: { x: '-110%', scale: 0.6, zIndex: 2, opacity: 0.3, rotateY: 45 },
+        next: { x: '60%', scale: 0.75, zIndex: 5, opacity: 0.6, rotateY: -30 },
+        nextFar: { x: '110%', scale: 0.6, zIndex: 2, opacity: 0.3, rotateY: -45 },
+        hidden: { x: '0%', scale: 0.4, zIndex: 0, opacity: 0 }
+    };
+
+    let currentVariant = 'hidden';
+    if (position === 0) currentVariant = 'center';
+    else if (position === -1) currentVariant = 'prev';
+    else if (position === -2) currentVariant = 'prevFar';
+    else if (position === 1) currentVariant = 'next';
+    else if (position === 2) currentVariant = 'nextFar';
+
+    return (
+        <motion.div
+            animate={currentVariant}
+            variants={variants}
+            transition={{ type: 'spring', stiffness: 300, damping: 30 }}
+            className={`absolute w-full max-w-[240px] md:max-w-[300px] aspect-[9/16] cursor-pointer perspective-1000`}
+            onClick={() => position !== 0 && onClick()}
+        >
+            <div className={`relative w-full h-full bg-black rounded-[24px] md:rounded-[40px] overflow-hidden shadow-2xl border border-white/10 transition-all duration-500 ${isActive ? 'ring-2 ring-gold-400' : ''}`}>
+                {/* Video / Thumbnail */}
+                <div className="absolute inset-0 w-full h-full">
+                    {isActive ? (
+                        <iframe
+                            className="w-full h-full"
+                            src={`https://www.youtube.com/embed/${video.videoId}?autoplay=1&mute=${isMuted ? 1 : 0}&controls=0&loop=1&playlist=${video.videoId}&modestbranding=1&rel=0&playsinline=1&enablejsapi=1`}
+                            title={video.title}
+                            frameBorder="0"
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                            allowFullScreen
+                        ></iframe>
+                    ) : (
+                        <div className="w-full h-full relative group">
+                            <img
+                                src={`https://img.youtube.com/vi/${video.videoId}/maxresdefault.jpg`}
+                                alt={video.title}
+                                className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110 opacity-70"
+                            />
+                            <div className="absolute inset-0 flex items-center justify-center">
+                                <div className="w-16 h-16 bg-white/20 backdrop-blur-md rounded-full flex items-center justify-center text-white border border-white/30">
+                                    <Play fill="currentColor" size={24} className="ml-1" />
+                                </div>
+                            </div>
+                        </div>
+                    )}
+                </div>
+
+                {/* Controls (Top Right Overlay) */}
+                {isActive && (
+                    <div className="absolute top-4 right-4 flex flex-col gap-3 z-50">
+                        <button onClick={(e) => { e.stopPropagation(); setIsMuted(!isMuted); }} className="p-3 bg-black/40 backdrop-blur-md border border-white/20 text-white rounded-full hover:bg-black/60 transition-all">
+                            {isMuted ? <VolumeX size={18} /> : <Volume2 size={18} />}
+                        </button>
+                        <button className="p-3 bg-black/40 backdrop-blur-md border border-white/20 text-white rounded-full hover:bg-black/60 transition-all">
+                            <Maximize2 size={18} />
+                        </button>
+                    </div>
+                )}
+
+                {/* Subtitle / Brand Branding (Bottom Overlay) */}
+                <div className="absolute inset-x-0 bottom-0 p-6 bg-gradient-to-t from-black/90 via-black/40 to-transparent flex flex-col gap-2">
+                    <span className="text-gold-400 font-poppins font-black text-[10px] uppercase tracking-widest drop-shadow-md">Abhinav Gold</span>
+                    <h3 className="text-white font-playfair font-black text-lg md:text-2xl leading-tight drop-shadow-lg">{video.title}</h3>
+                </div>
+            </div>
+        </motion.div>
+    );
+};
+
 const VideosPage = () => {
-    // Fetch videos from localStorage or use defaults
     const [videos, setVideos] = useState([]);
-    const [activeVideo, setActiveVideo] = useState(null);
+    const [activeIndex, setActiveIndex] = useState(0);
 
     useEffect(() => {
         const stored = localStorage.getItem('ag_videos');
@@ -15,135 +95,113 @@ const VideosPage = () => {
                 const parsed = JSON.parse(stored);
                 if (Array.isArray(parsed) && parsed.length > 0) {
                     setVideos(parsed);
-                    setActiveVideo(parsed[0]);
                 }
             } catch (e) {
                 console.error("Failed to load videos:", e);
             }
         }
 
-        // If still empty, use fallback
         if (videos.length === 0 && !stored) {
             const fallback = [
-                { videoId: 'dQw4w9WgXcQ', title: 'Welcome to Abhinav Gold & Silver' }
+                { videoId: 'dQw4w9WgXcQ', title: 'Luxury Gold Collection 2026' },
+                { videoId: '3JZ_D3ELwOQ', title: 'Modern Silver Artisanship' },
+                { videoId: 'kJQP7kiw5Fk', title: 'Pure Purity Standards' },
+                { videoId: 'dQw4w9WgXcQ', title: 'Jewellery Masterclass' },
+                { videoId: '3JZ_D3ELwOQ', title: 'Investment Analysis' }
             ];
             setVideos(fallback);
-            setActiveVideo(fallback[0]);
         }
-    }, []);
+    }, [videos.length]);
 
-    // Filter out any videos that don't have a valid ID
+    const handleNext = () => setActiveIndex((prev) => (prev + 1) % videos.length);
+    const handlePrev = () => setActiveIndex((prev) => (prev - 1 + videos.length) % videos.length);
+
     const validVideos = videos.filter(v => v.videoId && v.videoId.length === 11);
 
     return (
         <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            className="pb-32 px-6 pt-10 max-w-7xl mx-auto relative"
+            className="w-full relative py-12 px-6 flex flex-col items-center select-none"
         >
-            <div className="absolute top-4 right-6">
+            {/* Admin/Manage Link */}
+            <div className="absolute top-8 right-8 z-50">
                 <Link
                     to="/admin"
-                    className="p-3 bg-white/5 hover:bg-gold-400 hover:text-magenta-800 text-white rounded-2xl shadow-luxury border border-white/20 transition-all flex items-center gap-2 font-poppins font-bold text-xs uppercase tracking-widest backdrop-blur-sm"
+                    className="px-6 py-3 bg-white/5 hover:bg-gold-400 hover:text-magenta-800 text-white rounded-full shadow-luxury border border-white/20 transition-all flex items-center gap-3 font-poppins font-black text-xs uppercase tracking-widest backdrop-blur-md"
                 >
-                    <Settings size={18} />
-                    Login
+                    <Settings size={20} />
+                    LOGIN
                 </Link>
             </div>
 
-            <div className="text-center mb-16 flex flex-col items-center gap-4">
-                <h1 className="text-4xl sm:text-6xl md:text-7xl font-playfair font-black text-white uppercase tracking-tighter leading-none drop-shadow-luxury px-4">Education Hub</h1>
-                <p className="text-white/60 font-poppins max-w-2xl text-base md:text-lg font-medium px-4">Expert insights, market analysis, and educational content to guide your precious metal investments.</p>
+            {/* Hub Title */}
+            <div className="text-center mb-12 flex flex-col items-center gap-2">
+                <h1 className="text-4xl md:text-6xl font-playfair font-black text-white uppercase tracking-tighter drop-shadow-luxury">Education Hub</h1>
             </div>
 
-            <AnimatePresence mode="wait">
-                {activeVideo && activeVideo.videoId.length === 11 ? (
-                    <motion.div
-                        key={activeVideo.videoId}
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        className="mb-20 glass rounded-[40px] overflow-hidden shadow-luxury border-white/40"
-                    >
-                        <div className="relative aspect-video w-full bg-black">
-                            <iframe
-                                className="absolute inset-0 w-full h-full"
-                                src={`https://www.youtube.com/embed/${activeVideo.videoId}?autoplay=0&rel=0&modestbranding=1&playsinline=1`}
-                                title={activeVideo.title}
-                                frameBorder="0"
-                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                                allowFullScreen
-                            ></iframe>
-                        </div>
-                        <div className="p-8 md:p-12 gradient-luxury flex flex-col md:flex-row justify-between items-center gap-6">
-                            <div className="flex-1">
-                                <span className="text-gold-400 font-poppins font-black text-xs uppercase tracking-widest mb-2 block">Now Playing</span>
-                                <h2 className="text-xl sm:text-3xl md:text-5xl font-playfair font-black text-white leading-tight">{activeVideo.title}</h2>
-                            </div>
-                            <button className="px-8 py-4 bg-white/5 backdrop-blur-md text-white border border-white/20 rounded-full font-poppins font-black text-xs uppercase tracking-widest hover:bg-white/10 transition-all">
-                                Video Library
-                            </button>
-                        </div>
-                    </motion.div>
-                ) : (
-                    <div className="mb-20 glass h-[400px] rounded-[40px] flex flex-col items-center justify-center gap-4 text-slate-400">
-                        <AlertCircle size={48} />
-                        <p className="font-poppins font-bold uppercase tracking-widest">No valid video selected</p>
-                    </div>
-                )}
-            </AnimatePresence>
+            {/* Carousel Container */}
+            <div className="relative w-full h-[450px] md:h-[580px] flex items-center justify-center overflow-hidden">
+                {/* Navigation Arrows */}
+                <button
+                    onClick={handlePrev}
+                    className="absolute left-4 md:left-20 z-50 w-12 h-12 md:w-16 md:h-16 bg-white/10 hover:bg-white text-white hover:text-magenta-900 rounded-full flex items-center justify-center border border-white/20 transition-all shadow-xl hover:scale-110 active:scale-95 group"
+                >
+                    <ChevronLeft size={32} className="group-hover:-translate-x-1 transition-transform" />
+                </button>
 
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-                {validVideos.map((video, idx) => (
-                    <motion.div
-                        key={idx}
-                        initial={{ opacity: 0, scale: 0.95 }}
-                        animate={{ opacity: 1, scale: 1 }}
-                        transition={{ delay: idx * 0.1 }}
-                        onClick={() => {
-                            setActiveVideo(video);
-                            window.scrollTo({ top: 300, behavior: 'smooth' });
-                        }}
-                        className={`group relative glass rounded-[35px] overflow-hidden shadow-luxury border-white/40 cursor-pointer transition-all ${activeVideo?.videoId === video.videoId ? 'ring-2 ring-gold-400' : ''}`}
-                    >
-                        {/* Thumbnail Wrap */}
-                        <div className="relative h-48 overflow-hidden bg-slate-900">
-                            <img
-                                src={`https://img.youtube.com/vi/${video.videoId}/hqdefault.jpg`}
-                                alt={video.title}
-                                className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110 opacity-60"
-                            />
-                            <div className="absolute inset-0 bg-gradient-to-t from-magenta-900/40 to-transparent"></div>
+                <button
+                    onClick={handleNext}
+                    className="absolute right-4 md:right-20 z-50 w-12 h-12 md:w-16 md:h-16 bg-white/10 hover:bg-white text-white hover:text-magenta-900 rounded-full flex items-center justify-center border border-white/20 transition-all shadow-xl hover:scale-110 active:scale-95 group"
+                >
+                    <ChevronRight size={32} className="group-hover:translate-x-1 transition-transform" />
+                </button>
 
-                            {/* Play Button Overlay */}
-                            <div className="absolute inset-0 flex items-center justify-center">
-                                <div className="w-12 h-12 bg-gold-400 text-magenta-700 rounded-full flex items-center justify-center opacity-0 scale-50 group-hover:opacity-100 group-hover:scale-100 transition-all duration-300 shadow-gold-glow">
-                                    <Play fill="currentColor" size={24} className="ml-0.5" />
-                                </div>
-                            </div>
-                        </div>
+                {/* Cards Container */}
+                <div className="relative w-full max-w-7xl h-full flex items-center justify-center">
+                    <AnimatePresence initial={false}>
+                        {validVideos.map((video, idx) => {
+                            let position = idx - activeIndex;
 
-                        {/* Title Section */}
-                        <div className="p-6 flex justify-between items-center bg-white/5">
-                            <h3 className="text-lg font-playfair font-black text-white leading-tight line-clamp-2">{video.title}</h3>
-                            <div className="p-2 bg-white/5 text-gold-400 rounded-full group-hover:bg-gold-400 group-hover:text-magenta-800 transition-colors duration-300 shrink-0">
-                                <ChevronRight size={18} />
-                            </div>
-                        </div>
-                    </motion.div>
-                ))}
-            </div>
+                            // Handle large differences due to circularity
+                            if (position > 2) position -= validVideos.length;
+                            if (position < -2) position += validVideos.length;
 
-            {validVideos.length === 0 && (
-                <div className="text-center py-20 text-slate-400 font-poppins font-bold uppercase tracking-widest text-sm">
-                    The video library is currently being updated. Please check back later.
+                            // Only render the active one and 2 on each side
+                            if (position < -2 || position > 2) return null;
+
+                            return (
+                                <VideoCard
+                                    key={`${video.videoId}-${idx}`}
+                                    video={video}
+                                    isActive={idx === activeIndex}
+                                    position={position}
+                                    onClick={() => setActiveIndex(idx)}
+                                />
+                            );
+                        })}
+                    </AnimatePresence>
                 </div>
-            )}
+            </div>
 
-            <div className="mt-20 flex justify-center">
-                <button className="flex items-center gap-4 px-10 py-5 gradient-luxury text-white rounded-full font-poppins font-black text-lg uppercase tracking-widest shadow-luxury hover:scale-105 transition-transform group shadow-gold-glow">
-                    <PlayCircle size={28} />
-                    View Live Sessions
-                    <ChevronRight className="group-hover:translate-x-2 transition-transform" />
+            {/* Bottom Indicator / Progress */}
+            <div className="mt-12 flex gap-4 items-center">
+                <div className="flex gap-2">
+                    {validVideos.map((_, idx) => (
+                        <div
+                            key={idx}
+                            onClick={() => setActiveIndex(idx)}
+                            className={`h-1.5 transition-all duration-500 rounded-full cursor-pointer ${activeIndex === idx ? 'w-8 bg-gold-400 shadow-[0_0_10px_rgba(255,215,0,0.5)]' : 'w-2 bg-white/20'}`}
+                        />
+                    ))}
+                </div>
+            </div>
+
+            {/* Global CTA */}
+            <div className="mt-16">
+                <button className="px-10 py-5 bg-gold-400 text-magenta-900 rounded-full font-poppins font-black text-sm uppercase tracking-widest shadow-luxury hover:scale-105 transition-all flex items-center gap-3">
+                    <PlayCircle size={24} />
+                    Explore Live Sessions
                 </button>
             </div>
         </motion.div>

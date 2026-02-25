@@ -69,7 +69,7 @@ const AdminPage = () => {
 
     if (!isLoggedIn) {
         return (
-            <div className="min-h-screen bg-slate-50 flex items-center justify-center p-6">
+            <div className="min-h-screen bg-slate-50 flex items-center justify-center p-6 pt-24 md:pt-32">
                 <motion.div initial={{ scale: 0.9, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} className="glass max-w-md w-full p-10 rounded-[40px] shadow-luxury">
                     <div className="flex flex-col items-center gap-6 mb-10">
                         <div className="w-20 h-20 gradient-luxury rounded-3xl flex items-center justify-center shadow-gold-glow">

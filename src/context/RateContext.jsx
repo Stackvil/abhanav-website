@@ -5,13 +5,17 @@ const RateContext = createContext();
 const POTENTIAL_ENDPOINTS = [
     'https://bcast.rbgoldspot.com:7768/VOTSBroadcastStreaming/Services/xml/GetLiveRateByTemplateID/',
     'https://bcast.rbgoldspot.com:7767/VOTSBroadcastStreaming/Services/xml/GetLiveRateByTemplateID/',
+    'http://13.201.9.242:7767/VOTSBroadcastStreaming/Services/xml/GetLiveRateByTemplateID/',
     'https://bcast.rbgoldspot.com/VOTSBroadcastStreaming/Services/xml/GetLiveRateByTemplateID/',
-    'http://bcast.rbgoldspot.com:7767/VOTSBroadcastStreaming/Services/xml/GetLiveRateByTemplateID/'
+    'http://bcast.rbgoldspot.com:7767/VOTSBroadcastStreaming/Services/xml/GetLiveRateByTemplateID/',
+    'http://bcast.rbgoldspot.com:8080/VOTSBroadcastStreaming/Services/xml/GetLiveRateByTemplateID/',
+    'https://bcast.rbgoldspot.com:8081/VOTSBroadcastStreaming/Services/xml/GetLiveRateByTemplateID/'
 ];
 const POTENTIAL_IDS = ['rbgold', 'rbgoldspot'];
 
 const CORS_PROXIES = [
     url => `https://api.allorigins.win/get?url=${encodeURIComponent(url)}`,
+    url => `https://api.codetabs.com/v1/proxy?quest=${encodeURIComponent(url)}`,
     url => `https://thingproxy.freeboard.io/fetch/${url}`,
     url => `https://corsproxy.org/?${encodeURIComponent(url)}`,
     url => `https://allorigins.win/get?url=${encodeURIComponent(url)}`,
@@ -29,19 +33,33 @@ const INITIAL_RTGS_CONFIG = [
     { id: '2987', name: 'Silver 999 (5 Kgs)' }
 ];
 
-const getPlaceholders = () => ({
-    spot: INITIAL_SPOT_CONFIG.map(it => ({ ...it, bid: '-', ask: '-', high: '-', low: '-', stock: false })),
-    rtgs: INITIAL_RTGS_CONFIG.map(it => ({ ...it, buy: '-', sell: '-', stock: false }))
-});
+const getPlaceholders = () => {
+    try {
+        const cached = localStorage.getItem('ag_cachedRates');
+        if (cached) {
+            const parsed = JSON.parse(cached);
+            if (parsed.spot && parsed.rtgs) return parsed;
+        }
+    } catch (e) {
+        console.error("Failed to parse cached rates:", e);
+    }
+    return {
+        spot: INITIAL_SPOT_CONFIG.map(it => ({ ...it, bid: '-', ask: '-', high: '-', low: '-', stock: false })),
+        rtgs: INITIAL_RTGS_CONFIG.map(it => ({ ...it, buy: '-', sell: '-', stock: false }))
+    };
+};
 
 export const RateProvider = ({ children }) => {
     const [rawRates, setRawRates] = useState(getPlaceholders());
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const isFetching = React.useRef(false);
-    const lastProxyIndex = React.useRef(0);
-    const lastEndpointIndex = React.useRef(0);
-    const lastIdIndex = React.useRef(0);
+
+    // Load last working config indices from localStorage
+    const savedConfig = JSON.parse(localStorage.getItem('ag_lastWorkingConfig') || '{}');
+    const lastProxyIndex = React.useRef(savedConfig.proxy || 0);
+    const lastEndpointIndex = React.useRef(savedConfig.endpoint || 0);
+    const lastIdIndex = React.useRef(savedConfig.id || 0);
 
     // Robust initial state for adj
     const getInitialAdj = () => {
@@ -181,13 +199,23 @@ export const RateProvider = ({ children }) => {
                         const parsed = parseRateText(text);
 
                         setRawRates(parsed);
+                        localStorage.setItem('ag_cachedRates', JSON.stringify(parsed));
                         setError(null);
                         setLoading(false);
 
                         // Save working configuration
-                        lastEndpointIndex.current = (lastEndpointIndex.current + eIdx) % endpointCount;
-                        lastIdIndex.current = (lastIdIndex.current + iIdx) % idCount;
+                        const newEndpointIdx = (lastEndpointIndex.current + eIdx) % endpointCount;
+                        const newIdIdx = (lastIdIndex.current + iIdx) % idCount;
+
+                        lastEndpointIndex.current = newEndpointIdx;
+                        lastIdIndex.current = newIdIdx;
                         lastProxyIndex.current = currentPIdx;
+
+                        localStorage.setItem('ag_lastWorkingConfig', JSON.stringify({
+                            proxy: currentPIdx,
+                            endpoint: newEndpointIdx,
+                            id: newIdIdx
+                        }));
 
                         isFetching.current = false;
                         return;

@@ -30,12 +30,12 @@ const SpotBar = () => {
                     transition={{ duration: 0.5, delay: idx * 0.1 }}
                     className="flex flex-col items-center group md:flex-initial"
                 >
-                    <span className="text-gold-400 font-poppins font-black text-[7px] md:text-[11px] uppercase tracking-[0.2em] md:tracking-[0.3em] mb-0.5 drop-shadow-md">
+                    <span className="text-black/80 font-poppins font-black text-[7px] md:text-[11px] uppercase tracking-[0.2em] md:tracking-[0.3em] mb-0.5">
                         {item.label}
                     </span>
                     <div className="flex items-baseline gap-1 md:gap-2 px-0 py-0 bg-transparent transition-all w-auto justify-center">
-                        <span className="text-white/60 font-playfair font-black text-[9px] md:text-lg">{item.symbol}</span>
-                        <span className="text-white font-playfair font-black text-sm md:text-5xl tracking-tighter whitespace-nowrap drop-shadow-lg">
+                        <span className="text-black/50 font-playfair font-black text-[9px] md:text-lg">{item.symbol}</span>
+                        <span className="text-black font-playfair font-black text-sm md:text-5xl tracking-tighter whitespace-nowrap">
                             {fmt(item.value)}
                         </span>
                     </div>
