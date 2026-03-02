@@ -52,8 +52,7 @@ const AlertsPage = () => {
                         initial={{ opacity: 0, x: -20 }}
                         animate={{ opacity: 1, x: 0 }}
                         transition={{ delay: idx * 0.1 }}
-                        className="glass p-6 rounded-3xl shadow-luxury border-l-8 border-magenta-600 hover:scale-[1.02] transition-transform cursor-pointer overflow-hidden relative group"
-                        onClick={() => alert.link && window.open(alert.link, '_blank')}
+                        className="glass p-6 rounded-3xl shadow-luxury border-l-8 border-magenta-600 hover:scale-[1.02] transition-transform cursor-default overflow-hidden relative group"
                     >
                         {/* Hover Glow */}
                         <div className="absolute inset-0 bg-gold-400/5 opacity-0 group-hover:opacity-100 transition-opacity" />
@@ -72,12 +71,6 @@ const AlertsPage = () => {
                         </div>
                         <p className="text-white/70 font-poppins text-sm leading-relaxed relative z-10">{alert.msg}</p>
 
-                        {alert.link && (
-                            <div className="mt-4 flex items-center gap-2 text-gold-400/60 text-[10px] font-black uppercase tracking-widest relative z-10">
-                                <span>Read Full Analysis</span>
-                                <Info size={12} />
-                            </div>
-                        )}
                     </motion.div>
                 ))}
             </div>
