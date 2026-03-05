@@ -37,15 +37,15 @@ const RatesPage = () => {
                         <h2 className="text-white font-poppins font-bold text-lg uppercase tracking-widest">Retail Gold Rates (10g)</h2>
                         <span className="text-white/40 text-[10px] font-black uppercase tracking-widest bg-white/5 px-3 py-1 rounded-full">RTGS / 999 Base</span>
                     </div>
-                    <div className="glass rounded-b-2xl overflow-hidden shadow-luxury">
-                        <table className="w-full text-left">
+                    <div className="glass rounded-b-2xl overflow-x-auto shadow-luxury">
+                        <table className="w-full text-left min-w-[560px]">
                             <thead className="bg-white/10 border-b border-white/10">
                                 <tr>
-                                    <th className="px-4 py-5 text-[10px] md:text-[12px] font-black text-white/80 uppercase tracking-widest whitespace-nowrap">Purity</th>
-                                    <th className="px-4 py-5 text-[10px] md:text-[12px] font-black text-white/80 uppercase tracking-widest text-center whitespace-nowrap">Buy</th>
-                                    <th className="px-4 py-5 text-[10px] md:text-[12px] font-black text-white/80 uppercase tracking-widest text-center whitespace-nowrap">Sell</th>
-                                    <th className="px-4 py-5 text-[10px] md:text-[12px] font-black text-red-400/80 uppercase tracking-widest text-center whitespace-nowrap">Low</th>
-                                    <th className="px-4 py-5 text-[10px] md:text-[12px] font-black text-green-400/80 uppercase tracking-widest text-right whitespace-nowrap">High</th>
+                                    <th className="px-2 py-4 md:px-4 md:py-5 text-[9px] md:text-[12px] font-black text-white/80 uppercase tracking-widest whitespace-nowrap">Purity</th>
+                                    <th className="px-2 py-4 md:px-4 md:py-5 text-[9px] md:text-[12px] font-black text-white/80 uppercase tracking-widest text-center whitespace-nowrap">Buy</th>
+                                    <th className="px-2 py-4 md:px-4 md:py-5 text-[9px] md:text-[12px] font-black text-white/80 uppercase tracking-widest text-center whitespace-nowrap">Sell</th>
+                                    <th className="px-2 py-4 md:px-4 md:py-5 text-[9px] md:text-[12px] font-black text-red-400/80 uppercase tracking-widest text-center whitespace-nowrap">Low</th>
+                                    <th className="px-2 py-4 md:px-4 md:py-5 text-[9px] md:text-[12px] font-black text-green-400/80 uppercase tracking-widest text-right whitespace-nowrap">High</th>
                                 </tr>
                             </thead>
                             <tbody className="divide-y divide-white/5">
@@ -62,17 +62,17 @@ const RatesPage = () => {
 
                                     return (
                                         <tr key={idx} className="hover:bg-white/5 transition-colors group">
-                                            <td className="px-4 py-6 text-sm md:text-lg font-bold text-white whitespace-nowrap">{karat.name}</td>
-                                            <td className="px-4 py-6 text-[11px] md:text-xl font-black text-white text-center font-poppins">
+                                            <td className="px-2 py-4 md:px-4 md:py-6 text-[11px] md:text-lg font-bold text-white whitespace-nowrap">{karat.name}</td>
+                                            <td className="px-2 py-4 md:px-4 md:py-6 text-[10px] md:text-xl font-black text-white text-center font-poppins whitespace-nowrap">
                                                 {buyVal !== '-' ? `₹${buyVal}` : '-'}
                                             </td>
-                                            <td className="px-4 py-6 text-lg md:text-2xl font-black text-gold-400 text-center font-poppins group-hover:scale-105 transition-transform">
+                                            <td className="px-2 py-4 md:px-4 md:py-6 text-[11px] md:text-2xl font-black text-gold-400 text-center font-poppins whitespace-nowrap group-hover:scale-105 transition-transform">
                                                 {sellVal !== '-' ? `₹${sellVal}` : '-'}
                                             </td>
-                                            <td className="px-4 py-6 text-sm md:text-xl font-black text-red-400 text-center font-poppins">
+                                            <td className="px-2 py-4 md:px-4 md:py-6 text-[10px] md:text-xl font-black text-red-400 text-center font-poppins whitespace-nowrap">
                                                 {lowVal !== '-' ? `₹${lowVal}` : '-'}
                                             </td>
-                                            <td className="px-4 py-6 text-sm md:text-xl font-black text-green-400 text-right font-poppins">
+                                            <td className="px-2 py-4 md:px-4 md:py-6 text-[10px] md:text-xl font-black text-green-400 text-right font-poppins whitespace-nowrap">
                                                 {highVal !== '-' ? `₹${highVal}` : '-'}
                                             </td>
                                         </tr>
@@ -83,47 +83,32 @@ const RatesPage = () => {
                     </div>
                 </div>
 
-                {/* Silver Rates Table */}
-                <div className="flex flex-col gap-6">
-                    <div className="gradient-luxury p-4 rounded-t-2xl shadow-lg flex justify-between items-center">
-                        <h2 className="text-white font-poppins font-bold text-lg uppercase tracking-widest">Silver Rates</h2>
-                        <span className="text-white/40 text-[10px] font-black uppercase tracking-widest bg-white/5 px-3 py-1 rounded-full">RTGS / Base</span>
+                {/* QR Codes Section */}
+                <div className="flex flex-col sm:flex-row gap-6 justify-center items-center">
+                    {/* Location QR */}
+                    <div className="flex flex-col items-center gap-3 glass rounded-2xl p-6 flex-1 max-w-[240px]">
+                        <img
+                            src="/qr-code (1).png"
+                            alt="Scan for Location"
+                            className="w-40 h-40 object-contain rounded-xl"
+                        />
+                        <div className="text-center">
+                            <p className="text-white font-poppins font-black text-sm uppercase tracking-widest">📍 Location</p>
+                            <p className="text-white/50 font-poppins text-[10px] mt-1">Scan to find us</p>
+                        </div>
                     </div>
-                    <div className="glass rounded-b-2xl overflow-hidden shadow-luxury">
-                        <table className="w-full text-left">
-                            <thead className="bg-white/10 border-b border-white/10">
-                                <tr>
-                                    <th className="px-4 py-5 text-[10px] md:text-[12px] font-black text-white/80 uppercase tracking-widest whitespace-nowrap">Item</th>
-                                    <th className="px-4 py-5 text-[10px] md:text-[12px] font-black text-white/80 uppercase tracking-widest text-center whitespace-nowrap">Buy</th>
-                                    <th className="px-4 py-5 text-[10px] md:text-[12px] font-black text-white/80 uppercase tracking-widest text-center whitespace-nowrap">Sell</th>
-                                    <th className="px-4 py-5 text-[10px] md:text-[12px] font-black text-red-400/80 uppercase tracking-widest text-center whitespace-nowrap">Low</th>
-                                    <th className="px-4 py-5 text-[10px] md:text-[12px] font-black text-green-400/80 uppercase tracking-widest text-right whitespace-nowrap">High</th>
-                                </tr>
-                            </thead>
-                            <tbody className="divide-y divide-white/5">
-                                {rates.rtgs.filter(r => r.name.toUpperCase().includes('SILVER')).map((item, idx) => {
-                                    const rawItem = rawRates.rtgs.find(r => r.id === item.id || (r.name && r.name === item.name)) || item;
 
-                                    return (
-                                        <tr key={idx} className="hover:bg-white/5 transition-colors group">
-                                            <td className="px-4 py-6 text-sm md:text-lg font-bold text-white whitespace-nowrap">{item.name}</td>
-                                            <td className="px-4 py-6 text-[11px] md:text-xl font-black text-white text-center font-poppins">
-                                                ₹{item.buy !== '-' ? fmt(item.buy) : '-'}
-                                            </td>
-                                            <td className="px-4 py-6 text-lg md:text-2xl font-black text-gold-400 text-center font-poppins group-hover:scale-105 transition-transform">
-                                                ₹{item.sell !== '-' ? fmt(item.sell) : '-'}
-                                            </td>
-                                            <td className="px-4 py-6 text-sm md:text-xl font-black text-red-400 text-center font-poppins">
-                                                ₹{rawItem.low !== '-' ? fmt(rawItem.low) : '-'}
-                                            </td>
-                                            <td className="px-4 py-6 text-sm md:text-xl font-black text-green-400 text-right font-poppins">
-                                                ₹{rawItem.high !== '-' ? fmt(rawItem.high) : '-'}
-                                            </td>
-                                        </tr>
-                                    );
-                                })}
-                            </tbody>
-                        </table>
+                    {/* Bank Details QR */}
+                    <div className="flex flex-col items-center gap-3 glass rounded-2xl p-6 flex-1 max-w-[240px]">
+                        <img
+                            src="/qr-code.png"
+                            alt="Scan for Bank Details"
+                            className="w-40 h-40 object-contain rounded-xl"
+                        />
+                        <div className="text-center">
+                            <p className="text-white font-poppins font-black text-sm uppercase tracking-widest">🏦 Bank Details</p>
+                            <p className="text-white/50 font-poppins text-[10px] mt-1">Scan to pay us</p>
+                        </div>
                     </div>
                 </div>
 

@@ -1,0 +1,119 @@
+import React from 'react';
+import { motion } from 'framer-motion';
+import { Phone, Mail, MapPin, Instagram, Facebook, Twitter, ShieldCheck, Clock, Award } from 'lucide-react';
+import { Link } from 'react-router-dom';
+
+const Footer = () => {
+    const currentYear = new Date().getFullYear();
+
+    return (
+        <footer className="hidden md:block bg-slate-950 text-slate-300 pt-16 pb-8 border-t border-white/5 relative overflow-hidden">
+            {/* Background Decorative Elements */}
+            <div className="absolute top-0 left-1/4 w-96 h-96 bg-magenta-900/10 blur-[120px] rounded-full -translate-y-1/2" />
+            <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-gold-900/10 blur-[120px] rounded-full translate-y-1/2" />
+
+            <div className="max-w-7xl mx-auto px-6 relative z-10">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-16">
+                    {/* Brand Section */}
+                    <div className="flex flex-col gap-6">
+                        <Link to="/" className="flex items-center gap-3">
+                            <img src="/logofd.png" alt="Abhinav Logo" className="w-12 h-12 object-contain" />
+                            <div className="flex flex-col">
+                                <span className="text-white font-playfair font-black text-xl tracking-tight leading-none uppercase">ABHINAV</span>
+                                <span className="text-[10px] text-gold-400 font-poppins font-bold tracking-[0.2em] leading-tight">GOLD & SILVER</span>
+                            </div>
+                        </Link>
+                        <p className="text-sm leading-relaxed text-slate-400 font-poppins">
+                            Purity you can trust, quality you can wear. Abhinav Gold & Silver delivers the finest bullion and jewelry with a legacy of excellence and transparency.
+                        </p>
+                        <div className="flex gap-4">
+                            <SocialIcon icon={<Instagram size={18} />} href="#" />
+                            <SocialIcon icon={<Facebook size={18} />} href="#" />
+                            <SocialIcon icon={<Twitter size={18} />} href="#" />
+                        </div>
+                    </div>
+
+                    {/* Quick Links */}
+                    <div>
+                        <h4 className="text-white font-playfair font-bold text-lg mb-6 uppercase tracking-widest">Navigation</h4>
+                        <ul className="flex flex-col gap-4">
+                            <FooterLink to="/" label="Home" />
+                            <FooterLink to="/rates" label="Live Rates" />
+                            <FooterLink to="/alerts" label="Market Alerts" />
+                            <FooterLink to="/videos" label="Media Gallery" />
+                        </ul>
+                    </div>
+
+                    {/* Features / Why Us */}
+                    <div>
+                        <h4 className="text-white font-playfair font-bold text-lg mb-6 uppercase tracking-widest">Why Choose Us</h4>
+                        <ul className="flex flex-col gap-4">
+                            <FeatureItem icon={<ShieldCheck size={16} className="text-gold-400" />} text="100% Purity Guaranteed" />
+                            <FeatureItem icon={<Clock size={16} className="text-gold-400" />} text="Real-time Market Rates" />
+                            <FeatureItem icon={<Award size={16} className="text-gold-400" />} text="Certified Bullion Dealer" />
+                        </ul>
+                    </div>
+
+                    {/* Contact Details */}
+                    <div>
+                        <h4 className="text-white font-playfair font-bold text-lg mb-6 uppercase tracking-widest">Contact Owner</h4>
+                        <div className="flex flex-col gap-5">
+                            <ContactItem icon={<Phone size={18} />} title="WhatsApp / Call" value="+91 98480 12345" href="https://wa.me/919848012345" />
+                            <ContactItem icon={<Mail size={18} />} title="Email Support" value="info@abhinavjewellers.com" href="mailto:info@abhinavjewellers.com" />
+                            <ContactItem icon={<MapPin size={18} />} title="Main Branch" value="Jeweler Street, Hyderabad, India" />
+                        </div>
+                    </div>
+                </div>
+
+                {/* Bottom Bar */}
+                <div className="pt-8 border-t border-white/10 flex flex-col md:flex-row justify-between items-center gap-4 text-[10px] md:text-xs font-poppins font-bold uppercase tracking-widest text-slate-500">
+                    <p>© {currentYear} Abhinav Gold & Silver. All Rights Reserved.</p>
+                    <div className="flex gap-6">
+                        <a href="#" className="hover:text-gold-400 transition-colors">Privacy Policy</a>
+                        <a href="#" className="hover:text-gold-400 transition-colors">Terms of Service</a>
+                    </div>
+                </div>
+            </div>
+        </footer>
+    );
+};
+
+const FooterLink = ({ to, label }) => (
+    <li>
+        <Link to={to} className="text-sm font-poppins text-slate-400 hover:text-gold-400 transition-colors flex items-center gap-2 group">
+            <span className="w-1.5 h-1.5 rounded-full bg-gold-400/20 group-hover:bg-gold-400 transition-colors" />
+            {label}
+        </Link>
+    </li>
+);
+
+const FeatureItem = ({ icon, text }) => (
+    <li className="flex items-center gap-3 text-sm font-poppins text-slate-400">
+        {icon}
+        <span>{text}</span>
+    </li>
+);
+
+const SocialIcon = ({ icon, href }) => (
+    <a href={href} className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center hover:bg-gold-400 hover:text-slate-950 transition-all duration-300 border border-white/10">
+        {icon}
+    </a>
+);
+
+const ContactItem = ({ icon, title, value, href }) => {
+    const Content = (
+        <div className="flex items-start gap-4 group">
+            <div className="w-10 h-10 rounded-xl bg-gold-400/10 flex items-center justify-center shrink-0 text-gold-400 group-hover:bg-gold-400 group-hover:text-slate-950 transition-all">
+                {icon}
+            </div>
+            <div className="flex flex-col">
+                <span className="text-[10px] text-slate-500 font-black uppercase tracking-widest leading-none mb-1">{title}</span>
+                <span className="text-sm text-slate-300 font-bold group-hover:text-white transition-colors">{value}</span>
+            </div>
+        </div>
+    );
+
+    return href ? <a href={href} className="block">{Content}</a> : Content;
+};
+
+export default Footer;

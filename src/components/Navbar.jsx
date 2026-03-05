@@ -31,8 +31,8 @@ const Navbar = () => {
             {/* Left Section: Logo - Compact for Mobile */}
             <div className="flex items-center">
                 <Link to="/" className="flex items-center gap-1.5 md:gap-3 group cursor-pointer">
-                    <div className="w-8 h-8 md:w-12 md:h-12 flex items-center justify-center shrink-0">
-                        <img src="/logofd.png" alt="Abhinav Logo" className="w-full h-full object-contain" />
+                    <div className="w-8 h-8 md:w-10 md:h-10 flex items-center justify-center shrink-0 overflow-visible">
+                        <img src="/logofd.png" alt="Abhinav Logo" className="w-14 h-14 md:w-20 md:h-20 object-contain" />
                     </div>
                     <div className="flex flex-col">
                         <span className="text-magenta-600 font-playfair font-black text-[14px] md:text-xl tracking-tight leading-none uppercase">ABHINAV</span>
@@ -42,7 +42,7 @@ const Navbar = () => {
             </div>
 
             {/* Middle Section: Integrated Nav Buttons (Desktop & Mobile) */}
-            <div className="flex items-center gap-2 md:gap-8 px-2">
+            <div className="hidden md:flex items-center gap-2 md:gap-8 px-2">
                 {navItems.map((item) => (
                     <Link
                         key={item.name}
