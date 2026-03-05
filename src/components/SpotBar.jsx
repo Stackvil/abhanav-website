@@ -34,8 +34,8 @@ const SpotBar = () => {
                         {item.label}
                     </span>
                     <div className="flex items-baseline gap-1 md:gap-2 px-0 py-0 bg-transparent transition-all w-auto justify-center">
-                        <span className="text-black/50 font-playfair font-black text-[9px] md:text-lg">{item.symbol}</span>
-                        <span className="text-black font-playfair font-black text-sm md:text-5xl tracking-tighter whitespace-nowrap">
+                        <span className="text-black/50 font-poppins font-black text-[9px] md:text-lg">{item.symbol}</span>
+                        <span className="text-black font-poppins font-black text-sm md:text-5xl tracking-tighter whitespace-nowrap">
                             {fmt(item.value)}
                         </span>
                     </div>

@@ -71,13 +71,13 @@ const RatesPage = () => {
                                             <td className="px-4 py-6 text-[11px] md:text-xl font-black text-white text-center font-poppins">
                                                 {buyVal !== '-' ? `₹${buyVal}` : '-'}
                                             </td>
-                                            <td className="px-4 py-6 text-lg md:text-2xl font-black text-gold-400 text-center font-playfair group-hover:scale-105 transition-transform">
+                                            <td className="px-4 py-6 text-lg md:text-2xl font-black text-gold-400 text-center font-poppins group-hover:scale-105 transition-transform">
                                                 {sellVal !== '-' ? `₹${sellVal}` : '-'}
                                             </td>
-                                            <td className="px-4 py-6 text-sm md:text-xl font-black text-red-400 text-center font-playfair">
+                                            <td className="px-4 py-6 text-sm md:text-xl font-black text-red-400 text-center font-poppins">
                                                 {lowVal !== '-' ? `₹${lowVal}` : '-'}
                                             </td>
-                                            <td className="px-4 py-6 text-sm md:text-xl font-black text-green-400 text-right font-playfair">
+                                            <td className="px-4 py-6 text-sm md:text-xl font-black text-green-400 text-right font-poppins">
                                                 {highVal !== '-' ? `₹${highVal}` : '-'}
                                             </td>
                                         </tr>
