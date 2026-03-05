@@ -408,27 +408,30 @@ export const RateProvider = ({ children }) => {
             const isGold = r.name.toUpperCase().includes('GOLD');
             const isSilver = r.name.toUpperCase().includes('SILVER');
 
-            // benchmark choice
-            const mod = isGold ? adj.baseModifications?.gold999 : (isSilver ? adj.baseModifications?.silver999 : null);
-
-            let sell = r.sell;
-
-            if (showModified && mod && mod.value !== 0) {
-                const liveSell = parseFloat(r.sell) || 0;
-                const delta = mod.mode === 'amount' ? mod.value : (liveSell * mod.value) / 100;
-                sell = parseFloat((liveSell + delta).toFixed(2));
-            }
-
-            // Buy follows modified sell + adjustment always
+            // benchmark choice for sell modification
+            const sellMod = isGold ? adj.baseModifications?.gold999 : (isSilver ? adj.baseModifications?.silver999 : null);
+            // benchmark choice for buy modification
             const buyOffset = isGold ? adj.gold : adj.silver;
-            let buy = '-';
-            if (sell !== '-') {
-                const liveSell = parseFloat(sell) || 0;
-                const delta = buyOffset.mode === 'amount' ? buyOffset.value : (liveSell * buyOffset.value) / 100;
-                buy = parseFloat((liveSell + delta).toFixed(2));
+
+            const liveSell = parseFloat(r.sell) || 0;
+            let sell = r.sell;
+            let buy = r.buy;
+
+            if (showModified) {
+                // Sell Calculation: Live + SellMod
+                if (sellMod && sellMod.value !== 0) {
+                    const delta = sellMod.mode === 'amount' ? sellMod.value : (liveSell * sellMod.value) / 100;
+                    sell = parseFloat((liveSell + delta).toFixed(2));
+                }
+
+                // Buy Calculation: LiveSell + BuyMod (Consistent base for spread)
+                if (buyOffset) {
+                    const delta = buyOffset.mode === 'amount' ? buyOffset.value : (liveSell * buyOffset.value) / 100;
+                    buy = parseFloat((liveSell + delta).toFixed(2));
+                }
             }
 
-            return { ...r, buy, sell, isModified: showModified && mod && mod.value !== 0 };
+            return { ...r, buy, sell, isModified: showModified && sellMod && sellMod.value !== 0 };
         });
 
         // 3. Gold Purities & Manual Sell Modifications
@@ -443,34 +446,37 @@ export const RateProvider = ({ children }) => {
             { label: 'Gold 22 Karat', key: '22K', factor: 0.916 },
             { label: 'Gold 24 Karat', key: '24K', factor: 1.0 }
         ].map(p => {
-            const liveSellNoMod = (goldBaseItem && goldBaseItem.sell !== '-')
-                ? (showModified && adj.baseModifications.gold999.value !== 0
-                    ? parseFloat(rawRates.rtgs.find(r => r.id === '945' || r.name?.toLowerCase().includes('gold 999'))?.sell || 0)
-                    : goldBaseItem.sell)
-                : null;
+            const rawGold999 = rawRates.rtgs.find(r => r.id === '945' || r.name?.toLowerCase().includes('gold 999'));
+            const live999Sell = parseFloat(rawGold999?.sell) || 0;
 
-            const liveSell = baseSell999 !== null ? Math.round(baseSell999 * p.factor) : '-';
+            // Base Karat price from LIVE 999
+            const karatBase = Math.round(live999Sell * p.factor);
 
             let sell, buy;
-            sell = liveSell;
 
-            // Buy should follow LIVE price + offset, not modified sell
-            if (sell !== '-') {
-                const targetBaseForBuy = liveSellNoMod !== null ? Math.round(liveSellNoMod * p.factor) : sell;
-                const delta = adj.gold.mode === 'amount' ? adj.gold.value : (targetBaseForBuy * adj.gold.value) / 100;
-                buy = Math.round(targetBaseForBuy + delta);
+            if (showModified) {
+                // Sell = KaratBase + GoldSellMod (Flat)
+                const sMod = adj.baseModifications.gold999;
+                const sDelta = sMod.mode === 'amount' ? sMod.value : (live999Sell * sMod.value) / 100;
+                sell = Math.round(karatBase + sDelta);
+
+                // Buy = KaratBase + GoldBuyMod (Flat, ensuring consistent spread)
+                const bMod = adj.gold;
+                const bDelta = bMod.mode === 'amount' ? bMod.value : (live999Sell * bMod.value) / 100;
+                buy = Math.round(karatBase + bDelta);
             } else {
-                buy = '-';
+                sell = karatBase;
+                buy = karatBase; // Or use raw buy if preferred, but user wants consistency
             }
 
             return {
                 name: p.label,
                 key: p.key,
-                sell,
-                buy,
+                sell: live999Sell !== 0 ? sell : '-',
+                buy: live999Sell !== 0 ? buy : '-',
                 low: baseLow999 !== null ? Math.round(baseLow999 * p.factor) : '-',
                 high: baseHigh999 !== null ? Math.round(baseHigh999 * p.factor) : '-',
-                isModified: false
+                isModified: showModified && adj.baseModifications.gold999.value !== 0
             };
         });
 
