@@ -10,10 +10,10 @@ const POTENTIAL_IDS = ['rbgold'];
 
 const CORS_PROXIES = [
     url => `https://api.allorigins.win/raw?url=${encodeURIComponent(url)}`,
-    url => `https://api.allorigins.win/get?url=${encodeURIComponent(url)}`,
-    url => `https://corsproxy.org/?${encodeURIComponent(url)}`,
-    url => `https://api.codetabs.com/v1/proxy?quest=${encodeURIComponent(url)}`,
     url => `https://corsproxy.io/?${encodeURIComponent(url)}`,
+    url => `https://corsproxy.org/?${encodeURIComponent(url)}`,
+    url => `https://api.allorigins.win/get?url=${encodeURIComponent(url)}`,
+    url => `https://api.codetabs.com/v1/proxy?quest=${encodeURIComponent(url)}`,
 ];
 
 const INITIAL_SPOT_CONFIG = [
@@ -56,7 +56,7 @@ export const RateProvider = ({ children }) => {
     // Proxy rotation state
     const currentProxyIndex = React.useRef(0);
 
-    const API_BASE = 'http://localhost:5000/api';
+    const API_BASE = '/api';
 
     // Robust initial state for adj
     const getInitialAdj = () => ({
@@ -65,11 +65,15 @@ export const RateProvider = ({ children }) => {
         baseModifications: {
             gold999: { mode: 'amount', value: 0 },
             silver999: { mode: 'amount', value: 0 }
-        }
+        },
+        stockOverrides: {} // { itemId: boolean }
     });
 
     const [adj, setAdj] = useState(getInitialAdj());
     const [showModified, setShowModified] = useState(JSON.parse(localStorage.getItem('ag_showModified') || 'false'));
+    const [priceChangeMap, setPriceChangeMap] = useState({});
+    const [ticker, setTicker] = useState('Welcome to Abhinav Gold & Silver - Quality Purity Guaranteed');
+    const [videos, setVideos] = useState([{ videoId: 'dQw4w9WgXcQ', title: 'Brand Film' }]);
 
     // Fetch settings from MongoDB on mount
     useEffect(() => {
@@ -85,8 +89,11 @@ export const RateProvider = ({ children }) => {
                             baseModifications: data.baseModifications || {
                                 gold999: { mode: 'amount', value: 0 },
                                 silver999: { mode: 'amount', value: 0 }
-                            }
+                            },
+                            stockOverrides: data.stockOverrides || {}
                         });
+                        if (data.ticker) setTicker(data.ticker);
+                        if (data.videos) setVideos(data.videos);
                     }
                 }
             } catch (error) {
@@ -96,29 +103,44 @@ export const RateProvider = ({ children }) => {
         fetchSettings();
     }, []);
 
-    const updateSettings = async (newAdj, newShow) => {
-        if (newAdj !== undefined) {
-            setAdj(newAdj);
-            localStorage.setItem('ag_rateAdj', JSON.stringify(newAdj));
-
-            // Sync to MongoDB
-            try {
-                await fetch(`${API_BASE}/rates/settings`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(newAdj)
-                });
-            } catch (e) {
-                console.error("Failed to sync modifications to MongoDB:", e);
-            }
+    const updateSettings = async (payload) => {
+        // payload can contain newAdj, newShow, newTicker, newVideos
+        if (payload.adj !== undefined) {
+            setAdj(payload.adj);
+            // localStorage is still kept as a backup if needed, but primary is MongoDB
+            localStorage.setItem('ag_rateAdj', JSON.stringify(payload.adj));
         }
-        if (newShow !== undefined) {
-            setShowModified(newShow);
-            localStorage.setItem('ag_showModified', JSON.stringify(newShow));
+        if (payload.showModified !== undefined) {
+            setShowModified(payload.showModified);
+            localStorage.setItem('ag_showModified', JSON.stringify(payload.showModified));
+        }
+        if (payload.ticker !== undefined) setTicker(payload.ticker);
+        if (payload.videos !== undefined) setVideos(payload.videos);
+
+        // Sync to MongoDB
+        try {
+            const body = {
+                ...payload.adj,
+                ticker: payload.ticker,
+                videos: payload.videos
+            };
+            if (payload.adj) {
+                // Map gold/silver to backend names
+                body.goldOffset = payload.adj.gold;
+                body.silverOffset = payload.adj.silver;
+            }
+
+            await fetch(`${API_BASE}/rates/settings`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(body)
+            });
+        } catch (e) {
+            console.error("Failed to sync modifications to MongoDB:", e);
         }
     };
 
-    const fetchWithTimeout = async (url, ms = 2500) => {
+    const fetchWithTimeout = async (url, ms = 2000) => {
         const controller = new AbortController();
         const id = setTimeout(() => controller.abort(), ms);
         try {
@@ -289,14 +311,51 @@ export const RateProvider = ({ children }) => {
                             const data = parseRateText(text);
                             if (currentFetchId > lastProcessedTimestamp.current) {
                                 lastProcessedTimestamp.current = currentFetchId;
-                                setRawRates(data);
-                                localStorage.setItem('ag_cachedRates', JSON.stringify(data));
-                                setError(null);
-                                setLoading(false);
+                                const nextPriceMap = {};
+
+                                const recordFieldChange = (section, id, key, oldVal, newVal) => {
+                                    const toNum = (v) => (typeof v === 'number' ? v : Number.isFinite(parseFloat(v)) ? parseFloat(v) : null);
+                                    const o = toNum(oldVal); const n = toNum(newVal);
+                                    if (o === null || n === null) { nextPriceMap[`${section}-${id}-${key}`] = 'neutral'; return; }
+                                    if (n > o) nextPriceMap[`${section}-${id}-${key}`] = 'up';
+                                    else if (n < o) nextPriceMap[`${section}-${id}-${key}`] = 'down';
+                                    else nextPriceMap[`${section}-${id}-${key}`] = 'neutral';
+                                };
+
+                                const calculateTrend = (section, newList, oldList) => {
+                                    const now = Date.now();
+                                    return newList.map(newItem => {
+                                        const oldItem = oldList.find(o => o.id === newItem.id);
+                                        if (!oldItem) return { ...newItem, trend: 'stable', trendExpiry: 0 };
+                                        let change = 0;
+                                        const keys = newItem.buy !== undefined ? ['buy', 'sell'] : ['bid', 'ask'];
+                                        keys.forEach(key => {
+                                            recordFieldChange(section, newItem.id || newItem.name, key, oldItem[key], newItem[key]);
+                                            const nv = parseFloat(newItem[key]); const ov = parseFloat(oldItem[key]);
+                                            if (change === 0 && !isNaN(nv) && !isNaN(ov) && nv !== ov) change = nv > ov ? 1 : -1;
+                                        });
+                                        let trend = oldItem.trend || 'stable';
+                                        let trendExpiry = oldItem.trendExpiry || 0;
+                                        if (change !== 0) { trend = change === 1 ? 'up' : 'down'; trendExpiry = now + 5000; }
+                                        else if (now > trendExpiry) { trend = 'stable'; trendExpiry = 0; }
+                                        return { ...newItem, trend, trendExpiry };
+                                    });
+                                };
+
+                                setRawRates(prev => {
+                                    const newFinal = {
+                                        spot: calculateTrend('spot', data.spot, prev.spot),
+                                        rtgs: calculateTrend('rtgs', data.rtgs, prev.rtgs)
+                                    };
+                                    localStorage.setItem('ag_cachedRates', JSON.stringify(newFinal));
+                                    return newFinal;
+                                });
+                                setPriceChangeMap(nextPriceMap);
+                                setError(null); setLoading(false);
                             }
-                            success = true;
-                            failureCount.current = 0;
                         }
+                        success = true;
+                        failureCount.current = 0;
                     }
                 } catch (e) {
                     // Fall back to public proxies if local proxy fails for some reason
@@ -306,6 +365,69 @@ export const RateProvider = ({ children }) => {
             if (!success) {
                 const targetUrl = `${POTENTIAL_ENDPOINTS[0]}${POTENTIAL_IDS[0]}`;
                 const backupUrl = `http://13.201.9.242:7768/VOTSBroadcastStreaming/Services/xml/GetLiveRateByTemplateID/${POTENTIAL_IDS[0]}`;
+
+                // On production/Vercel, we can try our own backend proxy
+                if (!isLocal) {
+                    try {
+                        const serverProxyUrl = `/api/rates/proxy?url=${encodeURIComponent(backupUrl)}&_=${iterationTimestamp}`;
+                        const res = await fetchWithTimeout(serverProxyUrl, 4000);
+                        if (res.ok) {
+                            const text = await res.text();
+                            if (text && text.length > 20 && !text.includes('1015')) {
+                                const data = parseRateText(text);
+                                const hasRates = data.rtgs.some(r => r.buy !== '-' || r.sell !== '-') ||
+                                    data.spot.some(s => s.bid !== '-' || s.ask !== '-');
+
+                                if (hasRates && currentFetchId > lastProcessedTimestamp.current) {
+                                    lastProcessedTimestamp.current = currentFetchId;
+                                    const nextPriceMap = {};
+
+                                    const recordFieldChange = (section, id, key, oldVal, newVal) => {
+                                        const toNum = (v) => (typeof v === 'number' ? v : Number.isFinite(parseFloat(v)) ? parseFloat(v) : null);
+                                        const o = toNum(oldVal); const n = toNum(newVal);
+                                        if (o === null || n === null) { nextPriceMap[`${section}-${id}-${key}`] = 'neutral'; return; }
+                                        if (n > o) nextPriceMap[`${section}-${id}-${key}`] = 'up';
+                                        else if (n < o) nextPriceMap[`${section}-${id}-${key}`] = 'down';
+                                        else nextPriceMap[`${section}-${id}-${key}`] = 'neutral';
+                                    };
+
+                                    const calculateTrend = (section, newList, oldList) => {
+                                        const now = Date.now();
+                                        return newList.map(newItem => {
+                                            const oldItem = oldList.find(o => o.id === newItem.id);
+                                            if (!oldItem) return { ...newItem, trend: 'stable', trendExpiry: 0 };
+                                            let change = 0;
+                                            const keys = newItem.buy !== undefined ? ['buy', 'sell'] : ['bid', 'ask'];
+                                            keys.forEach(key => {
+                                                recordFieldChange(section, newItem.id || newItem.name, key, oldItem[key], newItem[key]);
+                                                const nv = parseFloat(newItem[key]); const ov = parseFloat(oldItem[key]);
+                                                if (change === 0 && !isNaN(nv) && !isNaN(ov) && nv !== ov) change = nv > ov ? 1 : -1;
+                                            });
+                                            let trend = oldItem.trend || 'stable';
+                                            let trendExpiry = oldItem.trendExpiry || 0;
+                                            if (change !== 0) { trend = change === 1 ? 'up' : 'down'; trendExpiry = now + 5000; }
+                                            else if (now > trendExpiry) { trend = 'stable'; trendExpiry = 0; }
+                                            return { ...newItem, trend, trendExpiry };
+                                        });
+                                    };
+
+                                    setRawRates(prev => {
+                                        const newFinal = {
+                                            spot: calculateTrend('spot', data.spot, prev.spot),
+                                            rtgs: calculateTrend('rtgs', data.rtgs, prev.rtgs)
+                                        };
+                                        localStorage.setItem('ag_cachedRates', JSON.stringify(newFinal));
+                                        return newFinal;
+                                    });
+                                    setPriceChangeMap(nextPriceMap);
+                                    setError(null); setLoading(false);
+                                    success = true;
+                                    failureCount.current = 0;
+                                }
+                            }
+                        }
+                    } catch (e) { }
+                }
 
                 // Try first 3 proxies for speed
                 const proxyIndices = [
@@ -347,8 +469,69 @@ export const RateProvider = ({ children }) => {
                                     // TIMESTAMP GUARD: Only update if this data is newer than what we last processed
                                     if (currentFetchId > lastProcessedTimestamp.current) {
                                         lastProcessedTimestamp.current = currentFetchId;
-                                        setRawRates(data);
-                                        localStorage.setItem('ag_cachedRates', JSON.stringify(data));
+
+                                        // Trend & global per-field price change calculation
+                                        setRawRates(prev => {
+                                            const nextPriceMap = {};
+
+                                            const recordFieldChange = (section, id, key, oldVal, newVal) => {
+                                                const toNum = (v) => (typeof v === 'number' ? v : Number.isFinite(parseFloat(v)) ? parseFloat(v) : null);
+                                                const o = toNum(oldVal);
+                                                const n = toNum(newVal);
+                                                if (o === null || n === null) {
+                                                    nextPriceMap[`${section}-${id}-${key}`] = 'neutral';
+                                                    return;
+                                                }
+                                                if (n > o) nextPriceMap[`${section}-${id}-${key}`] = 'up';
+                                                else if (n < o) nextPriceMap[`${section}-${id}-${key}`] = 'down';
+                                                else nextPriceMap[`${section}-${id}-${key}`] = 'neutral';
+                                            };
+
+                                            const calculateTrend = (section, newList, oldList) => {
+                                                const now = Date.now();
+                                                return newList.map(newItem => {
+                                                    const oldItem = oldList.find(o => o.id === newItem.id);
+                                                    if (!oldItem) return { ...newItem, trend: 'stable', trendExpiry: 0 };
+
+                                                    // Check both sides of the spread for more robust detection
+                                                    let change = 0;
+                                                    const keys = newItem.buy !== undefined ? ['buy', 'sell', 'low', 'high'] : ['bid', 'ask', 'low', 'high'];
+
+                                                    keys.forEach((key) => {
+                                                        recordFieldChange(section, newItem.id || newItem.name, key, oldItem[key], newItem[key]);
+                                                        const newVal = parseFloat(newItem[key]);
+                                                        const oldVal = parseFloat(oldItem[key]);
+                                                        if (change === 0 && !isNaN(newVal) && !isNaN(oldVal) && newVal !== oldVal) {
+                                                            change = newVal > oldVal ? 1 : -1;
+                                                        }
+                                                    });
+
+                                                    let trend = oldItem.trend || 'stable';
+                                                    let trendExpiry = oldItem.trendExpiry || 0;
+
+                                                    if (change !== 0) {
+                                                        const t = change === 1 ? 'up' : 'down';
+                                                        console.log(`[MARKET MOVE] ${newItem.name} is now ${t}`);
+                                                        trend = t;
+                                                        trendExpiry = now + 5000;
+                                                    } else if (now > trendExpiry) {
+                                                        trend = 'stable';
+                                                        trendExpiry = 0;
+                                                    }
+
+                                                    return { ...newItem, trend, trendExpiry };
+                                                });
+                                            };
+
+                                            const newSpot = calculateTrend('spot', data.spot, prev.spot);
+                                            const newRtgs = calculateTrend('rtgs', data.rtgs, prev.rtgs);
+
+                                            const finalData = { spot: newSpot, rtgs: newRtgs };
+                                            localStorage.setItem('ag_cachedRates', JSON.stringify(finalData));
+                                            setPriceChangeMap(nextPriceMap);
+                                            return finalData;
+                                        });
+
                                         currentProxyIndex.current = idx;
                                         setError(null);
                                         setLoading(false);
@@ -375,10 +558,48 @@ export const RateProvider = ({ children }) => {
     };
 
     useEffect(() => {
-        fetchAllRates();
-        const interval = setInterval(fetchAllRates, 1000); // Pulse every 1s
-        return () => clearInterval(interval);
+        let active = true;
+        let timeoutId = null;
+
+        const runFetch = async () => {
+            if (!active) return;
+            const startTime = Date.now();
+
+            try {
+                await fetchAllRates();
+            } finally {
+                if (active) {
+                    const elapsed = Date.now() - startTime;
+                    const delay = Math.max(100, 1000 - elapsed);
+                    timeoutId = setTimeout(runFetch, delay);
+                }
+            }
+        };
+
+        runFetch();
+        return () => {
+            active = false;
+            if (timeoutId) clearTimeout(timeoutId);
+        };
     }, []);
+
+    const getPriceClass = (section, id, field) => {
+        const key = `${section}-${id}-${field}`;
+        const dir = priceChangeMap[key];
+        if (dir === 'up') return 'price-up';
+        if (dir === 'down') return 'price-down';
+
+        let name = '';
+        if (rawRates[section]) {
+            const item = rawRates[section].find(r => r.id === id || r.name === id);
+            if (item && item.name) name = item.name.toLowerCase();
+        }
+
+        if (name.includes('gold') || id === '3101' || id === '945') return 'gold-default';
+        if (name.includes('silver') || id === '3107' || id === '2966' || id === '2987') return 'silver-default';
+
+        return 'price-neutral';
+    };
 
     const rates = React.useMemo(() => {
         const adjust = (val, type) => {
@@ -431,7 +652,10 @@ export const RateProvider = ({ children }) => {
                 }
             }
 
-            return { ...r, buy, sell, isModified: showModified && sellMod && sellMod.value !== 0 };
+            // Apply Stock Override if exists
+            const stock = adj.stockOverrides?.[r.id] !== undefined ? adj.stockOverrides[r.id] : r.stock;
+
+            return { ...r, buy, sell, stock, isModified: showModified && sellMod && sellMod.value !== 0 };
         });
 
         // 3. Gold Purities & Manual Sell Modifications
@@ -448,6 +672,7 @@ export const RateProvider = ({ children }) => {
         ].map(p => {
             const rawGold999 = rawRates.rtgs.find(r => r.id === '945' || r.name?.toLowerCase().includes('gold 999'));
             const live999Sell = parseFloat(rawGold999?.sell) || 0;
+            const trend = rawGold999?.trend || 'stable';
 
             // Base Karat price from LIVE 999
             const karatBase = Math.round(live999Sell * p.factor);
@@ -476,6 +701,7 @@ export const RateProvider = ({ children }) => {
                 buy: live999Sell !== 0 ? buy : '-',
                 low: baseLow999 !== null ? Math.round(baseLow999 * p.factor) : '-',
                 high: baseHigh999 !== null ? Math.round(baseHigh999 * p.factor) : '-',
+                trend,
                 isModified: showModified && adj.baseModifications.gold999.value !== 0
             };
         });
@@ -484,7 +710,7 @@ export const RateProvider = ({ children }) => {
     }, [rawRates, adj, showModified]);
 
     return (
-        <RateContext.Provider value={{ rates, rawRates, loading, error, news, adj, showModified, updateSettings, refreshRates: fetchAllRates }}>
+        <RateContext.Provider value={{ rates, rawRates, loading, error, news, adj, showModified, ticker, videos, updateSettings, refreshRates: fetchAllRates, getPriceClass }}>
             {children}
         </RateContext.Provider>
     );

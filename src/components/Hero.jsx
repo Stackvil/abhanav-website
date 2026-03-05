@@ -7,7 +7,7 @@ import SpotBar from './SpotBar';
 import Ticker from './Ticker';
 
 const Hero = () => {
-    const { rates, rawRates, loading, error } = useRates();
+    const { rates, rawRates, loading, error, getPriceClass } = useRates();
 
     const fmt = (val) => {
         if (typeof val !== 'number') return '-';
@@ -15,71 +15,143 @@ const Hero = () => {
     };
 
     return (
-        <div className="w-full inventory-section">
-            {/* Rates Table Section - Restored for detailed data */}
-            <section className="max-w-7xl mx-auto px-4 md:px-6 w-full mt-0 md:mt-6 relative z-10 mb-8 md:mb-12 pb-0">
+        <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 1 }}
+            className="w-full inventory-section bg-gradient-gold-luxury min-h-[60vh] relative overflow-hidden pt-6 md:pt-10"
+        >
+            {/* Ambient Background Accents */}
+            <div className="absolute top-0 left-0 w-full h-full opacity-30 pointer-events-none"
+                style={{ background: 'radial-gradient(circle at 10% 20%, #fff, transparent 80%)' }} />
+
+            {/* Rates Section */}
+            <section className="max-w-6xl mx-auto px-4 md:px-6 w-full mt-6 md:mt-10 relative z-10 mb-10 md:mb-16">
                 <motion.div
-                    initial={{ opacity: 0, y: 30 }}
+                    initial={{ opacity: 0, y: 50 }}
                     animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.5, duration: 1 }}
-                    className="flex flex-col gap-12"
+                    transition={{ duration: 0.9, ease: "easeOut" }}
+                    className="flex flex-col gap-8 md:gap-14"
                 >
-                    <div className="flex flex-col gap-8 md:gap-16">
-                        {/* Physical Inventory Column */}
-                        <div className="flex flex-col gap-6">
-                            {loading && !rates.rtgs.length && (
-                                <div className="text-center font-poppins font-bold text-xs text-gold-400 animate-pulse uppercase tracking-widest">
-                                    Fetching Live Market Data...
-                                </div>
-                            )}
-                            {error && (
-                                <div className="text-center font-poppins font-black text-[10px] text-red-500 bg-red-50 py-2 rounded-xl uppercase tracking-widest border border-red-100">
-                                    Connection Alert: {error}
-                                </div>
-                            )}
-                            <div className="bg-white rounded-2xl overflow-hidden shadow-luxury border border-slate-200">
-                                <div className="gradient-vibrant p-3">
-                                    <span className="text-white font-poppins font-bold text-xs uppercase tracking-widest">Inventory Rates</span>
-                                </div>
-                                <div className="p-0 overflow-x-auto scrollbar-thin scrollbar-thumb-slate-200">
-                                    <table className="w-full text-left border-collapse min-w-full md:min-w-0">
-                                        <thead>
-                                            <tr className="border-b border-slate-100 whitespace-nowrap bg-slate-50/50">
-                                                <th className="py-2 px-3 md:py-3 md:px-4 text-[9px] md:text-[11px] font-extrabold text-slate-500 uppercase tracking-tight md:tracking-widest text-left">Item Name</th>
-                                                <th className="py-2 px-3 md:py-3 md:px-4 text-[9px] md:text-[11px] font-extrabold text-slate-500 uppercase tracking-tight md:tracking-widest text-center">Buy (INR)</th>
-                                                <th className="py-2 px-3 md:py-3 md:px-4 text-[9px] md:text-[11px] font-extrabold text-slate-500 uppercase tracking-tight md:tracking-widest text-center">Sell (INR)</th>
-                                                <th className="py-2 px-3 md:py-3 md:px-4 text-[9px] md:text-[11px] font-extrabold text-red-500/60 uppercase tracking-tight md:tracking-widest text-center">Low</th>
-                                                <th className="py-2 px-3 md:py-3 md:px-4 text-[9px] md:text-[11px] font-extrabold text-green-500/60 uppercase tracking-tight md:tracking-widest text-center">High</th>
-                                                <th className="py-2 px-3 md:py-3 md:px-4 text-[9px] md:text-[11px] font-extrabold text-slate-500 uppercase tracking-tight md:tracking-widest text-right">Stock</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody className="divide-y divide-slate-50">
-                                            {rates.rtgs.map((item, idx) => {
-                                                const rawItem = rawRates.rtgs.find(r => r.id === item.id || (r.name && r.name === item.name)) || item;
-                                                return (
-                                                    <tr key={idx} className="hover:bg-slate-50 transition-colors group whitespace-nowrap">
-                                                        <td className="py-3 px-3 md:py-4 md:px-4 text-[10px] md:text-[13px] font-bold text-slate-900 font-poppins">{item.name}</td>
-                                                        <td className="py-3 px-3 md:py-4 md:px-4 text-[11px] md:text-[13px] font-black text-slate-900 text-center font-poppins">₹{item.buy !== '-' ? fmt(item.buy) : '-'}</td>
-                                                        <td className="py-3 px-3 md:py-4 md:px-4 text-[11px] md:text-[13px] font-black text-magenta-600 text-center font-poppins group-hover:text-magenta-800 transition-colors">₹{fmt(item.sell)}</td>
-                                                        <td className="py-3 px-3 md:py-4 md:px-4 text-[10px] md:text-[12px] font-black text-red-600 text-center font-poppins">₹{rawItem.low !== '-' ? fmt(rawItem.low) : fmt(rawItem.sell)}</td>
-                                                        <td className="py-3 px-3 md:py-4 md:px-4 text-[10px] md:text-[12px] font-black text-green-600 text-center font-poppins">₹{rawItem.high !== '-' ? fmt(rawItem.high) : fmt(rawItem.sell)}</td>
-                                                        <td className="py-3 px-3 md:py-4 md:px-4 text-right">
-                                                            <span className={`px-1.5 md:px-2 py-0.5 rounded-full text-[7px] md:text-[10px] font-black uppercase whitespace-nowrap ${item.stock ? 'bg-green-500/10 text-green-300' : 'bg-red-500/10 text-red-300'}`}>
-                                                                {item.stock ? 'In Stock' : 'Out'}
-                                                            </span>
-                                                        </td>
-                                                    </tr>
-                                                );
-                                            })}
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
+                    {/* Spot Bar remains in App.jsx header overlay */}
+
+                    {/* Inventory Headings aligned with price boxes */}
+                    <div className="grid grid-cols-[1.4fr_1fr_1fr_0.8fr] gap-2 md:gap-6 px-3 md:px-6 mb-[-10px] md:mb-[-16px] items-center w-full">
+                        {/* Placeholder column matching item name width */}
+                        <div></div>
+                        {/* BUY Column */}
+                        <div className="flex justify-center w-full">
+                            <span className="text-[11px] md:text-2xl font-black text-slate-900 uppercase tracking-widest md:tracking-[0.3em] font-poppins">
+                                BUY
+                            </span>
                         </div>
+                        {/* SELL Column */}
+                        <div className="flex justify-center w-full">
+                            <span className="text-[11px] md:text-2xl font-black text-slate-900 uppercase tracking-widest md:tracking-[0.3em] font-poppins">
+                                SELL
+                            </span>
+                        </div>
+                        {/* Placeholder column matching stock widths */}
+                        <div></div>
+                    </div>
+
+                    {/* Inventory Rows */}
+                    <div className="flex flex-col gap-3 md:gap-6 mt-4">
+                        {rates.rtgs.map((item, idx) => {
+                            const rawItem = rawRates.rtgs.find(r => r.id === item.id || (r.name && r.name === item.name)) || item;
+                            const isGold = item.name.toLowerCase().includes('gold') || item.id === '945';
+                            const isSilver = item.name.toLowerCase().includes('silver') || item.id === '2966' || item.id === '2987';
+                            const defaultBorder = isGold ? '#FFD700' : isSilver ? '#E5E5E5' : '#0f172a';
+                            const currentBorderColor = item.trend === 'up' ? '#00c853' : item.trend === 'down' ? '#ff1744' : defaultBorder;
+
+                            return (
+                                <motion.div
+                                    key={idx}
+                                    initial={{ opacity: 0, x: -30 }}
+                                    animate={{ opacity: 1, x: 0 }}
+                                    transition={{ delay: idx * 0.12 }}
+                                    whileHover={{ y: -3, boxShadow: "0 14px 30px -10px rgba(0,0,0,0.12)" }}
+                                    className="bg-white/10 backdrop-blur-sm rounded-[16px] md:rounded-[20px] p-2.5 md:p-6 shadow-premium transition-all duration-500 border border-white/20 relative group"
+                                >
+                                    <div className="grid grid-cols-[1.4fr_1fr_1fr_0.8fr] gap-2 md:gap-6 items-center w-full relative">
+                                        {/* Item Label */}
+                                        <div className="flex flex-col justify-center min-w-0 pr-1">
+                                            <span className="text-[12px] md:text-2xl font-black text-slate-900 font-poppins uppercase tracking-tight leading-tight group-hover:text-magenta-700 transition-colors duration-300 truncate">
+                                                {item.name.split('(')[0]}
+                                            </span>
+                                            {item.name.includes('(') && (
+                                                <span className="text-[8px] md:text-sm font-bold text-slate-400 font-poppins mt-0.5 whitespace-nowrap italic opacity-80 truncate">
+                                                    ({item.name.split('(')[1]}
+                                                </span>
+                                            )}
+                                        </div>
+
+                                        {/* BUY Box Container */}
+                                        <div className="flex justify-center w-full">
+                                            {(() => {
+                                                const pClass = getPriceClass('rtgs', item.id, 'buy');
+                                                const bColor = pClass === 'price-up' ? '#00c853' : pClass === 'price-down' ? '#ff1744' : pClass === 'gold-default' ? '#FFD700' : pClass === 'silver-default' ? '#E5E5E5' : '#0f172a';
+
+                                                return (
+                                                    <motion.div
+                                                        animate={{
+                                                            scale: pClass === 'price-up' || pClass === 'price-down' ? 1.04 : 1
+                                                        }}
+                                                        style={{ borderColor: bColor }}
+                                                        className="w-full max-w-[90px] md:max-w-[200px] h-[45px] md:h-[90px] bg-transparent border-2 md:border-[3px] rounded-[10px] md:rounded-[28px] flex items-center justify-center shadow-md overflow-hidden transition-colors duration-200"
+                                                    >
+                                                        <motion.span
+                                                            key={`buy-${item.buy}-${pClass}`}
+                                                            animate={{ scale: [1, 1.08, 1] }}
+                                                            className={`text-[16px] md:text-3xl font-extrabold font-poppins tracking-tight md:tracking-wider ${pClass}`}
+                                                        >
+                                                            {item.buy !== '-' ? `₹${fmt(item.buy)}` : '—'}
+                                                        </motion.span>
+                                                    </motion.div>
+                                                );
+                                            })()}
+                                        </div>
+
+                                        {/* SELL Box Container */}
+                                        <div className="flex justify-center w-full">
+                                            {(() => {
+                                                const pClass = getPriceClass('rtgs', item.id, 'sell');
+                                                const bColor = pClass === 'price-up' ? '#00c853' : pClass === 'price-down' ? '#ff1744' : pClass === 'gold-default' ? '#FFD700' : pClass === 'silver-default' ? '#E5E5E5' : '#0f172a';
+
+                                                return (
+                                                    <motion.div
+                                                        animate={{
+                                                            scale: pClass === 'price-up' || pClass === 'price-down' ? 1.04 : 1
+                                                        }}
+                                                        style={{ borderColor: bColor }}
+                                                        className="w-full max-w-[90px] md:max-w-[200px] h-[38px] md:h-[90px] bg-transparent border-2 md:border-[3px] rounded-[10px] md:rounded-[28px] flex items-center justify-center shadow-md overflow-hidden transition-colors duration-200"
+                                                    >
+                                                        <motion.span
+                                                            key={`sell-${item.sell}-${pClass}`}
+                                                            animate={{ scale: [1, 1.08, 1] }}
+                                                            className={`text-[12px] md:text-3xl font-extrabold font-poppins tracking-tight md:tracking-wider ${pClass}`}
+                                                        >
+                                                            {item.sell !== '-' ? `₹${fmt(item.sell)}` : '—'}
+                                                        </motion.span>
+                                                    </motion.div>
+                                                );
+                                            })()}
+                                        </div>
+
+                                        {/* Stock Status Pill */}
+                                        <div className="flex justify-center w-full">
+                                            <span className={`px-1 md:px-5 py-1 md:py-2 rounded-full text-[8px] md:text-[11px] font-black uppercase tracking-tighter md:tracking-widest transition-all duration-300 shadow-sm w-full text-center ${item.stock ? 'bg-gradient-to-r from-[#e6f9ec] to-[#f0fff4] text-[#1c7c3c]' : 'bg-red-50 text-red-600'}`}>
+                                                {item.stock ? 'IN STOCK' : 'OUT'}
+                                            </span>
+                                        </div>
+                                    </div>
+                                </motion.div>
+                            );
+                        })}
                     </div>
                 </motion.div>
             </section>
-        </div>
+        </motion.div>
     );
 };
 

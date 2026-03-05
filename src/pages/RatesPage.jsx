@@ -3,11 +3,18 @@ import { useRates } from '../context/RateContext';
 import { motion } from 'framer-motion';
 
 const RatesPage = () => {
-    const { rates, rawRates, loading, error, adj, showModified } = useRates();
+    const { rates, rawRates, loading, error, adj, showModified, getPriceClass } = useRates();
 
     const fmt = (val) => {
         if (typeof val !== 'number') return '-';
         return val.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    };
+
+    // All items in purities are gold — default to gold color when stable
+    const getKaratClass = (key, field) => {
+        const cls = getPriceClass('purities', key, field);
+        if (cls === 'price-up' || cls === 'price-down') return cls;
+        return 'gold-default';
     };
 
     return (
@@ -42,7 +49,6 @@ const RatesPage = () => {
                             <thead className="bg-white/10 border-b border-white/10">
                                 <tr>
                                     <th className="px-2 py-4 md:px-4 md:py-5 text-[9px] md:text-[12px] font-black text-white/80 uppercase tracking-widest whitespace-nowrap">Purity</th>
-                                    <th className="px-2 py-4 md:px-4 md:py-5 text-[9px] md:text-[12px] font-black text-white/80 uppercase tracking-widest text-center whitespace-nowrap">Buy</th>
                                     <th className="px-2 py-4 md:px-4 md:py-5 text-[9px] md:text-[12px] font-black text-white/80 uppercase tracking-widest text-center whitespace-nowrap">Sell</th>
                                     <th className="px-2 py-4 md:px-4 md:py-5 text-[9px] md:text-[12px] font-black text-red-400/80 uppercase tracking-widest text-center whitespace-nowrap">Low</th>
                                     <th className="px-2 py-4 md:px-4 md:py-5 text-[9px] md:text-[12px] font-black text-green-400/80 uppercase tracking-widest text-right whitespace-nowrap">High</th>
@@ -63,11 +69,15 @@ const RatesPage = () => {
                                     return (
                                         <tr key={idx} className="hover:bg-white/5 transition-colors group">
                                             <td className="px-2 py-4 md:px-4 md:py-6 text-[11px] md:text-lg font-bold text-white whitespace-nowrap">{karat.name}</td>
-                                            <td className="px-2 py-4 md:px-4 md:py-6 text-[10px] md:text-xl font-black text-white text-center font-poppins whitespace-nowrap">
-                                                {buyVal !== '-' ? `₹${buyVal}` : '-'}
-                                            </td>
-                                            <td className="px-2 py-4 md:px-4 md:py-6 text-[11px] md:text-2xl font-black text-gold-400 text-center font-poppins whitespace-nowrap group-hover:scale-105 transition-transform">
-                                                {sellVal !== '-' ? `₹${sellVal}` : '-'}
+                                            <td className="px-2 py-4 md:px-4 md:py-6 text-center font-poppins whitespace-nowrap">
+                                                <motion.span
+                                                    key={sellVal}
+                                                    initial={{ scale: 1 }}
+                                                    animate={{ scale: [1, 1.05, 1] }}
+                                                    className={`text-[10px] md:text-xl font-black transition-colors duration-300 ${getKaratClass(karat.key, 'sell')}`}
+                                                >
+                                                    {sellVal !== '-' ? `₹${sellVal}` : '-'}
+                                                </motion.span>
                                             </td>
                                             <td className="px-2 py-4 md:px-4 md:py-6 text-[10px] md:text-xl font-black text-red-400 text-center font-poppins whitespace-nowrap">
                                                 {lowVal !== '-' ? `₹${lowVal}` : '-'}
@@ -84,7 +94,7 @@ const RatesPage = () => {
                 </div>
 
                 {/* QR Codes Section */}
-                <div className="flex flex-col sm:flex-row gap-6 justify-center items-center">
+                <div className="flex flex-row gap-4 justify-center items-center">
                     {/* Location QR */}
                     <div className="flex flex-col items-center gap-3 glass rounded-2xl p-6 flex-1 max-w-[240px]">
                         <img

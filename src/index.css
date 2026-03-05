@@ -1,16 +1,27 @@
 @import "tailwindcss";
 
 @theme {
+  --color-magenta-400: #EB3096;
+  --color-magenta-500: #D61A85;
   --color-magenta-600: #C2187A;
   --color-magenta-700: #8E0E5A;
   --color-gold-400: #FFD700;
   --color-gold-500: #E6C200;
   --color-soft-pink: #F7E9EC;
 
+  /* Refined Luxury Theme Colors */
+  --color-luxury-gold: #fff7e6;
+  --color-luxury-cream: #f9f5ef;
+  --color-luxury-pink: #fdeff4;
+
   --font-playfair: "Playfair Display", serif;
   --font-poppins: "Poppins", sans-serif;
 
   --shadow-luxury: 0 20px 50px rgba(0, 0, 0, 0.15);
+  --shadow-premium: 0 10px 30px -10px rgba(0, 0, 0, 0.08);
+  --shadow-card-hover: 0 20px 40px -10px rgba(0, 0, 0, 0.12);
+  --shadow-glass: 0 8px 32px 0 rgba(31, 38, 135, 0.07);
+  --shadow-glass-dark: inset 0 0 12px rgba(255, 255, 255, 0.05);
   --shadow-gold-glow: 0 0 30px rgba(255, 215, 0, 0.3);
 }
 
@@ -24,7 +35,7 @@
 
   html,
   body {
-    @apply font-poppins bg-soft-pink text-slate-900 antialiased;
+    @apply font-poppins bg-[#fafafb] text-slate-900 antialiased;
     overflow-x: hidden;
     width: 100%;
     margin: 0;
@@ -34,30 +45,49 @@
 }
 
 @layer utilities {
-  .glass {
-    @apply bg-white/5 backdrop-blur-md border border-white/10;
+  .glass-premium {
+    @apply bg-white/70 backdrop-blur-xl border border-white/40;
+    box-shadow: var(--shadow-glass);
   }
 
-  .gradient-luxury {
-    background: linear-gradient(135deg, rgba(194, 24, 122, 0.2), rgba(142, 14, 90, 0.2));
+  .glass-dark {
+    @apply bg-slate-900/10 backdrop-blur-md border border-white/10;
+    box-shadow: var(--shadow-glass-dark);
   }
 
-  .gradient-vibrant {
-    background: linear-gradient(135deg, #C2187A, #8E0E5A);
+  .text-gradient-magenta {
+    @apply bg-clip-text text-transparent bg-gradient-to-r from-magenta-600 to-magenta-400;
+  }
+
+  .gradient-gold-luxury {
+    background: linear-gradient(135deg, #fff7e6 0%, #f9f5ef 50%, #fdeff4 100%);
   }
 
   .animate-float {
     animation: float 6s ease-in-out infinite;
   }
 
-  /* Forced Zero-Gap Transitions */
-  .welcome-rangoli-section {
-    margin-top: 0 !important;
-    padding-top: 0 !important;
+  /* Global price movement indicators */
+  .price-up {
+    color: #00c853 !important;
+    /* Force green on increase */
   }
 
-  .inventory-section {
-    margin-bottom: 0 !important;
+  .price-down {
+    color: #ff1744 !important;
+    /* Force red on decrease */
+  }
+
+  .gold-default {
+    color: #FFD700 !important;
+  }
+
+  .silver-default {
+    color: #E5E5E5 !important;
+  }
+
+  .price-neutral {
+    color: inherit !important;
   }
 }
 

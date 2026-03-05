@@ -5,6 +5,7 @@ import Navbar from './components/Navbar';
 import BottomNav from './components/BottomNav';
 import Footer from './components/Footer';
 import { motion } from 'framer-motion';
+import { MessageCircle, Bell } from 'lucide-react';
 import SpotBar from './components/SpotBar';
 import Ticker from './components/Ticker';
 import Hero from './components/Hero';
@@ -20,13 +21,15 @@ const AppLayout = () => {
 
   return (
     <main
-      className="min-h-screen Selection:bg-gold-400 Selection:text-magenta-800 relative bg-soft-pink"
-      style={!isHomePage && !isAdminPage ? {
-        backgroundImage: location.pathname === '/alerts'
-          ? 'url("/fe4171046d7ee1ab9220734db89e8859.jpg")'
-          : location.pathname === '/videos'
-            ? 'url("/Untitled design (10).png")'
-            : 'url("/Untitled design (14).png")',
+      className="min-h-screen Selection:bg-magenta-100 Selection:text-magenta-900 relative bg-[#fafafb]"
+      style={!isAdminPage ? {
+        backgroundImage: isHomePage
+          ? 'url("/Untitled design (22).png")'
+          : location.pathname === '/alerts'
+            ? 'url("/fe4171046d7ee1ab9220734db89e8859.jpg")'
+            : location.pathname === '/videos'
+              ? 'url("/Untitled design (10).png")'
+              : 'url("/Untitled design (14).png")',
         backgroundAttachment: 'fixed',
         backgroundPosition: 'center',
         backgroundRepeat: 'no-repeat',
@@ -47,9 +50,25 @@ const AppLayout = () => {
             className="w-full h-auto min-h-[120px] md:h-auto object-contain md:object-cover object-center block"
           />
 
+          {/* Overlaid Quick Icons - Mobile Only Right Side */}
+          {isHomePage && (
+            <div className="absolute top-[2%] right-10 z-20 flex md:hidden items-center gap-1.5">
+              <a
+                href="https://wa.me/919848012345"
+                target="_blank"
+                className="p-1.5 bg-green-500/90 text-white rounded-lg hover:bg-green-600 transition-all shadow-md flex items-center justify-center"
+              >
+                <MessageCircle size={18} />
+              </a>
+              <button className="p-1.5 bg-[#FFD700]/90 text-slate-900 rounded-lg hover:bg-[#FFD700] transition-all shadow-md flex items-center justify-center">
+                <Bell size={18} />
+              </button>
+            </div>
+          )}
+
           {/* Overlaid Spot Rates Bar - Home page only */}
           {isHomePage && (
-            <div className="absolute top-[80%] md:top-[80%] lg:top-[80%] left-0 w-full z-20">
+            <div className="absolute bottom-[5%] md:bottom-[10%] left-0 w-full z-20 flex justify-end px-1 md:px-0">
               <SpotBar />
             </div>
           )}

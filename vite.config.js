@@ -20,6 +20,10 @@ export default defineConfig({
         target: 'https://www.investing.com',
         changeOrigin: true,
         rewrite: (path) => path.replace(/^\/api-news/, ''),
+      },
+      '/api': {
+        target: 'http://localhost:5000',
+        changeOrigin: true,
       }
     }
   }

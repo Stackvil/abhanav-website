@@ -16,7 +16,23 @@ const rateSettingsSchema = new mongoose.Schema({
             value: { type: Number, default: 0 }
         }
     },
-    // Future placeholders for buy offsets if needed
+    stockOverrides: {
+        type: Map,
+        of: Boolean,
+        default: {}
+    },
+    ticker: {
+        type: String,
+        default: 'Welcome to Abhinav Gold & Silver - Quality Purity Guaranteed'
+    },
+    videos: [{
+        videoId: String,
+        title: String
+    }],
+    adminPassword: {
+        type: String,
+        default: 'admin123'
+    },
     goldOffset: { mode: String, value: Number },
     silverOffset: { mode: String, value: Number }
 }, { timestamps: true });

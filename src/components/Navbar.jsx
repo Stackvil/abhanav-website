@@ -26,7 +26,7 @@ const Navbar = () => {
         <motion.nav
             initial={{ y: -100 }}
             animate={{ y: 0 }}
-            className="sticky top-0 z-50 w-full bg-slate-950 border-b border-white/10 shadow-luxury px-2 md:px-6 py-1 md:py-2 flex items-center justify-between min-h-[50px] md:min-h-[64px]"
+            className="sticky top-0 z-50 w-full bg-slate-950 border-b border-white/10 shadow-luxury px-2 md:px-6 py-1 md:py-2 hidden md:flex items-center justify-between min-h-[50px] md:min-h-[64px]"
         >
             {/* Left Section: Logo - Compact for Mobile */}
             <div className="flex items-center">
@@ -70,10 +70,17 @@ const Navbar = () => {
                 <div className="hidden lg:flex items-center gap-2 px-3 py-1 bg-white/5 backdrop-blur-sm rounded-full border border-white/10">
                     <span className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse"></span>
                     <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">USD</span>
-                    <span className="text-xs font-black text-white">₹{fmt(usdRate)}</span>
+                    <motion.span
+                        key={usdRate}
+                        initial={{ scale: 1 }}
+                        animate={{ scale: [1, 1.1, 1] }}
+                        className={`text-xs font-black transition-colors duration-300 ${rates.spot?.[2]?.trend === 'up' ? 'text-emerald-400' : rates.spot?.[2]?.trend === 'down' ? 'text-rose-400' : 'text-white'}`}
+                    >
+                        ₹{fmt(usdRate)}
+                    </motion.span>
                 </div>
 
-                <div className="flex items-center gap-1 md:gap-3">
+                <div className="hidden md:flex items-center gap-1 md:gap-3">
                     <a
                         href="https://wa.me/919848012345"
                         target="_blank"

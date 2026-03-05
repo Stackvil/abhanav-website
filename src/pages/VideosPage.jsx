@@ -1,7 +1,8 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { Play, PlayCircle, Clock, ChevronLeft, ChevronRight, Settings, AlertCircle, Volume2, VolumeX, Maximize2 } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { Play, PlayCircle, ChevronLeft, ChevronRight, Settings, Volume2, VolumeX, Maximize2 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Link } from 'react-router-dom';
+import { useRates } from '../context/RateContext';
 
 const VideoCard = ({ video, isActive, position, onClick }) => {
     const [isMuted, setIsMuted] = useState(true);
@@ -85,33 +86,12 @@ const VideoCard = ({ video, isActive, position, onClick }) => {
 };
 
 const VideosPage = () => {
-    const [videos, setVideos] = useState([]);
+    const { videos } = useRates();
     const [activeIndex, setActiveIndex] = useState(0);
 
     useEffect(() => {
-        const stored = localStorage.getItem('ag_videos');
-        if (stored) {
-            try {
-                const parsed = JSON.parse(stored);
-                if (Array.isArray(parsed) && parsed.length > 0) {
-                    setVideos(parsed);
-                }
-            } catch (e) {
-                console.error("Failed to load videos:", e);
-            }
-        }
-
-        if (videos.length === 0 && !stored) {
-            const fallback = [
-                { videoId: 'dQw4w9WgXcQ', title: 'Luxury Gold Collection 2026' },
-                { videoId: '3JZ_D3ELwOQ', title: 'Modern Silver Artisanship' },
-                { videoId: 'kJQP7kiw5Fk', title: 'Pure Purity Standards' },
-                { videoId: 'dQw4w9WgXcQ', title: 'Jewellery Masterclass' },
-                { videoId: '3JZ_D3ELwOQ', title: 'Investment Analysis' }
-            ];
-            setVideos(fallback);
-        }
-    }, [videos.length]);
+        // We now rely on RateContext's videos state
+    }, []);
 
     const handleNext = () => setActiveIndex((prev) => (prev + 1) % videos.length);
     const handlePrev = () => setActiveIndex((prev) => (prev - 1 + videos.length) % videos.length);
@@ -135,10 +115,6 @@ const VideosPage = () => {
                 </Link>
             </div>
 
-            {/* Hub Title */}
-            <div className="text-center mb-12 flex flex-col items-center gap-2">
-                <h1 className="text-4xl md:text-6xl font-playfair font-black text-white uppercase tracking-tighter drop-shadow-luxury">Education Hub</h1>
-            </div>
 
             {/* Carousel Container */}
             <div className="relative w-full h-[450px] md:h-[580px] flex items-center justify-center overflow-hidden">

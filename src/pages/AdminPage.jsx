@@ -4,16 +4,26 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Lock, LogOut, TrendingUp, Settings, Video, MessageSquare, Play, Trash2, Save, RefreshCw, CheckCircle2, AlertCircle } from 'lucide-react';
 
 const AdminPage = () => {
-    const { rates, rawRates, adj, showModified, updateSettings, refreshRates, loading, error } = useRates();
+    const { rates, rawRates, adj, showModified, updateSettings, refreshRates, loading, error, ticker: contextTicker, videos: contextVideos } = useRates();
     const [isLoggedIn, setIsLoggedIn] = useState(false);
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [activeTab, setActiveTab] = useState('rates');
-    const [ticker, setTicker] = useState(localStorage.getItem('ag_ticker') || 'Welcome to Abhinav Gold & Silver - Quality Purity Guaranteed');
-    const [videos, setVideos] = useState(JSON.parse(localStorage.getItem('ag_videos') || '[{"videoId":"dQw4w9WgXcQ","title":"Brand Film"}]'));
+
+    // Local state for editing, initialized from context
+    const [ticker, setTicker] = useState('');
+    const [videos, setVideos] = useState([]);
+
+    useEffect(() => {
+        if (contextTicker) setTicker(contextTicker);
+    }, [contextTicker]);
+
+    useEffect(() => {
+        if (contextVideos) setVideos(contextVideos);
+    }, [contextVideos]);
 
     const handleLogin = () => {
-        const storedPw = localStorage.getItem('ag_adminPw') || 'admin123';
+        const storedPw = 'admin123'; // Logic for backend auth can be added later
         if (username === 'admin' && password === storedPw) {
             setIsLoggedIn(true);
         } else {
@@ -22,16 +32,16 @@ const AdminPage = () => {
     };
 
     const saveAdj = (newAdj) => {
-        updateSettings(newAdj, undefined);
+        updateSettings({ adj: newAdj });
     };
 
     const toggleDisplayMode = (mode) => {
-        updateSettings(undefined, mode === 'modified');
+        updateSettings({ showModified: mode === 'modified' });
     };
 
     const saveTicker = () => {
-        localStorage.setItem('ag_ticker', ticker);
-        alert('Ticker updated!');
+        updateSettings({ ticker });
+        alert('Ticker updated and saved to database!');
     };
 
     const addVideo = () => {
@@ -56,15 +66,11 @@ const AdminPage = () => {
         const processed = videos.map(v => ({
             ...v,
             videoId: getYouTubeId(v.videoId)
-        })).filter(v => v.videoId); // Filter out invalid ones
+        })).filter(v => v.videoId);
 
-        if (processed.length < videos.length) {
-            if (!window.confirm("Some video links are invalid and will be removed. Continue?")) return;
-        }
-
-        localStorage.setItem('ag_videos', JSON.stringify(processed));
+        updateSettings({ videos: processed });
         setVideos(processed);
-        alert('Videos updated!');
+        alert('Videos updated and saved to database!');
     };
 
     if (!isLoggedIn) {
@@ -193,7 +199,7 @@ const AdminPage = () => {
                                                 onChange={(newItem) => {
                                                     const newBase = { ...adj.baseModifications };
                                                     newBase.gold999 = newItem;
-                                                    updateSettings({ ...adj, baseModifications: newBase });
+                                                    updateSettings({ adj: { ...adj, baseModifications: newBase } });
                                                 }}
                                             />
                                             <AdjustmentCard
@@ -203,9 +209,33 @@ const AdminPage = () => {
                                                 onChange={(newItem) => {
                                                     const newBase = { ...adj.baseModifications };
                                                     newBase.silver999 = newItem;
-                                                    updateSettings({ ...adj, baseModifications: newBase });
+                                                    updateSettings({ adj: { ...adj, baseModifications: newBase } });
                                                 }}
                                             />
+                                        </div>
+                                    </div>
+
+                                    <div className="mt-12">
+                                        <h3 className="text-lg md:text-xl font-playfair font-black text-magenta-700 uppercase tracking-widest mb-6 border-b border-magenta-100 pb-2">Stock Control</h3>
+                                        <p className="text-[10px] font-bold text-slate-400 uppercase tracking-[0.1em] mb-8 max-w-2xl leading-relaxed">
+                                            Manually override the stock status for individual items.
+                                        </p>
+                                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-10 text-slate-500">
+                                            {rates.rtgs.map((item) => (
+                                                <div key={item.id} className="bg-white/60 p-4 rounded-2xl border border-slate-100 flex items-center justify-between shadow-sm hover:shadow-md transition-shadow">
+                                                    <span className="font-poppins font-black text-slate-700 text-[11px] uppercase tracking-tight">{item.name}</span>
+                                                    <button
+                                                        onClick={() => {
+                                                            const newStock = { ...adj.stockOverrides };
+                                                            newStock[item.id] = !item.stock;
+                                                            updateSettings({ adj: { ...adj, stockOverrides: newStock } });
+                                                        }}
+                                                        className={`px-4 py-2 rounded-xl font-poppins font-black text-[10px] uppercase tracking-widest transition-all min-w-[120px] ${item.stock ? 'bg-green-500 text-white shadow-lg shadow-green-100' : 'bg-red-500 text-white shadow-lg shadow-red-100'}`}
+                                                    >
+                                                        {item.stock ? 'In Stock' : 'Out of Stock'}
+                                                    </button>
+                                                </div>
+                                            ))}
                                         </div>
                                     </div>
 

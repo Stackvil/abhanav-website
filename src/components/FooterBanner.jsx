@@ -1,21 +1,8 @@
-import React from 'react';
 import { motion } from 'framer-motion';
+import { useRates } from '../context/RateContext';
 
 const FooterBanner = () => {
-    const [msg, setMsg] = React.useState(localStorage.getItem('ag_ticker') || 'Welcome to Abhinav Gold & Silver - Quality Purity Guaranteed');
-
-    React.useEffect(() => {
-        const handleStorage = () => {
-            const val = localStorage.getItem('ag_ticker');
-            if (val) setMsg(val);
-        };
-        window.addEventListener('storage', handleStorage);
-        const interval = setInterval(handleStorage, 5000);
-        return () => {
-            window.removeEventListener('storage', handleStorage);
-            clearInterval(interval);
-        };
-    }, []);
+    const { ticker: msg } = useRates();
 
     return (
         <div className="w-full overflow-hidden">

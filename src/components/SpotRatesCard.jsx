@@ -3,7 +3,7 @@ import { motion } from 'framer-motion';
 import { useRates } from '../context/RateContext';
 
 const SpotRatesCard = () => {
-    const { rates } = useRates();
+    const { rates, getPriceClass } = useRates();
 
     const fmt = (val) => {
         if (typeof val !== 'number') return '-';
@@ -46,8 +46,8 @@ const SpotRatesCard = () => {
                             return (
                                 <tr key={idx} className="hover:bg-slate-50 transition-colors group whitespace-nowrap">
                                     <td className="py-3 px-3 md:py-4 md:px-4 text-[9px] md:text-[13px] font-bold text-slate-900 font-poppins">{rate.name}</td>
-                                    <td className="py-3 px-3 md:py-4 md:px-4 text-[9px] md:text-[13px] font-black text-slate-600 text-center font-poppins">{symbol}{fmt(rate.bid)}</td>
-                                    <td className="py-3 px-3 md:py-4 md:px-4 text-[9px] md:text-[13px] font-black text-magenta-600 text-center font-poppins group-hover:text-magenta-800 transition-colors">{symbol}{fmt(rate.ask)}</td>
+                                    <td className={`py-3 px-3 md:py-4 md:px-4 text-[9px] md:text-[13px] font-black text-center font-poppins transition-colors duration-300 ${getPriceClass('spot', rate.id, 'bid')}`}>{symbol}{fmt(rate.bid)}</td>
+                                    <td className={`py-3 px-3 md:py-4 md:px-4 text-[9px] md:text-[13px] font-black text-center font-poppins group-hover:text-magenta-800 transition-all duration-300 ${getPriceClass('spot', rate.id, 'ask')}`}>{symbol}{fmt(rate.ask)}</td>
                                     <td className="py-3 px-3 md:py-4 md:px-4 text-[9px] md:text-[13px] font-bold text-slate-600 text-center font-poppins">{symbol}{fmt(rate.high)}</td>
                                     <td className="py-3 px-3 md:py-4 md:px-4 text-[9px] md:text-[13px] font-bold text-slate-600 text-right font-poppins">{symbol}{fmt(rate.low)}</td>
                                 </tr>
