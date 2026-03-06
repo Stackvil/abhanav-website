@@ -119,8 +119,8 @@ export const RateProvider = ({ children }) => {
         // Using current state values if they aren't in the payload
         try {
             const body = {
-                goldOffset: payload.adj?.gold || adj.gold,
-                silverOffset: payload.adj?.silver || adj.silver,
+                gold: payload.adj?.gold || adj.gold,
+                silver: payload.adj?.silver || adj.silver,
                 baseModifications: payload.adj?.baseModifications || adj.baseModifications,
                 stockOverrides: payload.adj?.stockOverrides || adj.stockOverrides,
                 ticker: payload.ticker !== undefined ? payload.ticker : ticker,
