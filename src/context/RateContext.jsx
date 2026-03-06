@@ -91,7 +91,6 @@ export const RateProvider = ({ children }) => {
                     });
                     if (data.showModified !== undefined) setShowModified(data.showModified);
                     if (data.ticker) setTicker(data.ticker);
-                    if (data.videos) setVideos(data.videos);
                 }
             }
         } catch (error) {

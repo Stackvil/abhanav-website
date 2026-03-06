@@ -23,7 +23,7 @@ const AdminPage = () => {
     }, [contextTicker, isInitialized.ticker]);
 
     useEffect(() => {
-        if (contextVideos && !isInitialized.videos && contextVideos.length > 0) {
+        if (contextVideos && contextVideos.length > 0 && !isInitialized.videos) {
             setVideos(contextVideos);
             setIsInitialized(prev => ({ ...prev, videos: true }));
         }
