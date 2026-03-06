@@ -13,19 +13,21 @@ const AdminPage = () => {
     // Local state for editing, initialized from context
     const [ticker, setTicker] = useState('');
     const [videos, setVideos] = useState([]);
-    const [isDirty, setIsDirty] = useState({ ticker: false, videos: false });
+    const [isInitialized, setIsInitialized] = useState({ ticker: false, videos: false });
 
     useEffect(() => {
-        if (contextTicker && !isDirty.ticker) {
+        if (contextTicker && !isInitialized.ticker) {
             setTicker(contextTicker);
+            setIsInitialized(prev => ({ ...prev, ticker: true }));
         }
-    }, [contextTicker, isDirty.ticker]);
+    }, [contextTicker, isInitialized.ticker]);
 
     useEffect(() => {
-        if (contextVideos && !isDirty.videos) {
+        if (contextVideos && !isInitialized.videos && contextVideos.length > 0) {
             setVideos(contextVideos);
+            setIsInitialized(prev => ({ ...prev, videos: true }));
         }
-    }, [contextVideos, isDirty.videos]);
+    }, [contextVideos, isInitialized.videos]);
 
     const handleLogin = () => {
         const storedPw = 'admin123'; // Logic for backend auth can be added later
@@ -46,20 +48,17 @@ const AdminPage = () => {
 
     const saveTicker = () => {
         updateSettings({ ticker });
-        setIsDirty(prev => ({ ...prev, ticker: false }));
         alert('Ticker updated and saved to database!');
     };
 
     const addVideo = () => {
         setVideos([...videos, { videoId: '', title: '' }]);
-        setIsDirty(prev => ({ ...prev, videos: true }));
     };
 
     const removeVideo = (idx) => {
         const v = [...videos];
         v.splice(idx, 1);
         setVideos(v);
-        setIsDirty(prev => ({ ...prev, videos: true }));
     };
 
     const getYouTubeId = (url) => {
@@ -78,7 +77,6 @@ const AdminPage = () => {
 
         updateVideos(processed);
         setVideos(processed);
-        setIsDirty(prev => ({ ...prev, videos: false }));
         alert('Videos updated and saved to database!');
     };
 
@@ -272,10 +270,7 @@ const AdminPage = () => {
                                     <textarea
                                         className="w-full h-32 md:h-40 bg-white/50 border border-slate-200 px-4 md:px-6 py-4 md:py-6 rounded-2xl md:rounded-3xl font-poppins text-sm md:text-lg focus:ring-2 focus:ring-magenta-600 outline-none transition-all resize-none"
                                         value={ticker}
-                                        onChange={(e) => {
-                                            setTicker(e.target.value);
-                                            setIsDirty(prev => ({ ...prev, ticker: true }));
-                                        }}
+                                        onChange={(e) => setTicker(e.target.value)}
                                         placeholder="Enter market news alert..."
                                     />
                                     <button
@@ -321,7 +316,6 @@ const AdminPage = () => {
                                                                     const v = [...videos];
                                                                     v[i].videoId = e.target.value;
                                                                     setVideos(v);
-                                                                    setIsDirty(prev => ({ ...prev, videos: true }));
                                                                 }}
                                                             />
                                                             {vid.videoId && (
@@ -338,7 +332,6 @@ const AdminPage = () => {
                                                                 const v = [...videos];
                                                                 v[i].title = e.target.value;
                                                                 setVideos(v);
-                                                                setIsDirty(prev => ({ ...prev, videos: true }));
                                                             }}
                                                         />
                                                         <button onClick={() => removeVideo(i)} className="p-2.5 md:p-3 text-slate-300 hover:text-red-500 hover:bg-red-50 rounded-lg md:rounded-xl transition-all self-center md:self-auto">
