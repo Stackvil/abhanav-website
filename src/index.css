@@ -89,6 +89,22 @@
   .price-neutral {
     color: inherit !important;
   }
+
+  .rate-box-premium {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 12px 20px;
+    min-width: 220px;
+    border-radius: 20px;
+    font-weight: 800;
+    font-size: clamp(18px, 2vw, 30px);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+  }
 }
 
 @keyframes float {

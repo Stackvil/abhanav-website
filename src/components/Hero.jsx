@@ -98,12 +98,12 @@ const Hero = () => {
                                                             scale: pClass === 'price-up' || pClass === 'price-down' ? 1.04 : 1
                                                         }}
                                                         style={{ borderColor: bColor }}
-                                                        className="w-full max-w-[120px] md:max-w-[200px] h-[45px] md:h-[90px] bg-transparent border-2 md:border-[3px] rounded-[10px] md:rounded-[28px] flex items-center justify-center shadow-md overflow-hidden transition-colors duration-200 px-1"
+                                                        className="w-full transition-all duration-300 md:rate-box-premium max-md:max-w-[120px] max-md:h-[45px] max-md:bg-transparent max-md:border-2 max-md:rounded-[10px] max-md:flex max-md:items-center max-md:justify-center max-md:shadow-md max-md:overflow-hidden max-md:px-1"
                                                     >
                                                         <motion.span
                                                             key={`buy-${item.buy}-${pClass}`}
                                                             animate={{ scale: [1, 1.08, 1] }}
-                                                            className={`text-[13px] md:text-3xl font-extrabold font-poppins tracking-tighter md:tracking-wider ${pClass}`}
+                                                            className={`font-black font-poppins tracking-tighter md:tracking-wider ${pClass} max-md:text-[13px]`}
                                                         >
                                                             {item.buy !== '-' ? `₹${fmt(item.buy)}` : '—'}
                                                         </motion.span>
@@ -124,12 +124,12 @@ const Hero = () => {
                                                             scale: pClass === 'price-up' || pClass === 'price-down' ? 1.04 : 1
                                                         }}
                                                         style={{ borderColor: bColor }}
-                                                        className="w-full max-w-[120px] md:max-w-[200px] h-[45px] md:h-[90px] bg-transparent border-2 md:border-[3px] rounded-[10px] md:rounded-[28px] flex items-center justify-center shadow-md overflow-hidden transition-colors duration-200 px-1"
+                                                        className="w-full transition-all duration-300 md:rate-box-premium max-md:max-w-[120px] max-md:h-[45px] max-md:bg-transparent max-md:border-2 max-md:rounded-[10px] max-md:flex max-md:items-center max-md:justify-center max-md:shadow-md max-md:overflow-hidden max-md:px-1"
                                                     >
                                                         <motion.span
                                                             key={`sell-${item.sell}-${pClass}`}
                                                             animate={{ scale: [1, 1.08, 1] }}
-                                                            className={`text-[13px] md:text-3xl font-extrabold font-poppins tracking-tighter md:tracking-wider ${pClass}`}
+                                                            className={`font-black font-poppins tracking-tighter md:tracking-wider ${pClass} max-md:text-[13px]`}
                                                         >
                                                             {item.sell !== '-' ? `₹${fmt(item.sell)}` : '—'}
                                                         </motion.span>
