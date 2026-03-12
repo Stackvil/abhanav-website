@@ -7,7 +7,7 @@ const RatesPage = () => {
 
     const fmt = (val) => {
         if (typeof val !== 'number') return '-';
-        return val.toLocaleString('en-IN', { minimumFractionDigits: 0, maximumFractionDigits: 0 });
+        return val.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
     };
 
     const getKaratClass = (key, field) => {
@@ -69,10 +69,10 @@ const RatesPage = () => {
                         <table className="w-full text-left min-w-[360px]">
                             <thead className="bg-white/10 border-b border-white/10">
                                 <tr>
-                                    <th className="px-2 py-4 text-[10px] md:text-sm font-black text-white/80 uppercase tracking-widest text-center">Purity</th>
-                                    <th className="px-2 py-4 text-[10px] md:text-sm font-black text-white/80 uppercase tracking-widest text-center">Sell</th>
-                                    <th className="px-2 py-4 text-[10px] md:text-sm font-black text-red-400/80 uppercase tracking-widest text-center">Low</th>
-                                    <th className="px-2 py-4 text-[10px] md:text-sm font-black text-green-400/80 uppercase tracking-widest text-center">High</th>
+                                    <th className="px-2 py-3 text-[10px] md:text-xs font-black text-white/80 uppercase tracking-widest text-left pl-4">Purity</th>
+                                    <th className="px-2 py-3 text-[10px] md:text-xs font-black text-white/80 uppercase tracking-widest text-center">Sell</th>
+                                    <th className="px-2 py-3 text-[10px] md:text-xs font-black text-red-400/80 uppercase tracking-widest text-center">Low</th>
+                                    <th className="px-2 py-3 text-[10px] md:text-xs font-black text-green-400/80 uppercase tracking-widest text-right pr-4">High</th>
                                 </tr>
                             </thead>
                             <tbody className="divide-y divide-white/5">
@@ -82,31 +82,25 @@ const RatesPage = () => {
                                     const highVal = karat.high !== '-' && karat.high !== undefined ? fmt(karat.high) : '-';
                                     return (
                                         <tr key={idx} className="hover:bg-white/5 transition-colors group">
-                                            <td className="px-2 py-2 text-[10px] md:text-sm font-bold text-white whitespace-nowrap">{karat.name}</td>
-                                            <td className="px-2 py-3 text-center whitespace-nowrap">
-                                                <div className="rate-box-table">
-                                                    <motion.span
-                                                        key={sellVal}
-                                                        animate={{ scale: [1, 1.05, 1] }}
-                                                        className={`font-bold ${getKaratClass(karat.key, 'sell')}`}
-                                                    >
-                                                        <span className="font-sans">₹</span>{sellVal !== '-' ? sellVal : '-'}
-                                                    </motion.span>
-                                                </div>
+                                            <td className="px-2 py-2 text-[11px] md:text-sm font-bold text-white whitespace-nowrap pl-4">{karat.name.replace('kt', 'Karat')}</td>
+                                            <td className="px-2 py-2 text-center whitespace-nowrap">
+                                                <motion.span
+                                                    key={sellVal}
+                                                    animate={{ scale: [1, 1.05, 1] }}
+                                                    className={`font-bold text-[13px] md:text-[16px] ${getKaratClass(karat.key, 'sell')}`}
+                                                >
+                                                    <span className="font-sans">₹</span>{sellVal !== '-' ? sellVal : '-'}
+                                                </motion.span>
                                             </td>
-                                            <td className="px-2 py-3 text-center whitespace-nowrap">
-                                                <div className="rate-box-table !border-red-500/20 !bg-red-500/5">
-                                                    <span className="font-bold text-red-400">
-                                                        <span className="font-sans">₹</span>{lowVal !== '-' ? lowVal : '-'}
-                                                    </span>
-                                                </div>
+                                            <td className="px-2 py-2 text-center whitespace-nowrap">
+                                                <span className="font-bold text-[13px] md:text-[16px] text-red-400">
+                                                    <span className="font-sans">₹</span>{lowVal !== '-' ? lowVal : '-'}
+                                                </span>
                                             </td>
-                                            <td className="px-2 py-3 text-right whitespace-nowrap">
-                                                <div className="rate-box-table !border-green-500/20 !bg-green-500/5">
-                                                    <span className="font-bold text-green-400">
-                                                        <span className="font-sans">₹</span>{highVal !== '-' ? highVal : '-'}
-                                                    </span>
-                                                </div>
+                                            <td className="px-2 py-2 text-right whitespace-nowrap pr-4">
+                                                <span className="font-bold text-[13px] md:text-[16px] text-green-400">
+                                                    <span className="font-sans">₹</span>{highVal !== '-' ? highVal : '-'}
+                                                </span>
                                             </td>
                                         </tr>
                                     );
@@ -126,36 +120,30 @@ const RatesPage = () => {
                         <table className="w-full text-left min-w-[360px]">
                             <thead className="bg-white/10 border-b border-white/10">
                                 <tr>
-                                    <th className="px-2 py-4 text-[10px] md:text-sm font-black text-white/80 uppercase tracking-widest text-center">Weight</th>
-                                    <th className="px-2 py-4 text-[10px] md:text-sm font-black text-white/80 uppercase tracking-widest text-center">Sell</th>
-                                    <th className="px-2 py-4 text-[10px] md:text-sm font-black text-red-400/80 uppercase tracking-widest text-center">Low</th>
-                                    <th className="px-2 py-4 text-[10px] md:text-sm font-black text-green-400/80 uppercase tracking-widest text-center">High</th>
+                                    <th className="px-2 py-3 text-[10px] md:text-xs font-black text-white/80 uppercase tracking-widest text-left pl-4">Weight</th>
+                                    <th className="px-2 py-3 text-[10px] md:text-xs font-black text-white/80 uppercase tracking-widest text-center">Sell</th>
+                                    <th className="px-2 py-3 text-[10px] md:text-xs font-black text-red-400/80 uppercase tracking-widest text-center">Low</th>
+                                    <th className="px-2 py-3 text-[10px] md:text-xs font-black text-green-400/80 uppercase tracking-widest text-right pr-4">High</th>
                                 </tr>
                             </thead>
                             <tbody className="divide-y divide-white/5">
                                 {silverRows.map((row, idx) => (
                                     <tr key={idx} className="hover:bg-white/5 transition-colors">
-                                        <td className="px-2 py-2 text-[10px] md:text-sm font-bold text-white whitespace-nowrap">{row.name}</td>
-                                        <td className="px-2 py-3 text-center whitespace-nowrap">
-                                            <div className="rate-box-table silver-default">
-                                                <span className="font-bold">
-                                                    <span className="font-sans">₹</span>{typeof row.sell === 'number' ? fmt(row.sell) : '-'}
-                                                </span>
-                                            </div>
+                                        <td className="px-2 py-2 text-[11px] md:text-sm font-bold text-white whitespace-nowrap pl-4">{row.name}</td>
+                                        <td className="px-2 py-2 text-center whitespace-nowrap">
+                                            <span className="font-bold text-[13px] md:text-[16px] silver-default">
+                                                <span className="font-sans">₹</span>{typeof row.sell === 'number' ? fmt(row.sell) : '-'}
+                                            </span>
                                         </td>
-                                        <td className="px-2 py-3 text-center whitespace-nowrap">
-                                            <div className="rate-box-table !border-red-500/20 !bg-red-500/5">
-                                                <span className="font-bold text-red-400">
-                                                    <span className="font-sans">₹</span>{typeof row.low === 'number' ? fmt(row.low) : '-'}
-                                                </span>
-                                            </div>
+                                        <td className="px-2 py-2 text-center whitespace-nowrap">
+                                            <span className="font-bold text-[13px] md:text-[16px] text-red-400">
+                                                <span className="font-sans">₹</span>{typeof row.low === 'number' ? fmt(row.low) : '-'}
+                                            </span>
                                         </td>
-                                        <td className="px-2 py-3 text-right whitespace-nowrap">
-                                            <div className="rate-box-table !border-green-500/20 !bg-green-500/5">
-                                                <span className="font-bold text-green-400">
-                                                    <span className="font-sans">₹</span>{typeof row.high === 'number' ? fmt(row.high) : '-'}
-                                                </span>
-                                            </div>
+                                        <td className="px-2 py-2 text-right whitespace-nowrap pr-4">
+                                            <span className="font-bold text-[13px] md:text-[16px] text-green-400">
+                                                <span className="font-sans">₹</span>{typeof row.high === 'number' ? fmt(row.high) : '-'}
+                                            </span>
                                         </td>
                                     </tr>
                                 ))}

@@ -25,6 +25,16 @@
   --shadow-gold-glow: 0 0 30px rgba(255, 215, 0, 0.3);
 }
 
+@utility glass-premium {
+  @apply bg-white/70 backdrop-blur-xl border border-white/40;
+  box-shadow: var(--shadow-glass);
+}
+
+@utility glass-dark {
+  @apply bg-slate-900/10 backdrop-blur-md border border-white/10;
+  box-shadow: var(--shadow-glass-dark);
+}
+
 @layer base {
 
   *,
@@ -45,16 +55,6 @@
 }
 
 @layer utilities {
-  .glass-premium {
-    @apply bg-white/70 backdrop-blur-xl border border-white/40;
-    box-shadow: var(--shadow-glass);
-  }
-
-  .glass-dark {
-    @apply bg-slate-900/10 backdrop-blur-md border border-white/10;
-    box-shadow: var(--shadow-glass-dark);
-  }
-
   .text-gradient-magenta {
     @apply bg-clip-text text-transparent bg-gradient-to-r from-magenta-600 to-magenta-400;
   }
@@ -96,27 +96,6 @@
 
   .price-neutral {
     color: inherit !important;
-  }
-
-  .rate-box-premium {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 12px 20px;
-    min-width: 260px;
-    border-radius: 20px;
-    font-family: var(--font-poppins);
-    font-weight: 800;
-    font-size: clamp(25px, 4vw, 27px);
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    transition: all 0.3s ease;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
-  }
-
-  .rate-box-table {
-    @apply inline-flex items-center justify-center px-6 py-2 rounded-lg border border-white/10 glass-dark font-poppins font-bold text-[22px] md:text-[27px] min-w-[140px] md:min-w-[220px] tracking-tighter shadow-sm transition-all duration-300;
   }
 
   .header-box-premium {
