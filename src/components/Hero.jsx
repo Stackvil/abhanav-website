@@ -19,14 +19,14 @@ const Hero = () => {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 1 }}
-            className="w-full inventory-section bg-gradient-gold-luxury min-h-[60vh] relative overflow-hidden pt-0"
+            className="w-full inventory-section bg-gradient-gold-luxury min-h-[60vh] relative overflow-hidden pt-6 md:pt-0"
         >
             {/* Ambient Background Accents */}
             <div className="absolute top-0 left-0 w-full h-full opacity-30 pointer-events-none"
                 style={{ background: 'radial-gradient(circle at 10% 20%, #fff, transparent 80%)' }} />
 
             {/* Rates Section */}
-            <section className="max-w-6xl mx-auto px-4 md:px-6 w-full mt-1 md:mt-2 relative z-10 mb-10 md:mb-16">
+            <section className="max-w-6xl mx-auto px-4 md:px-6 w-full mt-6 md:mt-2 relative z-10 mb-10 md:mb-16">
                 <motion.div
                     initial={{ opacity: 0, y: 50 }}
                     animate={{ opacity: 1, y: 0 }}
@@ -36,7 +36,7 @@ const Hero = () => {
                     {/* Spot Bar remains in App.jsx header overlay */}
 
                     {/* Inventory Headings - Adjusted ratios for more price space */}
-                    <div className="w-full border border-transparent px-2.5 md:px-6 mb-[-16px] md:mb-[-40px]">
+                    <div className="w-full border border-transparent px-2.5 md:px-6 mb-[-10px] md:mb-[-40px]">
                         <div className="grid grid-cols-[1.1fr_1.2fr_1.2fr_0.6fr] gap-2 md:gap-6 items-center w-full">
                             <div className="text-left font-black text-slate-900 text-[11px] md:text-2xl uppercase tracking-widest md:tracking-[0.3em] font-poppins md:-ml-8">
                                 PRODUCTS
@@ -54,7 +54,7 @@ const Hero = () => {
                     </div>
 
                     {/* Inventory Rows */}
-                    <div className="flex flex-col gap-3 md:gap-6 mt-0">
+                    <div className="flex flex-col gap-3 md:gap-6 mt-4 md:mt-0">
                         {rates.rtgs.map((item, idx) => {
                             const rawItem = rawRates.rtgs.find(r => r.id === item.id || (r.name && r.name === item.name)) || item;
                             const isGold = item.name.toLowerCase().includes('gold') || item.id === '945';
@@ -96,7 +96,7 @@ const Hero = () => {
                                                             scale: pClass === 'price-up' || pClass === 'price-down' ? 1.04 : 1
                                                         }}
                                                         style={{ borderColor: bColor }}
-                                                        className="w-full transition-all duration-300 md:rate-box-premium max-md:max-w-[120px] max-md:h-[45px] max-md:bg-transparent max-md:border-2 max-md:rounded-[10px] max-md:flex max-md:items-center max-md:justify-center max-md:shadow-md max-md:overflow-hidden max-md:px-1"
+                                                        className="w-full transition-all duration-300 md:rate-box-premium max-md:max-w-[120px] max-md:h-[55px] max-md:bg-transparent max-md:border-2 max-md:rounded-[10px] max-md:flex max-md:items-center max-md:justify-center max-md:shadow-md max-md:overflow-hidden max-md:px-1"
                                                     >
                                                         <motion.span
                                                             key={`buy-${item.buy}-${pClass}`}
@@ -122,7 +122,7 @@ const Hero = () => {
                                                             scale: pClass === 'price-up' || pClass === 'price-down' ? 1.04 : 1
                                                         }}
                                                         style={{ borderColor: bColor }}
-                                                        className="w-full transition-all duration-300 md:rate-box-premium max-md:max-w-[120px] max-md:h-[45px] max-md:bg-transparent max-md:border-2 max-md:rounded-[10px] max-md:flex max-md:items-center max-md:justify-center max-md:shadow-md max-md:overflow-hidden max-md:px-1"
+                                                        className="w-full transition-all duration-300 md:rate-box-premium max-md:max-w-[120px] max-md:h-[55px] max-md:bg-transparent max-md:border-2 max-md:rounded-[10px] max-md:flex max-md:items-center max-md:justify-center max-md:shadow-md max-md:overflow-hidden max-md:px-1"
                                                     >
                                                         <motion.span
                                                             key={`sell-${item.sell}-${pClass}`}
