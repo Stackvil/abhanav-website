@@ -6,8 +6,8 @@ import { motion, AnimatePresence } from 'framer-motion';
 const navItems = [
     { to: '/', icon: Home, label: 'Home' },
     { to: '/rates', icon: BarChart2, label: 'Rates' },
-    { to: '/alerts', icon: Bell, label: 'Alerts' },
     { to: '/videos', icon: PlayCircle, label: 'Videos' },
+    { to: '/alerts', icon: Bell, label: 'Alerts' },
 ];
 
 const BottomNav = () => {
