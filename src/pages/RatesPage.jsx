@@ -42,18 +42,8 @@ const RatesPage = () => {
         <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            className="pb-16 px-4 pt-2 max-w-7xl mx-auto md:-mt-[580px] md:w-[48%] md:ml-auto md:mr-0 md:pr-2"
+            className="pb-16 md:pb-64 md:min-h-[90vh] px-4 pt-4 max-w-7xl mx-auto mt-2 md:-mt-[540px] md:w-full md:ml-auto md:mr-0 md:pr-10"
         >
-            <h1 className="text-2xl font-poppins font-black text-white mb-2 text-center uppercase tracking-tighter drop-shadow-luxury px-2">
-                Live Retail Rates with GST
-            </h1>
-
-            {(loading && !rates.rtgs.some(r => r.sell !== '-')) && (
-                <div className="flex justify-center mb-4 animate-pulse text-gold-400 font-bold uppercase tracking-widest text-xs">
-                    Connecting to live market...
-                </div>
-            )}
-
             {error && (
                 <div className="max-w-md mx-auto mb-4 bg-red-500/10 border border-red-500/20 text-red-400 p-3 rounded-xl text-center text-xs font-bold uppercase tracking-wider">
                     {error}
@@ -61,83 +51,98 @@ const RatesPage = () => {
             )}
 
             <div className="flex flex-col gap-3">
-
-                {/* Combined Gold & Silver Rates Table */}
-                <div className="flex flex-col">
-                    <div className="gradient-luxury p-3 rounded-t-2xl shadow-lg flex justify-between items-center">
-                        <h2 className="text-white font-poppins font-bold text-sm uppercase tracking-widest hidden md:block">Retail Rates (Gold & Silver)</h2>
-                        <h2 className="text-white font-poppins font-bold text-sm uppercase tracking-widest md:hidden">Live Rates</h2>
-                        <span className="text-white/40 text-[9px] font-black uppercase tracking-widest bg-white/5 px-2 py-1 rounded-full">GST INCLUDED</span>
-                    </div>
-                    <div className="glass rounded-b-2xl overflow-x-auto shadow-luxury">
-                        <table className="w-full text-left min-w-[360px]">
-                            <thead className="bg-white/10 border-b border-white/10">
-                                <tr>
-                                    <th className="px-2 md:px-4 py-3 text-[10px] md:text-xs font-black text-white/80 uppercase tracking-widest text-left w-1/4">Gold Purity</th>
-                                    <th className="px-2 md:px-4 py-3 text-[10px] md:text-xs font-black text-white/80 uppercase tracking-widest text-center w-1/4 pr-4">Price</th>
-                                    {/* Vertical divider applied via CSS border on the left of this th/td */}
-                                    <th className="px-2 md:px-4 py-3 text-[10px] md:text-xs font-black text-white/80 uppercase tracking-widest text-left border-l border-white/10 w-1/4">Silver</th>
-                                    <th className="px-2 md:px-4 py-3 text-[10px] md:text-xs font-black text-white/80 uppercase tracking-widest text-center w-1/4">Price</th>
-                                </tr>
-                            </thead>
-                            <tbody className="divide-y divide-white/5">
-                                {combinedRows.map((row, idx) => {
-                                    const gold = row.gold;
-                                    const silver = row.silver;
-
-                                    const gSellVal = gold?.sell !== '-' && gold?.sell !== undefined ? fmt(gold.sell) : '-';
-                                    const sSellVal = typeof silver?.sell === 'number' ? fmt(silver.sell) : '-';
-
-                                    return (
-                                        <tr key={idx} className="hover:bg-white/5 transition-colors group">
-                                            {/* Gold Columns */}
-                                            <td className="px-2 md:px-4 py-2 text-[11px] md:text-sm font-bold text-white whitespace-nowrap">
-                                                {gold ? gold.name : ''}
-                                            </td>
-                                            <td className="px-2 md:px-4 py-2 text-center whitespace-nowrap pr-4">
-                                                {gold && (
-                                                    <motion.span
-                                                        key={gSellVal}
-                                                        animate={{ scale: [1, 1.05, 1] }}
-                                                        className={`font-bold text-[13px] md:text-[16px] ${getKaratClass(gold.key, 'sell')}`}
-                                                    >
-                                                        <span className="font-sans">₹</span>{gSellVal !== '-' ? gSellVal : '-'}
-                                                    </motion.span>
-                                                )}
-                                            </td>
-                                            
-                                            {/* Silver Columns */}
-                                            <td className="px-2 md:px-4 py-2 text-[11px] md:text-sm font-bold text-white whitespace-nowrap border-l border-white/10">
-                                                {silver ? silver.name : ''}
-                                            </td>
-                                            <td className="px-2 md:px-4 py-2 text-center whitespace-nowrap">
-                                                {silver && (
-                                                    <span className="font-bold text-[13px] md:text-[16px] silver-default">
-                                                        <span className="font-sans">₹</span>{sSellVal !== '-' ? sSellVal : '-'}
-                                                    </span>
-                                                )}
-                                            </td>
+                <div className="flex flex-col md:flex-col-reverse gap-6">
+                    <h1 className="text-xl font-poppins font-black text-white/80 mt-2 mb-1 text-center md:text-right md:-translate-x-32 uppercase tracking-tighter drop-shadow-luxury px-2 md:order-2">
+                        Live Retail Rates with GST
+                    </h1>
+                    
+                    {/* Separate Tables Grid */}
+                    <div className="flex flex-col md:flex-row justify-center md:justify-end gap-4 md:order-1 items-start">
+                        
+                        {/* Gold Rates Table */}
+                        <div className="flex flex-col w-[95%] min-w-[210px] md:max-w-[270px] max-w-[450px] mx-auto md:mx-0">
+                            <div className="gradient-luxury px-3 py-2 md:px-2.5 md:py-2 rounded-t-xl shadow-lg flex justify-between items-center">
+                                <h2 className="text-white font-poppins font-bold text-[12px] md:text-[11px] uppercase tracking-widest">Gold Rates</h2>
+                                <span className="text-white/40 text-[9px] md:text-[7px] font-black uppercase tracking-widest bg-white/5 px-1.5 py-0.5 rounded-full">GST INCL</span>
+                            </div>
+                            <div className="glass rounded-b-xl overflow-hidden shadow-luxury">
+                                <table className="w-full text-left">
+                                    <thead className="bg-white/10 border-b border-white/10">
+                                        <tr>
+                                            <th className="px-3 py-2 md:px-3 md:py-1.5 text-[10px] md:text-[9px] font-black text-white/80 uppercase tracking-widest">Purity</th>
+                                            <th className="px-3 py-2 md:px-3 md:py-1.5 text-[10px] md:text-[9px] font-black text-white/80 uppercase tracking-widest text-right">Price</th>
                                         </tr>
-                                    );
-                                })}
-                            </tbody>
-                        </table>
+                                    </thead>
+                                    <tbody className="divide-y divide-white/5">
+                                        {rates.purities.map((gold, idx) => {
+                                            const gSellVal = gold?.sell !== '-' && gold?.sell !== undefined ? fmt(gold.sell) : '-';
+                                            return (
+                                                <tr key={idx} className="hover:bg-white/5 transition-colors group">
+                                                    <td className="px-3 py-2.5 md:px-3 md:py-2 text-[13px] md:text-[13px] font-bold text-white whitespace-nowrap">
+                                                        {gold.name}
+                                                    </td>
+                                                    <td className="px-3 py-2.5 md:px-3 md:py-2 text-right whitespace-nowrap">
+                                                        <motion.span
+                                                            key={gSellVal}
+                                                            animate={{ scale: [1, 1.05, 1] }}
+                                                            className={`font-bold text-[14px] md:text-[15px] ${getKaratClass(gold.key, 'sell')}`}
+                                                        >
+                                                            <span className="font-sans">₹</span>{gSellVal}
+                                                        </motion.span>
+                                                    </td>
+                                                </tr>
+                                            );
+                                        })}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        {/* Silver Rates Table */}
+                        <div className="flex flex-col w-[95%] min-w-[210px] md:max-w-[270px] max-w-[450px] mx-auto md:mx-0">
+                            <div className="gradient-luxury px-3 py-2 md:px-2.5 md:py-2 rounded-t-xl shadow-lg flex justify-between items-center">
+                                <h2 className="text-white font-poppins font-bold text-[12px] md:text-[11px] uppercase tracking-widest">Silver Rates</h2>
+                                <span className="text-white/40 text-[9px] md:text-[7px] font-black uppercase tracking-widest bg-white/5 px-1.5 py-0.5 rounded-full">GST INCL</span>
+                            </div>
+                            <div className="glass rounded-b-xl overflow-hidden shadow-luxury">
+                                <table className="w-full text-left">
+                                    <thead className="bg-white/10 border-b border-white/10">
+                                        <tr>
+                                            <th className="px-3 py-2 md:px-3 md:py-1.5 text-[10px] md:text-[9px] font-black text-white/80 uppercase tracking-widest">Silver</th>
+                                            <th className="px-3 py-2 md:px-3 md:py-1.5 text-[10px] md:text-[9px] font-black text-white/80 uppercase tracking-widest text-right">Price</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody className="divide-y divide-white/5">
+                                        {silverRows.map((silver, idx) => {
+                                            const sSellVal = typeof silver?.sell === 'number' ? fmt(silver.sell) : '-';
+                                            return (
+                                                <tr key={idx} className="hover:bg-white/5 transition-colors group">
+                                                    <td className="px-3 py-2.5 md:px-3 md:py-2 text-[13px] md:text-[13px] font-bold text-white whitespace-nowrap">
+                                                        {silver.name}
+                                                    </td>
+                                                    <td className="px-3 py-2.5 md:px-3 md:py-2 text-right whitespace-nowrap">
+                                                        <span className="font-bold text-[14px] md:text-[15px] silver-default">
+                                                            <span className="font-sans">₹</span>{sSellVal}
+                                                        </span>
+                                                    </td>
+                                                </tr>
+                                            );
+                                        })}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
                     </div>
                 </div>
 
 
-                {/* Market Information */}
-                <div className="flex flex-col gap-3 opacity-60">
-                    <div className="flex items-center gap-4 px-4">
-                        <div className="h-px flex-1 bg-white/10"></div>
-                        <span className="text-white/40 font-poppins font-bold text-[9px] uppercase tracking-widest">Market Information</span>
-                        <div className="h-px flex-1 bg-white/10"></div>
-                    </div>
-                    <p className="text-center text-white/40 font-poppins text-[10px] px-6">
-                        Retail prices are indicative and subject to change based on local market conditions and taxes.
-                    </p>
-                </div>
 
+                {(loading && !rates.rtgs.some(r => r.sell !== '-')) && (
+                    <div className="flex justify-center mb-4 animate-pulse text-gold-400 font-bold uppercase tracking-widest text-xs">
+                        Connecting to live market...
+                    </div>
+                )}
             </div>
         </motion.div>
     );

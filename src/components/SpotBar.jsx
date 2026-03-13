@@ -44,16 +44,16 @@ const SpotBar = () => {
                                 animate={{
                                     scale: pClass === 'price-up' || pClass === 'price-down' ? 1.04 : 1
                                 }}
-                                style={{ borderColor: bColor }}
-                                className="bg-black/30 border-[2px] md:border-[2.5px] rounded-[8px] md:rounded-[20px] px-2 md:px-6 py-1.5 md:py-3 flex items-center w-full justify-center group hover:bg-black/40 shadow-premium transition-colors duration-200"
+                                style={{ backgroundColor: bColor, borderColor: bColor }}
+                                className="border-[2px] md:border-[2.5px] rounded-[8px] md:rounded-[20px] px-2 md:px-6 py-1.5 md:py-3 flex items-center w-full justify-center group shadow-premium transition-colors duration-200"
                             >
-                                <span className="text-slate-500 text-xs md:text-2xl font-normal mr-1 md:mr-2 group-hover:text-slate-300 transition-colors">
+                                <span className={`text-xs md:text-2xl font-normal mr-1 md:mr-2 ${bColor === '#FFD700' || bColor === '#E5E5E5' ? 'text-slate-900/40' : 'text-white/40'}`}>
                                     {item.symbol === '₹' ? <span style={{ fontFamily: 'Inter, system-ui, sans-serif' }}>₹</span> : item.symbol}
                                 </span>
                                 <motion.span
                                     key={`val-${item.value}-${item.key.section}-${item.key.id}`}
                                     animate={{ scale: [1, 1.1, 1] }}
-                                    className={`text-base md:text-4xl font-bold font-poppins tracking-tighter md:tracking-tight text-slate-900`}
+                                    className={`text-base md:text-4xl font-bold font-poppins tracking-tighter md:tracking-tight ${bColor === '#FFD700' || bColor === '#E5E5E5' ? 'text-slate-900' : 'text-white'}`}
                                 >
                                     {item.value}
                                 </motion.span>

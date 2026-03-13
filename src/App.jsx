@@ -70,6 +70,8 @@ const AppLayout = () => {
     if (isHomePage) {
       images.push('/Untitled design (19).png');
       images.push('/Untitled design (25).png');
+    } else if (location.pathname === '/rates') {
+      images.push('/Untitled design (30).png');
     }
     return images;
   }, [isHomePage]);
@@ -141,9 +143,9 @@ const AppLayout = () => {
                   initial={{ opacity: 1 }}
                   animate={{ opacity: 1 }}
                   transition={{ duration: 0.5 }}
-                  src={['/alerts', '/videos'].includes(location.pathname) ? "/Untitled design (31).png" : "/Untitled design (21).png"}
+                  src={['/alerts', '/videos'].includes(location.pathname) ? "/Untitled design (31).png" : location.pathname === '/rates' ? "/Untitled (A2 (Landscape)).png" : "/Untitled design (21).png"}
                   alt="Abhinav Gold & Silver Header Mobile"
-                  className={`${['/alerts', '/videos'].includes(location.pathname) ? 'w-[50%] mx-auto py-4 mt-16 max-w-[200px]' : 'w-full min-h-[120px]'} h-auto md:hidden object-contain object-center block`}
+                  className={`${['/alerts', '/videos'].includes(location.pathname) ? 'w-[50%] mx-auto py-4 mt-16 max-w-[200px]' : location.pathname === '/rates' ? 'w-full' : 'w-full min-h-[220px]'} h-auto md:hidden ${location.pathname === '/rates' ? 'object-contain' : 'object-cover'} object-center block`}
                 />
                 <motion.img
                   initial={{ opacity: 1 }}
@@ -151,7 +153,7 @@ const AppLayout = () => {
                   transition={{ duration: 0.5 }}
                   src={['/alerts', '/videos'].includes(location.pathname) ? "/Untitled design (31).png" : "/Untitled design (30).png"}
                   alt="Abhinav Gold & Silver Header Desktop"
-                  className={`${['/alerts', '/videos'].includes(location.pathname) ? 'w-[30%] mx-auto py-6 max-w-[250px]' : 'w-full'} h-auto hidden md:block object-contain object-center block`}
+                  className={`${['/alerts', '/videos'].includes(location.pathname) ? 'w-[30%] mx-auto py-6 max-w-[250px]' : location.pathname === '/rates' ? 'w-full' : 'w-full min-h-[350px]'} h-auto hidden md:block ${location.pathname === '/rates' ? 'object-contain' : 'object-cover'} object-center block`}
                 />
               </div>
             )}
@@ -163,9 +165,11 @@ const AppLayout = () => {
               </div>
             )}
           </section>
+          
+
 
           {/* Global Scrolling Ticker - Snapped to header section - Mobile Only */}
-          <div className="md:hidden">
+          <div className={`md:hidden z-10 w-full relative ${location.pathname === '/rates' ? '-mt-2' : ''}`}>
             <Ticker />
           </div>
         </div>
@@ -186,9 +190,9 @@ const AppLayout = () => {
 
       {/* Desktop Ticker — Above Footer, Desktop Only */}
       {!isAdminPage && (
-        <div className="hidden md:block">
-          <Ticker />
-        </div>
+      <div className={`hidden md:block ${location.pathname === '/rates' ? 'md:-mt-20' : ''}`}>
+        <Ticker />
+      </div>
       )}
 
       {/* Desktop Footer — hidden on Admin, Desktop Only */}
