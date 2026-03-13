@@ -18,24 +18,20 @@ import TermsOfService from './pages/TermsOfService';
 import { Loader2 } from 'lucide-react';
 
 const Preloader = () => (
-  <div className="fixed inset-0 z-[100] flex flex-col items-center justify-center bg-[#FFB1E1]">
-    <motion.div
-      initial={{ opacity: 0, scale: 0.8 }}
-      animate={{ opacity: 1, scale: 1 }}
-      transition={{ duration: 0.5 }}
-      className="flex flex-col items-center gap-6"
-    >
-      <div className="relative">
-        <Loader2 className="w-12 h-12 text-slate-900 animate-spin" />
-        <div className="absolute inset-0 flex items-center justify-center">
-          <div className="w-6 h-6 bg-slate-900 rounded-full animate-pulse" />
-        </div>
-      </div>
-      <div className="flex flex-col items-center">
-        <h2 className="text-2xl font-playfair font-black tracking-[0.2em] text-slate-900 uppercase">Abhinav</h2>
-        <p className="text-[10px] font-poppins tracking-[0.3em] text-slate-900/60 uppercase mt-1">Gold & Silver</p>
-      </div>
-    </motion.div>
+  <div className="fixed inset-0 z-[100] flex items-center justify-center bg-[#FFB1E1]">
+    <motion.img
+      src="/Untitled design (31).png"
+      alt="Abhinav Loading"
+      animate={{
+        scale: [1, 1.1, 1],
+      }}
+      transition={{
+        duration: 2,
+        repeat: Infinity,
+        ease: "easeInOut"
+      }}
+      className="max-w-[80%] max-h-[80%] object-contain"
+    />
   </div>
 );
 
@@ -70,7 +66,7 @@ const AppLayout = () => {
 
   // Critical images to preload based on viewport
   const criticalImages = React.useMemo(() => {
-    const images = [];
+    const images = ['/Untitled design (31).png'];
     if (isHomePage) {
       images.push('/Untitled design (19).png');
       images.push('/Untitled design (25).png');
