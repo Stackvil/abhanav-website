@@ -40,7 +40,7 @@ const AlertsPage = () => {
         >
             <div className="flex items-center gap-4 mb-10 justify-center">
                 <div className="p-3 bg-white/5 rounded-2xl shadow-gold-glow border border-white/20">
-                    <Bell className="text-gold-400" size={32} />
+                    <Bell className="text-gold-400" size={24} />
                 </div>
                 <h1 className="text-3xl md:text-5xl font-playfair font-black text-white uppercase tracking-tighter leading-none drop-shadow-luxury">Market Alerts</h1>
             </div>

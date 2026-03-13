@@ -23,14 +23,14 @@ const SpotBar = () => {
     if (!rates) return null;
 
     return (
-        <div className="flex items-center justify-end gap-2 md:gap-8 px-0 md:px-2 py-1 md:py-3">
+        <div className="flex items-center justify-end gap-3 md:gap-10 px-0 md:px-2 py-1 md:py-3">
             {items.map((item, index) => (
                 <motion.div
                     key={index}
                     className="flex flex-col items-center gap-1 md:gap-1.5"
                 >
                     {/* Label */}
-                    <span className="text-[10px] md:text-sm font-bold text-slate-500 uppercase tracking-wider md:tracking-[0.2em] font-poppins opacity-80 text-center">
+                    <span className="text-[10px] md:text-base font-bold text-slate-500 uppercase tracking-wider md:tracking-[0.2em] font-poppins opacity-80 text-center">
                         {item.label}
                     </span>
 
@@ -45,15 +45,15 @@ const SpotBar = () => {
                                     scale: pClass === 'price-up' || pClass === 'price-down' ? 1.04 : 1
                                 }}
                                 style={{ borderColor: bColor }}
-                                className="bg-black/30 border-[1.5px] md:border-[2px] rounded-[6px] md:rounded-[16px] px-2 md:px-4 py-1 md:py-2 flex items-center w-full justify-center group hover:bg-black/40 shadow-premium transition-colors duration-200"
+                                className="bg-black/30 border-[2px] md:border-[2.5px] rounded-[8px] md:rounded-[20px] px-2 md:px-6 py-1.5 md:py-3 flex items-center w-full justify-center group hover:bg-black/40 shadow-premium transition-colors duration-200"
                             >
-                                <span className="text-slate-500 text-[10px] md:text-xl font-normal mr-1 md:mr-2 group-hover:text-slate-300 transition-colors">
+                                <span className="text-slate-500 text-xs md:text-2xl font-normal mr-1 md:mr-2 group-hover:text-slate-300 transition-colors">
                                     {item.symbol === '₹' ? <span style={{ fontFamily: 'Inter, system-ui, sans-serif' }}>₹</span> : item.symbol}
                                 </span>
                                 <motion.span
                                     key={`val-${item.value}-${item.key.section}-${item.key.id}`}
                                     animate={{ scale: [1, 1.1, 1] }}
-                                    className={`text-[12px] md:text-2xl font-bold font-poppins tracking-tighter md:tracking-tight text-slate-900`}
+                                    className={`text-base md:text-4xl font-bold font-poppins tracking-tighter md:tracking-tight text-slate-900`}
                                 >
                                     {item.value}
                                 </motion.span>

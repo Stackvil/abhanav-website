@@ -92,7 +92,7 @@ const RatesPage = () => {
                                         <tr key={idx} className="hover:bg-white/5 transition-colors group">
                                             {/* Gold Columns */}
                                             <td className="px-2 md:px-4 py-2 text-[11px] md:text-sm font-bold text-white whitespace-nowrap">
-                                                {gold ? gold.name.replace('kt', 'Karat') : ''}
+                                                {gold ? gold.name : ''}
                                             </td>
                                             <td className="px-2 md:px-4 py-2 text-center whitespace-nowrap pr-4">
                                                 {gold && (

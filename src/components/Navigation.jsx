@@ -20,13 +20,13 @@ const Navigation = () => {
         <>
             {/* Absolute Positioned Triggers over the Header Banner */}
             <div className="absolute top-0 w-full z-50 pointer-events-none">
-                <div className="max-w-7xl mx-auto px-4 py-4 md:py-6 flex justify-between items-start pointer-events-auto">
-                    {/* Left: Hamburger Icon */}
+                <div className="w-full flex justify-end items-start pointer-events-auto relative h-20 md:h-24 px-6 md:px-8 py-4 md:py-6">
+                    {/* Left: Hamburger Icon (Absolute Top Left) */}
                     <button 
                         onClick={() => setIsOpen(true)}
-                        className="p-2 md:p-3 bg-black/40 backdrop-blur-md rounded-xl text-white hover:bg-black/60 transition-all shadow-premium border border-white/20"
+                        className="hidden md:flex absolute top-4 left-4 w-[40px] h-[40px] bg-[#6e0a39] text-white rounded-[14px] hover:bg-[#831145] transition-all shadow-md items-center justify-center border-0"
                     >
-                        <Menu size={24} className="md:w-7 md:h-7" />
+                        <Menu size={22} className="md:w-5 md:h-5" strokeWidth={2.5} />
                     </button>
 
                     {/* Right: Action Icons (Home Page Only) */}
@@ -36,12 +36,12 @@ const Navigation = () => {
                                 href="https://wa.me/919848012345"
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className="p-2 md:p-3 bg-green-500/90 text-white rounded-xl hover:bg-green-600 transition-all hover:scale-105 active:scale-95 shadow-premium flex items-center justify-center border border-white/20"
+                                className="w-[32px] h-[32px] md:w-[48px] md:h-[48px] bg-[#1eb858] text-white rounded-[10px] md:rounded-[14px] hover:bg-green-500 transition-all flex items-center justify-center shadow-md border-0"
                             >
-                                <MessageCircle size={24} className="md:w-6 md:h-6" />
+                                <MessageCircle size={16} className="md:w-6 md:h-6" strokeWidth={2.5} />
                             </a>
-                            <button className="p-2 md:p-3 bg-[#FFD700]/90 text-slate-900 rounded-xl hover:bg-[#FFD700] transition-all hover:scale-105 active:scale-95 shadow-premium flex items-center justify-center border border-white/20">
-                                <Bell size={24} className="md:w-6 md:h-6" />
+                            <button className="w-[32px] h-[32px] md:w-[48px] md:h-[48px] bg-[#f4cb4c] text-slate-900 rounded-[10px] md:rounded-[14px] hover:bg-yellow-400 transition-all flex items-center justify-center shadow-md border-0">
+                                <Bell size={16} className="md:w-6 md:h-6" strokeWidth={2.5} color="#0f172a" />
                             </button>
                         </div>
                     )}

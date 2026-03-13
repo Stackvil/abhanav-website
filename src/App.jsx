@@ -141,17 +141,17 @@ const AppLayout = () => {
                   initial={{ opacity: 1 }}
                   animate={{ opacity: 1 }}
                   transition={{ duration: 0.5 }}
-                  src="/Untitled design (21).png"
+                  src={['/alerts', '/videos'].includes(location.pathname) ? "/Untitled design (31).png" : "/Untitled design (21).png"}
                   alt="Abhinav Gold & Silver Header Mobile"
-                  className="w-full h-auto min-h-[120px] md:hidden object-contain object-center block"
+                  className={`${['/alerts', '/videos'].includes(location.pathname) ? 'w-[50%] mx-auto py-4 mt-16 max-w-[200px]' : 'w-full min-h-[120px]'} h-auto md:hidden object-contain object-center block`}
                 />
                 <motion.img
                   initial={{ opacity: 1 }}
                   animate={{ opacity: 1 }}
                   transition={{ duration: 0.5 }}
-                  src="/Untitled design (30).png"
+                  src={['/alerts', '/videos'].includes(location.pathname) ? "/Untitled design (31).png" : "/Untitled design (30).png"}
                   alt="Abhinav Gold & Silver Header Desktop"
-                  className="w-full h-auto hidden md:block object-contain object-center block"
+                  className={`${['/alerts', '/videos'].includes(location.pathname) ? 'w-[30%] mx-auto py-6 max-w-[250px]' : 'w-full'} h-auto hidden md:block object-contain object-center block`}
                 />
               </div>
             )}
