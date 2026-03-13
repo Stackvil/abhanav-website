@@ -69,7 +69,7 @@ const Hero = () => {
                                     animate={{ opacity: 1, x: 0 }}
                                     transition={{ delay: idx * 0.12 }}
                                     whileHover={{ y: -3, boxShadow: "0 14px 30px -10px rgba(0,0,0,0.12)" }}
-                                    className="bg-white/10 backdrop-blur-sm rounded-[16px] py-2.5 px-3 md:py-3 md:px-5 shadow-premium transition-all duration-500 border border-white/20 relative group"
+                                    className="bg-white/10 backdrop-blur-sm rounded-[16px] py-5 px-3 md:py-3 md:px-5 shadow-premium transition-all duration-500 border border-white/20 relative group"
                                 >
                                     <div className="grid grid-cols-[1.5fr_1fr_1fr_60px] md:grid-cols-[2fr_1fr_1fr_80px] gap-2 md:gap-4 items-center w-full relative">
                                         {/* Item Label */}
@@ -96,7 +96,7 @@ const Hero = () => {
                                                             scale: pClass === 'price-up' || pClass === 'price-down' ? 1.04 : 1
                                                         }}
                                                         style={{ borderColor: bColor, borderWidth: isGold ? '3px' : '2px' }}
-                                                        className="w-full transition-all duration-300 max-w-[110px] md:max-w-[160px] py-1.5 md:py-2 px-1 bg-transparent rounded-[14px] md:rounded-[18px] flex items-center justify-center shadow-md overflow-hidden"
+                                                        className="w-full transition-all duration-300 max-w-[110px] md:max-w-[160px] py-3 md:py-2 px-1 bg-transparent rounded-[14px] md:rounded-[18px] flex items-center justify-center shadow-md overflow-hidden"
                                                     >
                                                         <motion.span
                                                             key={`buy-${item.buy}-${pClass}`}
@@ -122,7 +122,7 @@ const Hero = () => {
                                                             scale: pClass === 'price-up' || pClass === 'price-down' ? 1.04 : 1
                                                         }}
                                                         style={{ borderColor: bColor, borderWidth: isGold ? '3px' : '2px' }}
-                                                        className="w-full transition-all duration-300 max-w-[110px] md:max-w-[160px] py-1.5 md:py-2 px-1 bg-transparent rounded-[14px] md:rounded-[18px] flex items-center justify-center shadow-md overflow-hidden"
+                                                        className="w-full transition-all duration-300 max-w-[110px] md:max-w-[160px] py-3 md:py-2 px-1 bg-transparent rounded-[14px] md:rounded-[18px] flex items-center justify-center shadow-md overflow-hidden"
                                                     >
                                                         <motion.span
                                                             key={`sell-${item.sell}-${pClass}`}

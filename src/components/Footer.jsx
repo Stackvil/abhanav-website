@@ -14,6 +14,19 @@ const Footer = () => {
 
             <div className="max-w-7xl mx-auto px-6 relative z-10">
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-10 mb-16">
+                    <div className="flex flex-col gap-6">
+                        <h4 className="text-white font-playfair font-bold text-lg mb-2 uppercase tracking-widest text-center lg:text-left">Bank QR</h4>
+                        <div className="flex flex-col items-center lg:items-start gap-4">
+                            <div className="bg-white p-2.5 rounded-[22px] shadow-luxury border-2 border-gold-400/30 group relative overflow-hidden w-max">
+                                <img src="/qr-code.png" alt="Scan QR Bank" className="w-24 h-24 object-contain transition-transform duration-500 group-hover:scale-110" />
+                                <div className="absolute inset-0 bg-gold-400/10 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none" />
+                            </div>
+                            <div className="flex flex-col lg:items-start items-center">
+                                <span className="text-white font-poppins font-black text-[9px] uppercase tracking-[0.2em] mb-1">Bank Details</span>
+                            </div>
+                        </div>
+                    </div>
+
                     {/* Brand Section */}
                     <div className="flex flex-col gap-6">
                         <Link to="/" className="flex items-center gap-3">
@@ -33,16 +46,7 @@ const Footer = () => {
                         </div>
                     </div>
 
-                    {/* Quick Links */}
-                    <div>
-                        <h4 className="text-white font-playfair font-bold text-lg mb-6 uppercase tracking-widest">Navigation</h4>
-                        <ul className="flex flex-col gap-4">
-                            <FooterLink to="/" label="Home" />
-                            <FooterLink to="/rates" label="Live Rates" />
-                            <FooterLink to="/alerts" label="Market Alerts" />
-                            <FooterLink to="/videos" label="Media Gallery" />
-                        </ul>
-                    </div>
+
 
                     {/* Features / Why Us */}
                     <div>
@@ -64,17 +68,17 @@ const Footer = () => {
                         </div>
                     </div>
 
-                    {/* QR Codes */}
-                    <div>
-                        <h4 className="text-white font-playfair font-bold text-lg mb-6 uppercase tracking-widest">Scan & Connect</h4>
-                        <div className="flex flex-col gap-4">
-                            <div className="flex flex-col items-center gap-2 bg-white/5 rounded-xl p-3 border border-white/5 hover:border-gold-400/30 transition-colors group">
-                                <img src="/qr-code (1).png" alt="Scan for Location" className="w-20 h-20 object-contain rounded-lg group-hover:scale-105 transition-transform" />
-                                <p className="text-white font-poppins font-black text-[9px] uppercase tracking-widest">📍 Location</p>
+
+                    {/* Location QR - Right Side End */}
+                    <div className="flex flex-col gap-6 lg:items-end">
+                        <h4 className="text-white font-playfair font-bold text-lg mb-2 uppercase tracking-widest text-center lg:text-right">Location QR</h4>
+                        <div className="flex flex-col items-center lg:items-end gap-4">
+                            <div className="bg-white p-2.5 rounded-[22px] shadow-luxury border-2 border-gold-400/30 group relative overflow-hidden w-max">
+                                <img src="/qr-code (1).png" alt="Scan QR Location" className="w-24 h-24 object-contain transition-transform duration-500 group-hover:scale-110" />
+                                <div className="absolute inset-0 bg-gold-400/10 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none" />
                             </div>
-                            <div className="flex flex-col items-center gap-2 bg-white/5 rounded-xl p-3 border border-white/5 hover:border-gold-400/30 transition-colors group">
-                                <img src="/qr-code.png" alt="Scan for Bank Details" className="w-20 h-20 object-contain rounded-lg group-hover:scale-105 transition-transform" />
-                                <p className="text-white font-poppins font-black text-[9px] uppercase tracking-widest">🏦 Bank Details</p>
+                            <div className="flex flex-col lg:items-end items-center">
+                                <span className="text-white font-poppins font-black text-[9px] uppercase tracking-[0.2em] mb-1">📍 Location</span>
                             </div>
                         </div>
                     </div>

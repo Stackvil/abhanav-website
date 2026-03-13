@@ -100,7 +100,7 @@ const AppLayout = () => {
           backgroundImage: isHomePage
             ? 'none'
             : location.pathname === '/alerts'
-              ? 'url("/fe4171046d7ee1ab9220734db89e8859.jpg")'
+              ? 'url("/Untitled design (6).jpg")'
               : location.pathname === '/videos'
                 ? 'url("/Untitled design (10).png")'
                 : 'url("/Untitled design (14).png")',
