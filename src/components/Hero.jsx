@@ -45,7 +45,7 @@ const Hero = () => {
                                     <span className="inline-flex items-center justify-center px-4 py-1.5 rounded-xl bg-transparent border-2 border-slate-900/20 text-slate-900 font-playfair font-black text-[10px] md:text-sm tracking-[0.1em] shadow-sm backdrop-blur-sm">PRODUCTS</span>
                                 </div>
                                 <div className="flex justify-center">
-                                    <span className="inline-flex items-center justify-center px-4 py-1.5 rounded-xl bg-transparent border-2 border-slate-900/20 text-slate-900 font-playfair font-black text-[10px] md:text-sm tracking-[0.1em] shadow-sm backdrop-blur-sm">BUY</span>
+                                    <span className="inline-flex items-center justify-center px-4 py-1.5 rounded-xl bg-transparent border-2 border-slate-900/20 text-slate-900 font-playfair font-black text-[10px] md:text-sm tracking-[0.1em] shadow-sm backdrop-blur-sm md:-translate-x-4">BUY</span>
                                 </div>
                                 <div className="flex justify-center">
                                     <span className="inline-flex items-center justify-center px-4 py-1.5 rounded-xl bg-transparent border-2 border-slate-900/20 text-slate-900 font-playfair font-black text-[10px] md:text-sm tracking-[0.1em] shadow-sm backdrop-blur-sm">SELL</span>
@@ -101,7 +101,7 @@ const Hero = () => {
                                                         <motion.span
                                                             key={`buy-${item.buy}-${pClass}`}
                                                             animate={{ scale: [1, 1.08, 1] }}
-                                                            className={`font-black font-poppins text-center tracking-tighter md:tracking-wider text-slate-900 text-[14px] md:text-[22px] leading-none`}
+                                                            className={`font-black font-poppins text-center tracking-tighter md:tracking-wider text-slate-900 text-[14px] md:text-[22px] leading-none md:-translate-x-4`}
                                                         >
                                                             {item.buy !== '-' ? <><span style={{ fontFamily: 'Inter, system-ui, sans-serif' }}>₹</span>{fmt(item.buy)}</> : '—'}
                                                         </motion.span>
