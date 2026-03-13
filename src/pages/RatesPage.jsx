@@ -24,14 +24,10 @@ const RatesPage = () => {
         {
             name: 'Silver 10g',
             sell: silverBase !== null ? Math.round((silverBase / 5000) * 10 * 100) / 100 : '-',
-            low: typeof silver5kg?.low === 'number' ? Math.round((silver5kg.low / 5000) * 10 * 100) / 100 : '-',
-            high: typeof silver5kg?.high === 'number' ? Math.round((silver5kg.high / 5000) * 10 * 100) / 100 : '-',
         },
         {
             name: 'Silver 1 Kg',
             sell: silverBase !== null ? Math.round(silverBase / 5 * 100) / 100 : '-',
-            low: typeof silver5kg?.low === 'number' ? Math.round(silver5kg.low / 5 * 100) / 100 : '-',
-            high: typeof silver5kg?.high === 'number' ? Math.round(silver5kg.high / 5 * 100) / 100 : '-',
         },
     ];
 
@@ -70,20 +66,16 @@ const RatesPage = () => {
                             <thead className="bg-white/10 border-b border-white/10">
                                 <tr>
                                     <th className="px-2 py-3 text-[10px] md:text-xs font-black text-white/80 uppercase tracking-widest text-left pl-4">Purity</th>
-                                    <th className="px-2 py-3 text-[10px] md:text-xs font-black text-white/80 uppercase tracking-widest text-center">Sell</th>
-                                    <th className="px-2 py-3 text-[10px] md:text-xs font-black text-red-400/80 uppercase tracking-widest text-center">Low</th>
-                                    <th className="px-2 py-3 text-[10px] md:text-xs font-black text-green-400/80 uppercase tracking-widest text-right pr-4">High</th>
+                                    <th className="px-2 py-3 text-[10px] md:text-xs font-black text-white/80 uppercase tracking-widest text-right pr-4">Sell</th>
                                 </tr>
                             </thead>
                             <tbody className="divide-y divide-white/5">
                                 {rates.purities.map((karat, idx) => {
                                     const sellVal = karat.sell !== '-' && karat.sell !== undefined ? fmt(karat.sell) : '-';
-                                    const lowVal = karat.low !== '-' && karat.low !== undefined ? fmt(karat.low) : '-';
-                                    const highVal = karat.high !== '-' && karat.high !== undefined ? fmt(karat.high) : '-';
                                     return (
                                         <tr key={idx} className="hover:bg-white/5 transition-colors group">
                                             <td className="px-2 py-2 text-[11px] md:text-sm font-bold text-white whitespace-nowrap pl-4">{karat.name.replace('kt', 'Karat')}</td>
-                                            <td className="px-2 py-2 text-center whitespace-nowrap">
+                                            <td className="px-2 py-2 text-right whitespace-nowrap pr-4">
                                                 <motion.span
                                                     key={sellVal}
                                                     animate={{ scale: [1, 1.05, 1] }}
@@ -91,16 +83,6 @@ const RatesPage = () => {
                                                 >
                                                     <span className="font-sans">₹</span>{sellVal !== '-' ? sellVal : '-'}
                                                 </motion.span>
-                                            </td>
-                                            <td className="px-2 py-2 text-center whitespace-nowrap">
-                                                <span className="font-bold text-[13px] md:text-[16px] text-red-400">
-                                                    <span className="font-sans">₹</span>{lowVal !== '-' ? lowVal : '-'}
-                                                </span>
-                                            </td>
-                                            <td className="px-2 py-2 text-right whitespace-nowrap pr-4">
-                                                <span className="font-bold text-[13px] md:text-[16px] text-green-400">
-                                                    <span className="font-sans">₹</span>{highVal !== '-' ? highVal : '-'}
-                                                </span>
                                             </td>
                                         </tr>
                                     );
@@ -121,28 +103,16 @@ const RatesPage = () => {
                             <thead className="bg-white/10 border-b border-white/10">
                                 <tr>
                                     <th className="px-2 py-3 text-[10px] md:text-xs font-black text-white/80 uppercase tracking-widest text-left pl-4">Weight</th>
-                                    <th className="px-2 py-3 text-[10px] md:text-xs font-black text-white/80 uppercase tracking-widest text-center">Sell</th>
-                                    <th className="px-2 py-3 text-[10px] md:text-xs font-black text-red-400/80 uppercase tracking-widest text-center">Low</th>
-                                    <th className="px-2 py-3 text-[10px] md:text-xs font-black text-green-400/80 uppercase tracking-widest text-right pr-4">High</th>
+                                    <th className="px-2 py-3 text-[10px] md:text-xs font-black text-white/80 uppercase tracking-widest text-right pr-4">Sell</th>
                                 </tr>
                             </thead>
                             <tbody className="divide-y divide-white/5">
                                 {silverRows.map((row, idx) => (
                                     <tr key={idx} className="hover:bg-white/5 transition-colors">
                                         <td className="px-2 py-2 text-[11px] md:text-sm font-bold text-white whitespace-nowrap pl-4">{row.name}</td>
-                                        <td className="px-2 py-2 text-center whitespace-nowrap">
+                                        <td className="px-2 py-2 text-right whitespace-nowrap pr-4">
                                             <span className="font-bold text-[13px] md:text-[16px] silver-default">
                                                 <span className="font-sans">₹</span>{typeof row.sell === 'number' ? fmt(row.sell) : '-'}
-                                            </span>
-                                        </td>
-                                        <td className="px-2 py-2 text-center whitespace-nowrap">
-                                            <span className="font-bold text-[13px] md:text-[16px] text-red-400">
-                                                <span className="font-sans">₹</span>{typeof row.low === 'number' ? fmt(row.low) : '-'}
-                                            </span>
-                                        </td>
-                                        <td className="px-2 py-2 text-right whitespace-nowrap pr-4">
-                                            <span className="font-bold text-[13px] md:text-[16px] text-green-400">
-                                                <span className="font-sans">₹</span>{typeof row.high === 'number' ? fmt(row.high) : '-'}
                                             </span>
                                         </td>
                                     </tr>
