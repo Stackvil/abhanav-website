@@ -59,17 +59,17 @@ const AlertsPage = () => {
 
                         <div className="flex justify-between items-start mb-4 relative z-10">
                             <div className="flex flex-col gap-1">
-                                <h3 className="text-xl font-playfair font-black text-white group-hover:text-gold-400 transition-colors uppercase tracking-tight">{alert.title}</h3>
-                                <div className="flex items-center gap-2 text-white/50">
+                                <h3 className="text-xl font-playfair font-black text-black group-hover:text-gold-500 transition-colors uppercase tracking-tight">{alert.title}</h3>
+                                <div className="flex items-center gap-2 text-black/60">
                                     <Calendar size={14} />
                                     <span className="text-[10px] font-bold uppercase tracking-widest font-poppins">{alert.date}</span>
                                 </div>
                             </div>
-                            <span className={`px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-wider ${alert.type === 'urgent' ? 'bg-red-500/20 text-red-300' : 'bg-blue-500/20 text-blue-300'}`}>
+                            <span className={`px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-wider ${alert.type === 'urgent' ? 'bg-red-500/20 text-red-600' : 'bg-blue-500/20 text-blue-600'}`}>
                                 {alert.type}
                             </span>
                         </div>
-                        <p className="text-white/70 font-poppins text-sm leading-relaxed relative z-10">{alert.msg}</p>
+                        <p className="text-black font-poppins text-sm font-semibold leading-relaxed relative z-10">{alert.msg}</p>
 
                     </motion.div>
                 ))}
