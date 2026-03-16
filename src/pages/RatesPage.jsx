@@ -4,7 +4,7 @@ import { motion } from 'framer-motion';
 import { Music } from 'lucide-react';
 
 const RatesPage = () => {
-    const { rates, rawRates, loading, error, getPriceClass, isMusicEnabled, toggleMusic, music } = useRates();
+    const { rates, rawRates, loading, error, getPriceClass, isMusicEnabled, toggleMusic } = useRates();
 
     const fmt = (val) => {
         if (typeof val !== 'number') return '-';
@@ -151,9 +151,7 @@ const RatesPage = () => {
                         onClick={toggleMusic}
                         className={`flex items-center gap-2 px-5 py-2.5 rounded-full shadow-lg transition-all border-2 font-poppins font-bold text-xs uppercase tracking-widest ${
                             isMusicEnabled ? 'bg-gold-500 border-gold-400 text-white animate-pulse' : 'bg-white/20 border-white/30 text-white'
-                        } ${
-                            !(music.ratesMusic?.sourceType === 'local' ? music.ratesMusic?.fileUrl : music.ratesMusic?.videoId) ? 'opacity-50 cursor-not-allowed' : 'hover:scale-105'
-                        }`}
+                        } hover:scale-105`}
                         title={isMusicEnabled ? 'Turn Off Music' : 'Turn On Music'}
                     >
                         <Music size={16} />

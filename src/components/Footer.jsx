@@ -4,7 +4,7 @@ import { Link, useLocation } from 'react-router-dom';
 import { useRates } from '../context/RateContext';
 
 const Footer = () => {
-    const { isMusicEnabled, toggleMusic, music } = useRates();
+    const { isMusicEnabled, toggleMusic } = useRates();
     const location = useLocation();
     const isRatesPage = location.pathname === '/rates';
     const currentYear = new Date().getFullYear();

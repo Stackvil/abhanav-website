@@ -4,7 +4,6 @@ import { useLocation } from 'react-router-dom';
 import { useRates } from '../context/RateContext';
 
 const MusicPlayer = ({ isEnabled }) => {
-    const { music } = useRates();
     const location = useLocation();
     const [isPlaying, setIsPlaying] = useState(false);
     const [currentUrl, setCurrentUrl] = useState('');
@@ -53,35 +52,16 @@ const MusicPlayer = ({ isEnabled }) => {
     }, [unlocked, isEnabled]);
 
     useEffect(() => {
-        let musicData = null;
+        setSourceType('local');
         if (isHomePage) {
-            musicData = music.homeMusic;
+            setCurrentUrl('/music/home.mp3');
         } else if (isRatesPage) {
-            musicData = music.ratesMusic;
+            setCurrentUrl('/music/rates.mp3');
+        } else {
+            setCurrentUrl('');
+            setIsPlaying(false);
         }
-
-        if (musicData) {
-            const newSourceType = musicData.sourceType || 'youtube';
-            setSourceType(newSourceType);
-            
-            if (newSourceType === 'local' && musicData.fileUrl) {
-                const absUrl = `${window.location.origin}${musicData.fileUrl}`;
-                if (currentUrl !== absUrl) {
-                    console.log("MusicPlayer: Switching to Local ->", absUrl);
-                    setCurrentUrl(absUrl);
-                }
-            } else if (musicData.videoId) {
-                const ytUrl = `https://www.youtube.com/watch?v=${musicData.videoId}`;
-                if (currentUrl !== ytUrl) {
-                    console.log("MusicPlayer: Switching to YouTube ->", ytUrl);
-                    setCurrentUrl(ytUrl);
-                }
-            } else {
-                setCurrentUrl('');
-                setIsPlaying(false);
-            }
-        }
-    }, [location.pathname, music, isHomePage, isRatesPage, currentUrl]);
+    }, [isHomePage, isRatesPage]);
 
     // sync playing state
     useEffect(() => {

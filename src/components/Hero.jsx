@@ -8,7 +8,7 @@ import SpotBar from './SpotBar';
 import Ticker from './Ticker';
 
 const Hero = () => {
-    const { rates, rawRates, loading, error, getPriceClass, isMusicEnabled, toggleMusic, music } = useRates();
+    const { rates, rawRates, loading, error, getPriceClass, isMusicEnabled, toggleMusic } = useRates();
 
     const fmt = (val) => {
         if (typeof val !== 'number') return '-';
@@ -167,7 +167,7 @@ const Hero = () => {
             <div className="flex md:hidden justify-center pb-4 -mt-4">
                 <button
                     onClick={toggleMusic}
-                    className={`flex items-center gap-2 px-5 py-2.5 rounded-full shadow-lg transition-all border-2 font-poppins font-bold text-xs uppercase tracking-widest ${isMusicEnabled ? 'bg-magenta-600 border-magenta-400 text-white animate-pulse' : 'bg-white/80 border-slate-200 text-slate-700'} ${!(music.homeMusic?.sourceType === 'local' ? music.homeMusic?.fileUrl : music.homeMusic?.videoId) ? 'opacity-50 cursor-not-allowed' : 'hover:scale-105'}`}
+                    className={`flex items-center gap-2 px-5 py-2.5 rounded-full shadow-lg transition-all border-2 font-poppins font-bold text-xs uppercase tracking-widest ${isMusicEnabled ? 'bg-magenta-600 border-magenta-400 text-white animate-pulse' : 'bg-white/80 border-slate-200 text-slate-700'} hover:scale-105`}
                     title={isMusicEnabled ? 'Turn Off Music' : 'Turn On Music'}
                 >
                     <Music size={16} />

@@ -8,7 +8,6 @@ import http from 'http';
 
 import LiveRate from './models/LiveRate.js';
 import Video from './models/Video.js';
-import Music from './models/Music.js';
 import multer from 'multer';
 import path from 'path';
 import { fileURLToPath } from 'url';
@@ -28,31 +27,9 @@ app.use(cors());
 app.use(express.json({ limit: '100mb' }));
 app.use(express.urlencoded({ limit: '100mb', extended: true }));
 app.use('/music', express.static(path.join(__dirname, '../public/music')));
-
-// Multer Storage Configuration
-const storage = multer.diskStorage({
-    destination: (req, file, cb) => {
-        const dir = path.join(__dirname, '../public/music');
-        if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
-        cb(null, dir);
-    },
-    filename: (req, file, cb) => {
-        const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
-        cb(null, uniqueSuffix + path.extname(file.originalname));
-    }
-});
-
 const upload = multer({ 
-    storage,
-    limits: { fileSize: 100 * 1024 * 1024 }, // 100MB
-    fileFilter: (req, file, cb) => {
-        console.log("Filtering file (API):", file.originalname, "Type:", file.mimetype);
-        const allowedTypes = /mp3|wav|ogg|mpeg/;
-        const extname = allowedTypes.test(path.extname(file.originalname).toLowerCase());
-        const mimetype = allowedTypes.test(file.mimetype);
-        if (extname && mimetype) return cb(null, true);
-        cb(new Error('Only audio files (mp3, wav, ogg) are allowed!'));
-    }
+    storage: multer.memoryStorage(), // Switched to memory for simpler handling if needed for other things, but music upload is gone
+    limits: { fileSize: 100 * 1024 * 1024 }
 });
 
 // MongoDB Connection
@@ -258,64 +235,7 @@ app.post('/api/videos', async (req, res) => {
     }
 });
 
-// --- Music Library Routes ---
 
-// 1. Get music settings
-app.get('/api/music', async (req, res) => {
-    res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate, s-maxage=0');
-    res.setHeader('Pragma', 'no-cache');
-    res.setHeader('Expires', '0');
-
-    try {
-        let musicData = await Music.findOne({ key: 'music_settings' });
-        if (!musicData) {
-            musicData = await Music.create({ key: 'music_settings', homeMusic: { videoId: '', title: '' }, ratesMusic: { videoId: '', title: '' } });
-        }
-        res.json(musicData);
-    } catch (error) {
-        res.status(500).json({ message: 'Error fetching music', error: error.message });
-    }
-});
-
-// 2. Update music settings
-app.post('/api/music', async (req, res) => {
-    try {
-        const { homeMusic, ratesMusic } = req.body;
-
-        const musicData = await Music.findOneAndUpdate(
-            { key: 'music_settings' },
-            { homeMusic, ratesMusic },
-            { upsert: true, new: true }
-        );
-
-        res.json(musicData);
-    } catch (error) {
-        res.status(500).json({ message: 'Error saving music', error: error.message });
-    }
-});
-
-// 3. Upload music file
-app.post('/api/music/upload', (req, res, next) => {
-    console.log("Upload request received (API)...");
-    upload.single('music')(req, res, (err) => {
-        if (err instanceof multer.MulterError) {
-            console.error("Multer Error:", err);
-            return res.status(400).json({ message: 'Multer Error: ' + err.message });
-        } else if (err) {
-            console.error("Unknown Music Upload Error:", err);
-            return res.status(500).json({ message: 'Upload Error: ' + err.message });
-        }
-        
-        if (!req.file) {
-            console.warn("Upload failed: No file in request");
-            return res.status(400).json({ message: 'No file uploaded' });
-        }
-
-        console.log("File uploaded successfully (API):", req.file.filename);
-        const fileUrl = `/music/${req.file.filename}`;
-        res.json({ fileUrl });
-    });
-});
 
 if (process.env.NODE_ENV !== 'production') {
     app.listen(PORT, () => {
