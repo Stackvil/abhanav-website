@@ -23,7 +23,7 @@ const SpotBar = () => {
     if (!rates) return null;
 
     return (
-        <div className="flex items-center justify-end gap-3 md:gap-10 px-0 md:px-2 py-1 md:py-3">
+        <div className="flex items-center justify-end gap-1 md:gap-2 px-0 md:px-2 py-1 md:py-3">
             {items.map((item, index) => (
                 <motion.div
                     key={index}
@@ -45,7 +45,7 @@ const SpotBar = () => {
                                     scale: pClass === 'price-up' || pClass === 'price-down' ? 1.04 : 1
                                 }}
                                 style={{ backgroundColor: bColor, borderColor: '#000000' }}
-                                className="border-[3px] md:border-[4px] rounded-[8px] md:rounded-[20px] px-2 md:px-6 py-1.5 md:py-3 flex items-center w-full justify-center group shadow-premium transition-colors duration-200"
+                                className="border-[3px] md:border-[4px] rounded-[8px] md:rounded-[20px] px-1 md:px-3 py-1.5 md:py-3 flex items-center w-full justify-center group shadow-premium transition-colors duration-200"
                             >
                                 <span className={`text-xs md:text-2xl font-normal mr-1 md:mr-2 ${bColor === '#FFD700' || bColor === '#E5E5E5' ? 'text-slate-900/40' : 'text-white/40'}`}>
                                     {item.symbol === '₹' ? <span style={{ fontFamily: 'Inter, system-ui, sans-serif' }}>₹</span> : item.symbol}
