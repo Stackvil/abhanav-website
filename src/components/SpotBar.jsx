@@ -7,7 +7,7 @@ const SpotBar = () => {
 
     const fmt = (val) => {
         if (typeof val !== 'number') return '-';
-        return val.toLocaleString('en-IN', { minimumFractionDigits: 0, maximumFractionDigits: 0 });
+        return val.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
     };
 
     const gold = rates.spot?.[0] || { bid: '-', ask: '-', name: 'GOLD' };

@@ -27,3 +27,5 @@ dist-ssr
 # Uploads
 public/music/*
 !public/music/.gitkeep
+!public/music/home.mp3
+!public/music/rates.mp3
