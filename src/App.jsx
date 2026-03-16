@@ -19,7 +19,7 @@ import { Loader2 } from 'lucide-react';
 import MusicPlayer from './components/MusicPlayer';
 
 const Preloader = () => (
-  <div className="fixed inset-0 z-[100] flex items-center justify-center bg-[#FFB1E1]">
+  <div className="fixed inset-0 z-[100] flex items-center justify-center bg-white">
     <motion.img
       src="/Untitled design (31).png"
       alt="Abhinav Loading"
@@ -101,7 +101,7 @@ const AppLayout = () => {
     <main
       className="min-h-screen Selection:bg-magenta-100 Selection:text-magenta-900 relative"
       style={{
-        backgroundColor: isHomePage ? '#FFB1E1' : '#fafafb',
+        backgroundColor: isHomePage ? '#FFFFFF' : '#fafafb',
         ...(!isAdminPage ? {
           backgroundImage: isHomePage
             ? 'url("/Untitled design (10).jpg")'
