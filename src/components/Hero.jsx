@@ -85,17 +85,14 @@ const Hero = () => {
 
                                         <div className="flex justify-start w-full md:pl-0">
                                             <motion.div
-                                                animate={{ scale: pClass === 'price-up' || pClass === 'price-down' ? 1.04 : 1 }}
                                                 style={{ backgroundColor: bColor, borderColor: '#000000', borderWidth: window.innerWidth >= 768 ? '4px' : '3px' }}
                                                 className="w-full transition-all duration-300 max-w-[140px] md:max-w-[200px] py-2 md:py-1.5 px-2 md:px-4 rounded-[14px] md:rounded-[18px] flex items-center justify-center shadow-md"
                                             >
-                                                <motion.span
-                                                    key={`live-price-${item.sell}-${pClass}`}
-                                                    animate={{ scale: [1, 1.08, 1] }}
+                                                <span
                                                     className={`font-black font-poppins text-center tracking-tighter md:tracking-normal text-[14px] md:text-[22px] leading-none ${bColor === '#FFD700' || bColor === '#CFE9E1' || bColor === '#E5E5E5' ? 'text-slate-900' : 'text-white'}`}
                                                 >
                                                     {item.sell !== '-' ? <><span style={{ fontFamily: 'Inter, system-ui, sans-serif' }}>₹</span>{fmt(item.sell)}</> : '—'}
-                                                </motion.span>
+                                                </span>
                                             </motion.div>
                                         </div>
 
@@ -112,13 +109,8 @@ const Hero = () => {
                 </motion.div>
             </section>
 
-            {/* Ticker in Between */}
-            <div className="w-full relative z-20 py-4 my-2">
-                <Ticker />
-            </div>
-
             {/* Table 2: Market Rates (BUY/SELL/HIGH/LOW) */}
-            <section className="max-w-4xl mx-auto px-2 md:px-6 w-full relative z-10 mb-10 md:mb-16">
+            <section className="max-w-4xl mx-auto px-2 md:px-6 w-full relative z-10 mb-1 md:mb-2">
                 <Heading text="GOLD AND SILVER RETAIL RATES" />
                 <motion.div
                     initial={{ opacity: 0, y: 50 }}
@@ -148,59 +140,86 @@ const Hero = () => {
                             </div>
                         </div>
 
-                        {rates.rtgs.filter(item => !(item.name.toLowerCase().includes('silver') && item.name.toLowerCase().includes('10 kg'))).map((item, idx) => {
-                            const isGold = item.name.toLowerCase().includes('gold') || item.id === '945';
-                            const isSilver = item.name.toLowerCase().includes('silver') || item.id === '2966' || item.id === '2987';
-                            const defaultColor = isGold ? '#FFD700' : isSilver ? '#CFE9E1' : '#0f172a';
+                        {(() => {
+                            const rtgsItems = rates.rtgs.map(r => {
+                                if (r.id === '2987' || r.name.toLowerCase().includes('10 kg')) {
+                                    return {
+                                        ...r,
+                                        name: 'Silver 999 (5 Kgs) ',
+                                        buy: typeof r.buy === 'number' ? r.buy / 2 : r.buy,
+                                        sell: typeof r.sell === 'number' ? r.sell / 2 : r.sell,
+                                        high: typeof r.high === 'number' ? r.high / 2 : r.high,
+                                        low: typeof r.low === 'number' ? r.low / 2 : r.low,
+                                    };
+                                }
+                                return r;
+                            });
+                            
+                            return rtgsItems.map((item, idx) => {
+                                const isGold = item.name.toLowerCase().includes('gold') || item.id === '945';
+                                const isSilver = item.name.toLowerCase().includes('silver') || ['2966', '2987'].includes(item.id);
+                                const defaultColor = isGold ? '#FFD700' : isSilver ? '#CFE9E1' : '#0f172a';
 
-                            const renderPriceBox = (val, field, colorOverride) => {
-                                const pClass = getPriceClass('rtgs', item.id, field);
-                                const bColor = pClass === 'price-up' ? '#00c853' : pClass === 'price-down' ? '#ff1744' : colorOverride || defaultColor;
+                                const renderPriceBox = (val, field, colorOverride) => {
+                                    const pClass = getPriceClass('rtgs', item.id, field);
+                                    const bColor = pClass === 'price-up' ? '#00c853' : pClass === 'price-down' ? '#ff1744' : colorOverride || defaultColor;
+
+                                    return (
+                                        <div className="flex justify-center w-full">
+                                            <div
+                                                style={{ backgroundColor: bColor, borderColor: '#000000', borderWidth: window.innerWidth >= 768 ? '3px' : '2px' }}
+                                                className="w-full transition-all duration-300 py-1.5 md:py-2 px-1 md:px-2 rounded-[8px] md:rounded-[12px] flex items-center justify-center shadow-sm"
+                                            >
+                                                <span className={`font-black font-poppins text-center tracking-tighter text-[10px] md:text-[18px] leading-none ${bColor === '#FFD700' || bColor === '#CFE9E1' || bColor === '#E5E5E5' ? 'text-slate-900' : 'text-white'}`}>
+                                                    {val !== '-' ? <><span className="hidden md:inline" style={{ fontFamily: 'Inter, system-ui, sans-serif' }}>₹</span>{fmt(val)}</> : '—'}
+                                                </span>
+                                            </div>
+                                        </div>
+                                    );
+                                };
+
+                                // Dynamic weight subtext
+                                const getWeightSubtext = () => {
+                                    const match = item.name.match(/\(([^)]+)\)/);
+                                    if (match) return match[1];
+                                    return isGold ? '10 Grams' : '1 Kg';
+                                };
 
                                 return (
-                                    <div className="flex justify-center w-full">
-                                        <motion.div
-                                            animate={{ scale: pClass === 'price-up' || pClass === 'price-down' ? 1.04 : 1 }}
-                                            style={{ backgroundColor: bColor, borderColor: '#000000', borderWidth: window.innerWidth >= 768 ? '3px' : '2px' }}
-                                            className="w-full transition-all duration-300 py-1.5 md:py-2 px-1 md:px-2 rounded-[8px] md:rounded-[12px] flex items-center justify-center shadow-sm"
-                                        >
-                                            <span className={`font-black font-poppins text-center tracking-tighter text-[10px] md:text-[18px] leading-none ${bColor === '#FFD700' || bColor === '#CFE9E1' || bColor === '#E5E5E5' ? 'text-slate-900' : 'text-white'}`}>
-                                                {val !== '-' ? <><span className="hidden md:inline" style={{ fontFamily: 'Inter, system-ui, sans-serif' }}>₹</span>{fmt(val)}</> : '—'}
-                                            </span>
-                                        </motion.div>
-                                    </div>
-                                );
-                            };
-
-                            return (
-                                <motion.div
-                                    key={`market-${idx}`}
-                                    initial={{ opacity: 0, x: 30 }}
-                                    animate={{ opacity: 1, x: 0 }}
-                                    transition={{ delay: idx * 0.12 }}
-                                    className="bg-white/10 backdrop-blur-sm rounded-[16px] py-3 px-2 md:bg-transparent md:backdrop-blur-none md:rounded-none md:py-2 md:px-0 relative group"
-                                >
-                                    <div className="grid grid-cols-[1.5fr_1fr_1fr_1fr_1fr] gap-1 md:gap-4 items-center w-full relative">
-                                        <div className="flex flex-col justify-center min-w-0 pr-1 pl-4 md:pl-10">
-                                            <span className="text-[10px] md:text-lg font-black text-slate-900 font-poppins uppercase tracking-tight leading-tight group-hover:text-magenta-700 transition-colors duration-300">
-                                                {item.name.split('(')[0]}
-                                            </span>
-                                            <span className="text-[8px] md:text-[11px] font-bold text-slate-500 font-poppins uppercase tracking-wider mt-0.5">
-                                                {item.name.toLowerCase().includes('gold') ? '10 Grams' : '30 Kg'}
-                                            </span>
+                                    <motion.div
+                                        key={`market-${item.id}-${idx}`}
+                                        initial={{ opacity: 0, x: 30 }}
+                                        animate={{ opacity: 1, x: 0 }}
+                                        transition={{ delay: idx * 0.12 }}
+                                        className="bg-white/10 backdrop-blur-sm rounded-[16px] py-3 px-2 md:bg-transparent md:backdrop-blur-none md:rounded-none md:py-2 md:px-0 relative group"
+                                    >
+                                        <div className="grid grid-cols-[1.5fr_1fr_1fr_1fr_1fr] gap-1 md:gap-4 items-center w-full relative">
+                                            <div className="flex flex-col justify-center min-w-0 pr-1 pl-4 md:pl-10">
+                                                <span className="text-[10px] md:text-lg font-black text-slate-900 font-poppins uppercase tracking-tight leading-tight group-hover:text-magenta-700 transition-colors duration-300">
+                                                    {item.name.split('(')[0]}
+                                                </span>
+                                                <span className="text-[8px] md:text-[11px] font-bold text-slate-500 font-poppins uppercase tracking-wider mt-0.5">
+                                                    {getWeightSubtext()}
+                                                </span>
+                                            </div>
+                                            {renderPriceBox(item.buy, 'buy')}
+                                            {renderPriceBox(item.sell, 'sell')}
+                                            {renderPriceBox(item.high, 'high', '#00c853')}
+                                            {renderPriceBox(item.low, 'low', '#ff1744')}
                                         </div>
-                                        {renderPriceBox(item.buy, 'buy')}
-                                        {renderPriceBox(item.sell, 'sell')}
-                                        {renderPriceBox(item.high, 'high', '#00c853')}
-                                        {renderPriceBox(item.low, 'low', '#ff1744')}
-                                    </div>
-                                </motion.div>
-                            );
-                        })}
-                        <div className="hidden md:block w-full h-1 bg-gradient-to-r from-transparent via-magenta-500/60 to-transparent mt-4 rounded-full" />
+                                    </motion.div>
+                                );
+                            });
+                        })()}
+                        <div className="hidden md:block w-full h-1 bg-gradient-to-r from-transparent via-magenta-500/60 to-transparent mt-1 rounded-full" />
                     </div>
                 </motion.div>
             </section>
+
+            {/* Ticker below Table 2 */}
+            <div className="w-full relative z-20 py-0 my-0">
+                <Ticker />
+            </div>
 
             {/* Music Toggle - Mobile Only (below tables) */}
             <div className="flex md:hidden justify-center pb-4 -mt-4">
@@ -221,7 +240,7 @@ const Hero = () => {
                 transition={{ duration: 1.2, ease: "easeOut", delay: 0.5 }}
                 src="/ChatGPT Image Mar 17, 2026, 10_58_54 AM.png"
                 alt="Decorative Right"
-                className="hidden md:block absolute right-[2%] top-[15%] -translate-y-1/2 w-[22%] max-w-[350px] object-contain opacity-90 pointer-events-none z-0"
+                className="hidden md:block absolute right-[2%] top-[15%] -translate-y-1/2 w-[15%] max-w-[250px] object-contain opacity-90 pointer-events-none z-0"
             />
 
             {/* Decorative Side Image - Desktop Only - Left side (Mirror) */}
@@ -231,7 +250,7 @@ const Hero = () => {
                 transition={{ duration: 1.2, ease: "easeOut", delay: 0.5 }}
                 src="/Untitled design (38).png"
                 alt="Decorative Left"
-                className="hidden md:block absolute left-[2%] top-[18%] -translate-y-1/2 w-[22%] max-w-[350px] object-contain opacity-90 pointer-events-none z-0"
+                className="hidden md:block absolute left-[2%] top-[18%] -translate-y-1/2 w-[15%] max-w-[250px] object-contain opacity-90 pointer-events-none z-0"
             />
 
         </motion.div>

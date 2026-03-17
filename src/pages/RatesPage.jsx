@@ -43,7 +43,7 @@ const RatesPage = () => {
         <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            className="pb-16 md:pb-32 md:min-h-[90vh] px-4 pt-4 max-w-7xl mx-auto mt-2 md:-mt-[420px] md:w-full md:ml-auto md:mr-0 md:pr-10"
+            className="pb-12 md:pb-8 md:min-h-0 px-4 pt-4 max-w-7xl mx-auto mt-2 md:-mt-[420px] md:w-full md:ml-auto md:mr-0 md:pr-10"
         >
             {error && (
                 <div className="max-w-md mx-auto mb-4 bg-red-500/10 border border-red-500/20 text-red-400 p-3 rounded-xl text-center text-xs font-bold uppercase tracking-wider">
@@ -79,17 +79,15 @@ const RatesPage = () => {
                                             const gSellVal = gold?.sell !== '-' && gold?.sell !== undefined ? fmt(gold.sell) : '-';
                                             return (
                                                 <tr key={idx} className="hover:bg-white/5 transition-colors group">
-                                                    <td className="px-3 py-2.5 md:px-4 md:py-5 text-[13px] md:text-[18px] font-bold text-white whitespace-nowrap">
+                                                    <td className="px-3 py-2.5 md:px-4 md:py-2.5 text-[13px] md:text-[24px] font-bold text-white whitespace-nowrap">
                                                         {gold.name}
                                                     </td>
-                                                    <td className="px-3 py-2.5 md:px-4 md:py-5 text-right whitespace-nowrap">
-                                                        <motion.span
-                                                            key={gSellVal}
-                                                            animate={{ scale: [1, 1.05, 1] }}
-                                                            className={`font-bold text-[14px] md:text-[22px] ${getKaratClass(gold.key, 'sell')}`}
+                                                    <td className="px-3 py-2.5 md:px-4 md:py-2.5 text-right whitespace-nowrap">
+                                                        <span
+                                                            className={`font-bold text-[14px] md:text-[32px] ${getKaratClass(gold.key, 'sell')}`}
                                                         >
                                                             <span className="font-sans">₹</span>{gSellVal}
-                                                        </motion.span>
+                                                        </span>
                                                     </td>
                                                 </tr>
                                             );
@@ -116,11 +114,11 @@ const RatesPage = () => {
                                     <tbody className="divide-y divide-white/5">
                                         {/* Silver 10g */}
                                         <tr className="hover:bg-white/5 transition-colors group">
-                                            <td className="px-3 py-2.5 md:px-3 md:py-4 text-[13px] md:text-[13px] font-bold text-white whitespace-nowrap">
+                                            <td className="px-3 py-2.5 md:px-3 md:py-2.5 text-[13px] md:text-[20px] font-bold text-white whitespace-nowrap">
                                                 Silver 10g
                                             </td>
-                                            <td className="px-3 py-2.5 md:px-3 md:py-4 text-right whitespace-nowrap">
-                                                <span className="font-bold text-[14px] md:text-[15px] silver-default">
+                                            <td className="px-3 py-2.5 md:px-3 md:py-2.5 text-right whitespace-nowrap">
+                                                <span className="font-bold text-[14px] md:text-[26px] silver-default">
                                                     <span className="font-sans">₹</span>
                                                     {rates.ratesPageSilver.sell !== '-' ? fmt(rates.ratesPageSilver.sell / 100) : '-'}
                                                 </span>
@@ -128,11 +126,11 @@ const RatesPage = () => {
                                         </tr>
                                         {/* Silver 1 Kg */}
                                         <tr className="hover:bg-white/5 transition-colors group">
-                                            <td className="px-3 py-2.5 md:px-3 md:py-4 text-[13px] md:text-[13px] font-bold text-white whitespace-nowrap">
+                                            <td className="px-3 py-2.5 md:px-3 md:py-2.5 text-[13px] md:text-[20px] font-bold text-white whitespace-nowrap">
                                                 Silver 1 Kg
                                             </td>
-                                            <td className="px-3 py-2.5 md:px-3 md:py-4 text-right whitespace-nowrap">
-                                                <span className="font-bold text-[14px] md:text-[15px] silver-default">
+                                            <td className="px-3 py-2.5 md:px-3 md:py-2.5 text-right whitespace-nowrap">
+                                                <span className="font-bold text-[14px] md:text-[26px] silver-default">
                                                     <span className="font-sans">₹</span>
                                                     {rates.ratesPageSilver.sell !== '-' ? fmt(rates.ratesPageSilver.sell) : '-'}
                                                 </span>
