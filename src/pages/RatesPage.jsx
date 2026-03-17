@@ -61,7 +61,7 @@ const RatesPage = () => {
                     <div className="flex flex-col gap-4 md:order-1">
                         
                         {/* Gold Rates Table */}
-                        <div className="flex flex-col w-[95%] min-w-[210px] md:max-w-[550px] max-w-[450px] mx-auto md:mx-0 md:self-end md:-mt-8">
+                        <div className="flex flex-col w-[95%] min-w-[210px] md:max-w-[480px] max-w-[450px] mx-auto md:mx-0 md:self-end md:-mt-8">
                             <div className="gradient-luxury px-3 py-2 md:px-4 md:py-1.5 rounded-t-xl shadow-lg flex justify-between items-center">
                                 <h2 className="text-white font-poppins font-bold text-[12px] md:text-[14px] uppercase tracking-widest">Gold Rates</h2>
                                 <span className="text-white/40 text-[9px] md:text-[10px] font-black uppercase tracking-widest bg-white/5 px-2 py-1 rounded-full">GST INCL</span>
@@ -75,14 +75,14 @@ const RatesPage = () => {
                                         </tr>
                                     </thead>
                                     <tbody className="divide-y divide-white/5">
-                                        {rates.purities.map((gold, idx) => {
+                                        {rates.ratesPagePurities.map((gold, idx) => {
                                             const gSellVal = gold?.sell !== '-' && gold?.sell !== undefined ? fmt(gold.sell) : '-';
                                             return (
                                                 <tr key={idx} className="hover:bg-white/5 transition-colors group">
-                                                    <td className="px-3 py-2.5 md:px-4 md:py-1 text-[13px] md:text-[18px] font-bold text-white whitespace-nowrap">
+                                                    <td className="px-3 py-2.5 md:px-4 md:py-5 text-[13px] md:text-[18px] font-bold text-white whitespace-nowrap">
                                                         {gold.name}
                                                     </td>
-                                                    <td className="px-3 py-2.5 md:px-4 md:py-1 text-right whitespace-nowrap">
+                                                    <td className="px-3 py-2.5 md:px-4 md:py-5 text-right whitespace-nowrap">
                                                         <motion.span
                                                             key={gSellVal}
                                                             animate={{ scale: [1, 1.05, 1] }}
@@ -114,21 +114,30 @@ const RatesPage = () => {
                                         </tr>
                                     </thead>
                                     <tbody className="divide-y divide-white/5">
-                                        {silverRows.map((silver, idx) => {
-                                            const sSellVal = typeof silver?.sell === 'number' ? fmt(silver.sell) : '-';
-                                            return (
-                                                <tr key={idx} className="hover:bg-white/5 transition-colors group">
-                                                    <td className="px-3 py-2.5 md:px-3 md:py-2 text-[13px] md:text-[13px] font-bold text-white whitespace-nowrap">
-                                                        {silver.name}
-                                                    </td>
-                                                    <td className="px-3 py-2.5 md:px-3 md:py-2 text-right whitespace-nowrap">
-                                                        <span className="font-bold text-[14px] md:text-[15px] silver-default">
-                                                            <span className="font-sans">₹</span>{sSellVal}
-                                                        </span>
-                                                    </td>
-                                                </tr>
-                                            );
-                                        })}
+                                        {/* Silver 10g */}
+                                        <tr className="hover:bg-white/5 transition-colors group">
+                                            <td className="px-3 py-2.5 md:px-3 md:py-4 text-[13px] md:text-[13px] font-bold text-white whitespace-nowrap">
+                                                Silver 10g
+                                            </td>
+                                            <td className="px-3 py-2.5 md:px-3 md:py-4 text-right whitespace-nowrap">
+                                                <span className="font-bold text-[14px] md:text-[15px] silver-default">
+                                                    <span className="font-sans">₹</span>
+                                                    {rates.ratesPageSilver.sell !== '-' ? fmt(rates.ratesPageSilver.sell / 100) : '-'}
+                                                </span>
+                                            </td>
+                                        </tr>
+                                        {/* Silver 1 Kg */}
+                                        <tr className="hover:bg-white/5 transition-colors group">
+                                            <td className="px-3 py-2.5 md:px-3 md:py-4 text-[13px] md:text-[13px] font-bold text-white whitespace-nowrap">
+                                                Silver 1 Kg
+                                            </td>
+                                            <td className="px-3 py-2.5 md:px-3 md:py-4 text-right whitespace-nowrap">
+                                                <span className="font-bold text-[14px] md:text-[15px] silver-default">
+                                                    <span className="font-sans">₹</span>
+                                                    {rates.ratesPageSilver.sell !== '-' ? fmt(rates.ratesPageSilver.sell) : '-'}
+                                                </span>
+                                            </td>
+                                        </tr>
                                     </tbody>
                                 </table>
                             </div>

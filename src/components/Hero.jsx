@@ -8,7 +8,7 @@ import SpotBar from './SpotBar';
 import Ticker from './Ticker';
 
 const Hero = () => {
-    const { rates, rawRates, loading, error, getPriceClass, isMusicEnabled, toggleMusic } = useRates();
+    const { rates, rawRates, loading, error, getPriceClass, isMusicEnabled, toggleMusic, adj } = useRates();
 
     const fmt = (val) => {
         if (typeof val !== 'number') return '-';
@@ -60,9 +60,10 @@ const Hero = () => {
                             </div>
                         </div>
 
-                        {rawRates.rtgs.filter(item => !(item.name.toLowerCase().includes('silver') && item.name.toLowerCase().includes('10 kgs'))).map((item, idx) => {
+                                        {rawRates.rtgs.filter(item => !(item.name.toLowerCase().includes('silver') && item.name.toLowerCase().includes('10 kg'))).map((item, idx) => {
                             const pClass = getPriceClass('rtgs', item.id, 'sell');
                             const bColor = pClass === 'price-up' ? '#00c853' : pClass === 'price-down' ? '#ff1744' : pClass === 'gold-default' ? '#FFD700' : pClass === 'silver-default' ? '#CFE9E1' : '#0f172a';
+                            const effectiveStock = adj.stockOverrides?.[item.id] !== undefined ? adj.stockOverrides[item.id] : item.stock;
 
                             return (
                                 <motion.div
@@ -76,6 +77,9 @@ const Hero = () => {
                                         <div className="flex flex-col justify-center min-w-0 pr-1 pl-4 md:pl-10">
                                             <span className="text-[12px] md:text-lg font-black text-slate-900 font-poppins uppercase tracking-tight leading-tight group-hover:text-magenta-700 transition-colors duration-300">
                                                 {item.name.split('(')[0]}
+                                            </span>
+                                            <span className="text-[9px] md:text-[11px] font-bold text-slate-500 font-poppins uppercase tracking-wider mt-0.5">
+                                                {item.name.toLowerCase().includes('gold') ? '10 Grams' : '30 Kg'}
                                             </span>
                                         </div>
 
@@ -96,8 +100,8 @@ const Hero = () => {
                                         </div>
 
                                         <div className="flex justify-center w-full">
-                                            <div className={`flex items-center justify-center w-8 h-8 md:w-10 md:h-10 rounded-full transition-all duration-300 shadow-sm ${item.stock ? 'bg-[#e6f9ec] text-[#1c7c3c] border border-[#1c7c3c]/20' : 'bg-red-50 text-red-600 border border-red-200'}`}>
-                                                {item.stock ? <Check size={18} strokeWidth={3} /> : <X size={18} strokeWidth={3} />}
+                                            <div className={`flex items-center justify-center w-8 h-8 md:w-10 md:h-10 rounded-full transition-all duration-300 shadow-sm ${effectiveStock ? 'bg-[#e6f9ec] text-[#1c7c3c] border border-[#1c7c3c]/20' : 'bg-red-50 text-red-600 border border-red-200'}`}>
+                                                {effectiveStock ? <Check size={18} strokeWidth={3} /> : <X size={18} strokeWidth={3} />}
                                             </div>
                                         </div>
                                     </div>
@@ -144,7 +148,7 @@ const Hero = () => {
                             </div>
                         </div>
 
-                        {rates.rtgs.filter(item => !(item.name.toLowerCase().includes('silver') && item.name.toLowerCase().includes('10 kgs'))).map((item, idx) => {
+                        {rates.rtgs.filter(item => !(item.name.toLowerCase().includes('silver') && item.name.toLowerCase().includes('10 kg'))).map((item, idx) => {
                             const isGold = item.name.toLowerCase().includes('gold') || item.id === '945';
                             const isSilver = item.name.toLowerCase().includes('silver') || item.id === '2966' || item.id === '2987';
                             const defaultColor = isGold ? '#FFD700' : isSilver ? '#CFE9E1' : '#0f172a';
@@ -180,6 +184,9 @@ const Hero = () => {
                                         <div className="flex flex-col justify-center min-w-0 pr-1 pl-4 md:pl-10">
                                             <span className="text-[10px] md:text-lg font-black text-slate-900 font-poppins uppercase tracking-tight leading-tight group-hover:text-magenta-700 transition-colors duration-300">
                                                 {item.name.split('(')[0]}
+                                            </span>
+                                            <span className="text-[8px] md:text-[11px] font-bold text-slate-500 font-poppins uppercase tracking-wider mt-0.5">
+                                                {item.name.toLowerCase().includes('gold') ? '10 Grams' : '30 Kg'}
                                             </span>
                                         </div>
                                         {renderPriceBox(item.buy, 'buy')}

@@ -58,7 +58,12 @@ export const RateProvider = ({ children }) => {
             gold999: { mode: 'amount', value: 0 },
             silver999: { mode: 'amount', value: 0 }
         },
-        stockOverrides: {} // { itemId: boolean }
+        stockOverrides: {}, // { itemId: boolean }
+        ratesPage: {
+            gold: { mode: 'amount', value: 0 },
+            silver: { mode: 'amount', value: 0 },
+            showModified: false
+        }
     });
 
     const [adj, setAdj] = useState(getInitialAdj());
@@ -92,7 +97,12 @@ export const RateProvider = ({ children }) => {
                             gold999: { mode: 'amount', value: 0 },
                             silver999: { mode: 'amount', value: 0 }
                         },
-                        stockOverrides: data.stockOverrides || {}
+                        stockOverrides: data.stockOverrides || {},
+                        ratesPage: data.ratesPage || {
+                            gold: { mode: 'amount', value: 0 },
+                            silver: { mode: 'amount', value: 0 },
+                            showModified: false
+                        }
                     });
                     if (data.showModified !== undefined) setShowModified(data.showModified);
                     if (data.ticker) setTicker(data.ticker);
@@ -160,6 +170,7 @@ export const RateProvider = ({ children }) => {
                 silver: payload.adj?.silver || adj.silver,
                 baseModifications: payload.adj?.baseModifications || adj.baseModifications,
                 stockOverrides: payload.adj?.stockOverrides || adj.stockOverrides,
+                ratesPage: payload.adj?.ratesPage || adj.ratesPage,
                 ticker: payload.ticker !== undefined ? payload.ticker : ticker,
                 showModified: payload.showModified !== undefined ? payload.showModified : showModified
             };
@@ -579,8 +590,8 @@ export const RateProvider = ({ children }) => {
     };
 
     const rates = React.useMemo(() => {
-        const adjust = (val, type) => {
-            const a = type === 'GOLD' ? adj.gold : adj.silver;
+        const adjust = (val, type, customAdj) => {
+            const a = customAdj || (type === 'GOLD' ? adj.gold : adj.silver);
             if (!a || typeof val !== 'number') return val;
             const delta = a.mode === 'amount' ? a.value : (val * a.value) / 100;
             return parseFloat((val + delta).toFixed(2));
@@ -635,7 +646,7 @@ export const RateProvider = ({ children }) => {
             return { ...r, buy, sell, stock, isModified: showModified && sellMod && sellMod.value !== 0 };
         });
 
-        // 3. Gold Purities & Manual Sell Modifications
+        // 3. Gold Purities (Home Page)
         const goldBaseItem = rtgs.find(r => r.id === '945' || (r.name && r.name.toLowerCase().includes('gold 999')));
         const baseSell999 = (goldBaseItem && typeof goldBaseItem.sell === 'number') ? goldBaseItem.sell : null;
         const baseLow999 = (goldBaseItem && typeof goldBaseItem.low === 'number') ? goldBaseItem.low : baseSell999;
@@ -668,7 +679,7 @@ export const RateProvider = ({ children }) => {
                 buy = Math.round(karatBase + bDelta);
             } else {
                 sell = karatBase;
-                buy = karatBase; // Or use raw buy if preferred, but user wants consistency
+                buy = karatBase;
             }
 
             return {
@@ -683,7 +694,47 @@ export const RateProvider = ({ children }) => {
             };
         });
 
-        return { spot, rtgs, purities };
+        // 4. Rates Page Independent Data
+        const ratesPagePurities = [
+            { label: 'Gold 24 KT', key: '24K', factor: 1.0 },
+            { label: 'Gold 22 KT', key: '22K', factor: 0.916 },
+            { label: 'Gold 18 KT', key: '18K', factor: 0.75 },
+            { label: 'Gold 14 KT', key: '14K', factor: 0.583 }
+        ].map(p => {
+            const rawGold999 = rawRates.rtgs.find(r => r.id === '945' || r.name?.toLowerCase().includes('gold 999'));
+            const live999Sell = parseFloat(rawGold999?.sell) || 0;
+            const trend = rawGold999?.trend || 'stable';
+            const karatBase = Math.round(live999Sell * p.factor);
+
+            let sell = karatBase;
+            if (adj.ratesPage.showModified) {
+                const sMod = adj.ratesPage.gold;
+                const sDelta = sMod.mode === 'amount' ? sMod.value : (karatBase * sMod.value) / 100;
+                sell = Math.round(karatBase + sDelta);
+            }
+
+            return {
+                name: p.label,
+                key: p.key,
+                sell: live999Sell !== 0 ? sell : '-',
+                trend
+            };
+        });
+
+        const rawSilver999 = rawRates.rtgs.find(r => r.id === '2987');
+        const liveSilverSell = parseFloat(rawSilver999?.sell) || 0;
+        let ratesPageSilverSell = liveSilverSell;
+        if (adj.ratesPage.showModified) {
+            const sMod = adj.ratesPage.silver;
+            const sDelta = sMod.mode === 'amount' ? sMod.value : (liveSilverSell * sMod.value) / 100;
+            ratesPageSilverSell = Math.round(liveSilverSell + sDelta);
+        }
+
+        const ratesPageSilver = {
+            sell: liveSilverSell !== 0 ? ratesPageSilverSell : '-'
+        };
+
+        return { spot, rtgs, purities, ratesPagePurities, ratesPageSilver };
     }, [rawRates, adj, showModified]);
 
     return (

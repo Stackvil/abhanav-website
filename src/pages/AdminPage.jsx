@@ -239,13 +239,55 @@ const AdminPage = () => {
                                         </div>
                                     </div>
 
+                                    <div className="mt-12 pt-12 border-t border-slate-100">
+                                        <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6 md:mb-10">
+                                            <div>
+                                                <h3 className="text-lg md:text-xl font-playfair font-black text-magenta-700 uppercase tracking-widest border-b border-magenta-100 pb-2">Rates Page Modification</h3>
+                                                <p className="text-[10px] font-bold text-slate-400 uppercase tracking-[0.1em] mt-2 max-w-2xl leading-relaxed">
+                                                    Independent modifications specifically for the Rates Page. These do not affect the Home Page.
+                                                </p>
+                                            </div>
+                                            <div className="flex gap-2 w-full md:w-auto">
+                                                <button
+                                                    onClick={() => updateSettings({ adj: { ...adj, ratesPage: { ...adj.ratesPage, showModified: false } } })}
+                                                    className={`flex-1 md:flex-none px-4 py-2 rounded-full text-[9px] md:text-[10px] font-black uppercase tracking-widest transition-all ${!adj.ratesPage.showModified ? 'gradient-luxury text-white shadow-lg' : 'bg-slate-100 text-slate-500'}`}
+                                                >
+                                                    Live Mode
+                                                </button>
+                                                <button
+                                                    onClick={() => updateSettings({ adj: { ...adj, ratesPage: { ...adj.ratesPage, showModified: true } } })}
+                                                    className={`flex-1 md:flex-none px-4 py-2 rounded-full text-[9px] md:text-[10px] font-black uppercase tracking-widest transition-all ${adj.ratesPage.showModified ? 'gradient-luxury text-white shadow-lg' : 'bg-slate-100 text-slate-500'}`}
+                                                >
+                                                    Modified Mode
+                                                </button>
+                                            </div>
+                                        </div>
+
+                                        <div className="grid md:grid-cols-2 gap-8">
+                                            <AdjustmentCard
+                                                label="Rates Gold Modification"
+                                                item={adj.ratesPage.gold}
+                                                liveRates={(rawRates.rtgs || []).filter(r => r.id === '945')}
+                                                targetField="sell"
+                                                onChange={(val) => updateSettings({ adj: { ...adj, ratesPage: { ...adj.ratesPage, gold: val } } })}
+                                            />
+                                            <AdjustmentCard
+                                                label="Rates Silver Modification"
+                                                item={adj.ratesPage.silver}
+                                                liveRates={(rawRates.rtgs || []).filter(r => r.id === '2987')}
+                                                targetField="sell"
+                                                onChange={(val) => updateSettings({ adj: { ...adj, ratesPage: { ...adj.ratesPage, silver: val } } })}
+                                            />
+                                        </div>
+                                    </div>
+
                                     <div className="mt-12">
                                         <h3 className="text-lg md:text-xl font-playfair font-black text-magenta-700 uppercase tracking-widest mb-6 border-b border-magenta-100 pb-2">Stock Control</h3>
                                         <p className="text-[10px] font-bold text-slate-400 uppercase tracking-[0.1em] mb-8 max-w-2xl leading-relaxed">
                                             Manually override the stock status for individual items.
                                         </p>
                                         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-10 text-slate-500">
-                                            {rates.rtgs.map((item) => (
+                                            {rates.rtgs.filter(item => !(item.name.toLowerCase().includes('silver') && item.name.toLowerCase().includes('10 kg'))).map((item) => (
                                                 <div key={item.id} className="bg-white/60 p-4 rounded-2xl border border-slate-100 flex items-center justify-between shadow-sm hover:shadow-md transition-shadow">
                                                     <span className="font-poppins font-black text-slate-700 text-[11px] uppercase tracking-tight">{item.name}</span>
                                                     <button
