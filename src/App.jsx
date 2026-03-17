@@ -22,11 +22,11 @@ const Preloader = () => (
   <div className="fixed inset-0 z-[100] flex items-center justify-center">
     <div 
       className="absolute inset-0 bg-cover bg-center bg-no-repeat"
-      style={{ backgroundImage: 'url("/Untitled design (14).png")' }}
+      style={{ backgroundImage: 'url("/Untitled design (14).webp")' }}
     />
     <div className="absolute inset-0 bg-black/20" /> {/* Subtle overlay for better contrast */}
     <motion.img
-      src="/Untitled design (31).png"
+      src="/Untitled design (31).webp"
       alt="Abhinav Loading"
       animate={{
         scale: [1, 1.1, 1],
@@ -73,16 +73,16 @@ const AppLayout = () => {
 
   // Critical images to preload based on viewport
   const criticalImages = React.useMemo(() => {
-    const images = ['/Untitled design (31).png', '/Untitled design (14).png'];
+    const images = ['/Untitled design (31).webp', '/Untitled design (14).webp'];
     if (isHomePage) {
-      images.push('/Untitled design (41).png');
-      images.push('/Untitled design (42).png');
-      images.push('/Abhinav web.psd.jpg');
-      images.push('/Untitled design (25).png');
-      images.push('/ChatGPT Image Mar 17, 2026, 10_58_54 AM.png');
-      images.push('/Untitled design (38).png');
+      images.push('/Untitled design (41).webp');
+      images.push('/Untitled design (42).webp');
+      images.push('/Abhinav web.psd.webp');
+      images.push('/Untitled design (25).webp');
+      images.push('/ChatGPT Image Mar 17, 2026, 10_58_54 AM.webp');
+      images.push('/Untitled design (38).webp');
     } else if (location.pathname === '/rates') {
-      images.push('/Untitled design (30).png');
+      images.push('/Untitled design (30).webp');
     }
     return images;
   }, [isHomePage]);
@@ -109,12 +109,12 @@ const AppLayout = () => {
         backgroundColor: isHomePage ? '#FFFFFF' : '#fafafb',
         ...(!isAdminPage ? {
           backgroundImage: isHomePage
-            ? 'url("/Abhinav web.psd.jpg")'
+            ? 'url("/Abhinav web.psd.webp")'
             : location.pathname === '/alerts'
-              ? 'url("/WhatsApp Image 2026-03-12 at 2.19.24 PM.jpeg")'
+              ? 'url("/WhatsApp Image 2026-03-12 at 2.19.24 PM.webp")'
               : location.pathname === '/videos'
-                ? 'url("/Untitled design (10).png")'
-                : 'url("/Untitled design (14).png")',
+                ? 'url("/Untitled design (10).webp")'
+                : 'url("/Untitled design (14).webp")',
           backgroundAttachment: 'fixed',
           backgroundPosition: 'center',
           backgroundRepeat: 'no-repeat',
@@ -135,7 +135,7 @@ const AppLayout = () => {
                   initial={{ opacity: 1 }}
                   animate={{ opacity: 1 }}
                   transition={{ duration: 0.5 }}
-                  src="/Untitled design (42).png"
+                  src="/Untitled design (42).webp"
                   alt="Abhinav Gold & Silver Header Mobile"
                   className="w-full h-auto md:hidden object-contain object-center block"
                 />
@@ -143,7 +143,7 @@ const AppLayout = () => {
                   initial={{ opacity: 1 }}
                   animate={{ opacity: 1 }}
                   transition={{ duration: 0.5 }}
-                  src="/Untitled design (41).png"
+                  src="/Untitled design (41).webp"
                   alt="Abhinav Gold & Silver Header Desktop"
                   className="w-full h-auto hidden md:block object-cover object-center block"
                 />
@@ -154,7 +154,7 @@ const AppLayout = () => {
                   initial={{ opacity: 1 }}
                   animate={{ opacity: 1 }}
                   transition={{ duration: 0.5 }}
-                  src={['/alerts', '/videos'].includes(location.pathname) ? "/Untitled design (31).png" : location.pathname === '/rates' ? "/Untitled (A2 (Landscape)).png" : "/Untitled design (21).png"}
+                  src={['/alerts', '/videos'].includes(location.pathname) ? "/Untitled design (31).webp" : location.pathname === '/rates' ? "/Untitled (A2 (Landscape)).webp" : "/Untitled design (21).webp"}
                   alt="Abhinav Gold & Silver Header Mobile"
                   className={`${['/alerts', '/videos'].includes(location.pathname) ? 'w-[50%] mx-auto py-4 mt-16 max-w-[200px]' : location.pathname === '/rates' ? 'w-full' : 'w-full min-h-[220px]'} h-auto md:hidden ${location.pathname === '/rates' ? 'object-contain' : 'object-cover'} object-center block`}
                 />
@@ -162,7 +162,7 @@ const AppLayout = () => {
                   initial={{ opacity: 1 }}
                   animate={{ opacity: 1 }}
                   transition={{ duration: 0.5 }}
-                  src={['/alerts', '/videos'].includes(location.pathname) ? "/Untitled design (31).png" : "/Untitled design (30).png"}
+                  src={['/alerts', '/videos'].includes(location.pathname) ? "/Untitled design (31).webp" : "/Untitled design (30).webp"}
                   alt="Abhinav Gold & Silver Header Desktop"
                   className={`${['/alerts', '/videos'].includes(location.pathname) ? 'w-[30%] mx-auto py-6 max-w-[250px]' : location.pathname === '/rates' ? 'w-full' : 'w-full min-h-[350px]'} h-auto hidden md:block ${location.pathname === '/rates' ? 'object-contain' : 'object-cover'} object-center block`}
                 />

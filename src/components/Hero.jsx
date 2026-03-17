@@ -265,7 +265,7 @@ const Hero = () => {
                 initial={{ opacity: 0, x: 100 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ duration: 1.2, ease: "easeOut", delay: 0.5 }}
-                src="/ChatGPT Image Mar 17, 2026, 10_58_54 AM.png"
+                src="/ChatGPT Image Mar 17, 2026, 10_58_54 AM.webp"
                 alt="Decorative Right"
                 className="hidden xl:block absolute right-[1%] top-[25%] -translate-y-1/2 w-[22%] max-w-[400px] object-contain opacity-95 pointer-events-none z-0"
             />
@@ -275,7 +275,7 @@ const Hero = () => {
                 initial={{ opacity: 0, x: -100 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ duration: 1.2, ease: "easeOut", delay: 0.5 }}
-                src="/Untitled design (38).png"
+                src="/Untitled design (38).webp"
                 alt="Decorative Left"
                 className="hidden xl:block absolute left-[1%] top-[28%] -translate-y-1/2 w-[22%] max-w-[400px] object-contain opacity-95 pointer-events-none z-0"
             />
