@@ -200,9 +200,9 @@ const AppLayout = () => {
 
       {/* Desktop Ticker — Above Footer, Desktop Only */}
       {!isAdminPage && !isHomePage && (
-      <div className={`hidden md:block ${location.pathname === '/rates' ? 'md:-mt-10' : isHomePage ? 'md:-mt-10' : 'mt-10'}`}>
-        <Ticker />
-      </div>
+        <div className={`hidden md:block ${location.pathname === '/rates' ? 'md:-mt-24' : 'mt-10'}`}>
+          <Ticker />
+        </div>
       )}
 
       {/* Desktop Footer — hidden on Admin, Desktop Only */}
