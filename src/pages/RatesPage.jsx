@@ -98,7 +98,7 @@ const RatesPage = () => {
                         </div>
 
                         {/* Silver Rates Table */}
-                        <div className="flex flex-col w-[95%] min-w-[210px] md:max-w-[270px] max-w-[450px] mx-auto md:mx-0 md:self-start md:translate-x-80 md:-mt-48">
+                        <div className="flex flex-col w-[95%] min-w-[210px] md:max-w-[400px] max-w-[450px] mx-auto md:mx-0 md:self-start md:translate-x-48 md:-mt-48">
                             <div className="gradient-luxury px-3 py-2 md:px-2.5 md:py-2 rounded-t-xl shadow-lg flex justify-between items-center">
                                 <h2 className="text-white font-poppins font-bold text-[12px] md:text-[11px] uppercase tracking-widest">Silver Rates</h2>
                                 <span className="text-white/40 text-[9px] md:text-[7px] font-black uppercase tracking-widest bg-white/5 px-1.5 py-0.5 rounded-full">GST INCL</span>

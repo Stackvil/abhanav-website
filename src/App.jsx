@@ -19,7 +19,12 @@ import { Loader2 } from 'lucide-react';
 import MusicPlayer from './components/MusicPlayer';
 
 const Preloader = () => (
-  <div className="fixed inset-0 z-[100] flex items-center justify-center bg-white">
+  <div className="fixed inset-0 z-[100] flex items-center justify-center">
+    <div 
+      className="absolute inset-0 bg-cover bg-center bg-no-repeat"
+      style={{ backgroundImage: 'url("/Untitled design (14).png")' }}
+    />
+    <div className="absolute inset-0 bg-black/20" /> {/* Subtle overlay for better contrast */}
     <motion.img
       src="/Untitled design (31).png"
       alt="Abhinav Loading"
@@ -31,7 +36,7 @@ const Preloader = () => (
         repeat: Infinity,
         ease: "easeInOut"
       }}
-      className="max-w-[80%] max-h-[80%] object-contain"
+      className="relative z-10 max-w-[80%] max-h-[80%] object-contain"
     />
   </div>
 );
@@ -68,7 +73,7 @@ const AppLayout = () => {
 
   // Critical images to preload based on viewport
   const criticalImages = React.useMemo(() => {
-    const images = ['/Untitled design (31).png'];
+    const images = ['/Untitled design (31).png', '/Untitled design (14).png'];
     if (isHomePage) {
       images.push('/Untitled design (41).png');
       images.push('/Untitled design (42).png');

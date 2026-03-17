@@ -23,7 +23,7 @@ const SpotBar = () => {
     if (!rates) return null;
 
     return (
-        <div className="flex flex-wrap md:flex-nowrap items-center justify-end gap-1 md:gap-1 px-1 md:px-4 md:pr-14 py-1 md:py-3">
+        <div className="flex flex-wrap md:flex-nowrap items-center justify-end gap-1 md:gap-1 px-1 md:px-4 md:pr-14 py-0.5 md:py-1">
             {/* Mobile Layout: USD-INR centered above Gold & Silver cluster */}
             <div className="flex flex-col items-center md:flex-row md:items-center gap-2 md:gap-3">
                 {/* Top Row: USD-INR */}
@@ -38,7 +38,7 @@ const SpotBar = () => {
                                 <span className="text-[7px] md:text-[11px] font-bold text-slate-800 uppercase tracking-tight font-poppins mb-1">{item.label}</span>
                                 <div
                                     style={{ backgroundColor: bColor }}
-                                    className="border-2 border-slate-200 rounded-lg md:rounded-xl px-2 md:px-3 py-1.5 md:py-2 flex flex-col items-center min-w-[75px] md:min-w-[120px] shadow-lg group relative overflow-hidden"
+                                    className="border-2 border-slate-200 rounded-lg md:rounded-xl px-2 md:px-3 py-1 md:py-1.5 flex flex-col items-center min-w-[75px] md:min-w-[120px] shadow-lg group relative overflow-hidden"
                                 >
                                     <div className="flex items-center gap-0.5 md:gap-1">
                                         <span style={{ fontFamily: 'Inter, system-ui, sans-serif' }} className="text-[8px] md:text-sm font-bold text-black/60">₹</span>
@@ -65,7 +65,7 @@ const SpotBar = () => {
                                 <span className="text-[7px] md:text-[11px] font-bold text-slate-800 uppercase tracking-tight font-poppins mb-1">{item.label}</span>
                                 <div
                                     style={{ backgroundColor: bColor }}
-                                    className="border-2 border-slate-200 rounded-lg md:rounded-xl px-2 md:px-4 py-1.5 md:py-2.5 flex flex-col items-center min-w-[90px] md:min-w-[140px] shadow-lg group relative overflow-hidden"
+                                    className="border-2 border-slate-200 rounded-lg md:rounded-xl px-2 md:px-4 py-1 md:py-1.5 flex flex-col items-center min-w-[90px] md:min-w-[140px] shadow-lg group relative overflow-hidden"
                                 >
                                     <div className="flex items-center gap-0.5 md:gap-1">
                                         <span className="text-[8px] md:text-sm font-bold text-black/60">{item.symbol}</span>
