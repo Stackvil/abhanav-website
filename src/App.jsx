@@ -18,6 +18,18 @@ import TermsOfService from './pages/TermsOfService';
 import { Loader2 } from 'lucide-react';
 import MusicPlayer from './components/MusicPlayer';
 
+// Scroll to top instantly on every page navigation — fires BEFORE browser paint
+const ScrollToTop = () => {
+  const { pathname } = useLocation();
+  React.useLayoutEffect(() => {
+    window.scrollTo(0, 0);
+    document.documentElement.scrollTop = 0;
+    document.body.scrollTop = 0;
+  }, [pathname]);
+  return null;
+};
+
+
 const Preloader = () => (
   <div className="fixed inset-0 z-[100] flex items-center justify-center">
     <div 
@@ -220,6 +232,7 @@ function App() {
   return (
     <RateProvider>
       <Router>
+        <ScrollToTop />
         <AppLayout />
       </Router>
     </RateProvider>
