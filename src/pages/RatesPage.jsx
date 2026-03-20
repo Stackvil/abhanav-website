@@ -16,29 +16,6 @@ const RatesPage = () => {
         if (cls === 'price-up' || cls === 'price-down') return cls;
         return 'gold-default';
     };
-
-    // Derive silver rows from rtgs data (5kg item = ID 2987)
-    const silver5kg = rawRates.rtgs.find(r => r.id === '2987');
-    const silverBase = typeof silver5kg?.sell === 'number' ? silver5kg.sell : null;
-
-    const silverRows = [
-        {
-            name: 'Silver 10g',
-            sell: silverBase !== null ? Math.round((silverBase / 100) * 100) / 100 : '-',
-        },
-        {
-            name: 'Silver 1 Kg',
-            sell: silverBase !== null ? Math.round(silverBase * 100) / 100 : '-',
-        },
-    ];
-
-    // Combine Gold and Silver rows for a 4-column layout
-    const maxRows = Math.max(rates.purities.length, silverRows.length);
-    const combinedRows = Array.from({ length: maxRows }).map((_, idx) => ({
-        gold: rates.purities[idx] || null,
-        silver: silverRows[idx] || null,
-    }));
-
     return (
         <motion.div
             initial={{ opacity: 0 }}
@@ -53,15 +30,13 @@ const RatesPage = () => {
 
             <div className="flex flex-col gap-3">
                 <div className="relative">
-                    <h1 className="text-xl font-poppins font-black text-white/80 mt-2 md:mt-1 mb-1 text-center md:text-right md:-translate-x-32 uppercase tracking-tighter drop-shadow-luxury px-2 md:absolute md:-top-20 md:right-0">
+                    <h1 className="text-xl font-poppins font-black text-white/80 mt-2 md:mt-0 mb-1 text-center md:text-right uppercase tracking-tighter drop-shadow-luxury px-2 md:absolute md:-top-24 md:right-10 leading-none">
                         Live Retail Rates with GST
                     </h1>
                     
-                    {/* Separate Tables Grid */}
                     <div className="flex flex-col gap-4">
-
                         {/* Gold Rates Table */}
-                        <div className="flex flex-col w-[95%] min-w-[210px] md:max-w-[480px] max-w-[450px] mx-auto md:mx-0 md:self-end md:-mt-12">
+                        <div className="flex flex-col w-[95%] min-w-[210px] md:max-w-[480px] max-w-[450px] mx-auto md:ml-auto md:mr-4 md:-mt-8">
                             <div className="gradient-luxury px-3 py-2 md:px-4 md:py-1.5 rounded-t-xl shadow-lg flex justify-between items-center">
                                 <h2 className="text-white font-poppins font-bold text-[12px] md:text-[14px] uppercase tracking-widest">Gold Rates</h2>
                                 <span className="text-white/40 text-[9px] md:text-[10px] font-black uppercase tracking-widest bg-white/5 px-2 py-1 rounded-full">GST INCL</span>
@@ -96,55 +71,8 @@ const RatesPage = () => {
                                 </table>
                             </div>
                         </div>
-
-                        {/* Silver Rates Table */}
-                        <div className="flex flex-col w-[95%] min-w-[210px] md:max-w-[400px] max-w-[450px] mx-auto md:mx-0 md:self-start md:translate-x-48 md:-mt-48">
-                            <div className="gradient-luxury px-3 py-2 md:px-2.5 md:py-2 rounded-t-xl shadow-lg flex justify-between items-center">
-                                <h2 className="text-white font-poppins font-bold text-[12px] md:text-[11px] uppercase tracking-widest">Silver Rates</h2>
-                                <span className="text-white/40 text-[9px] md:text-[7px] font-black uppercase tracking-widest bg-white/5 px-1.5 py-0.5 rounded-full">GST INCL</span>
-                            </div>
-                            <div className="glass rounded-b-xl overflow-hidden shadow-luxury">
-                                <table className="w-full text-left">
-                                    <thead className="bg-white/10 border-b border-white/10">
-                                        <tr>
-                                            <th className="px-3 py-2 md:px-3 md:py-1.5 text-[10px] md:text-[9px] font-black text-white/80 uppercase tracking-widest">Silver</th>
-                                            <th className="px-3 py-2 md:px-3 md:py-1.5 text-[10px] md:text-[9px] font-black text-white/80 uppercase tracking-widest text-right">Price</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody className="divide-y divide-white/5">
-                                        {/* Silver 10g */}
-                                        <tr className="hover:bg-white/5 transition-colors group">
-                                            <td className="px-3 py-2.5 md:px-3 md:py-2.5 text-[13px] md:text-[20px] font-bold text-white whitespace-nowrap">
-                                                Silver 10g
-                                            </td>
-                                            <td className="px-3 py-2.5 md:px-3 md:py-2.5 text-right whitespace-nowrap">
-                                                <span className="font-bold text-[14px] md:text-[26px] silver-default">
-                                                    <span className="font-sans">₹</span>
-                                                    {rates.ratesPageSilver.sell !== '-' ? fmt(rates.ratesPageSilver.sell / 100) : '-'}
-                                                </span>
-                                            </td>
-                                        </tr>
-                                        {/* Silver 1 Kg */}
-                                        <tr className="hover:bg-white/5 transition-colors group">
-                                            <td className="px-3 py-2.5 md:px-3 md:py-2.5 text-[13px] md:text-[20px] font-bold text-white whitespace-nowrap">
-                                                Silver 1 Kg
-                                            </td>
-                                            <td className="px-3 py-2.5 md:px-3 md:py-2.5 text-right whitespace-nowrap">
-                                                <span className="font-bold text-[14px] md:text-[26px] silver-default">
-                                                    <span className="font-sans">₹</span>
-                                                    {rates.ratesPageSilver.sell !== '-' ? fmt(rates.ratesPageSilver.sell) : '-'}
-                                                </span>
-                                            </td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-
                     </div>
                 </div>
-
-
 
                 {(loading && !rates.rtgs.some(r => r.sell !== '-')) && (
                     <div className="flex justify-center mb-4 animate-pulse text-gold-400 font-bold uppercase tracking-widest text-xs">

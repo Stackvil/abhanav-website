@@ -15,8 +15,8 @@ const Hero = () => {
     };
 
     const Heading = ({ text }) => (
-        <div className="flex justify-center mb-0 md:mb-0.5">
-            <h2 className="text-xl md:text-[26px] font-playfair font-black text-magenta-700 uppercase tracking-[0.2em] border-b-2 border-magenta-100 pb-1 text-center">
+        <div className="flex justify-center mb-0">
+            <h2 className="text-xl md:text-[26px] font-playfair font-black text-magenta-700 uppercase tracking-[0.2em] border-b-2 border-magenta-100 pb-0.5 text-center">
                 {text}
             </h2>
         </div>
@@ -27,7 +27,7 @@ const Hero = () => {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 1 }}
-            className="w-full inventory-section min-h-[50vh] relative overflow-hidden pt-2 md:pt-0"
+            className="w-full inventory-section min-h-[50vh] relative overflow-hidden pt-32 md:pt-30"
         >
 
             {/* Ambient Background Accents */}
@@ -35,26 +35,26 @@ const Hero = () => {
                 style={{ background: 'radial-gradient(circle at 10% 20%, #fff, transparent 80%)' }} />
 
             {/* Table 1: Live Rates */}
-            <section className="max-w-xl mx-auto px-4 md:px-6 w-full mt-2 md:mt-0 relative z-10 mb-2">
+            <section className="max-w-3xl mx-auto px-4 md:px-8 w-full mt-1 relative z-10 mb-2">
                 <Heading text="LIVE SPOT RATES" />
                 <motion.div
                     initial={{ opacity: 0, y: 50 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.9, ease: "easeOut" }}
-                    className="flex flex-col gap-1 md:gap-2"
+                    className="flex flex-col gap-1 md:gap-2 mt-2 md:mt-4"
                 >
                     <div className="flex flex-col gap-0 md:gap-0.5">
                         {/* Header Row Table 1 */}
-                        <div className="px-3 md:px-0 py-1 mb-1">
-                            <div className="grid grid-cols-[1.2fr_1.4fr_60px] md:grid-cols-[1.2fr_1.5fr_80px] gap-2 md:gap-4 items-center w-full">
+                        <div className="px-3 md:px-0 py-1 mb-1 md:mb-3">
+                            <div className="grid grid-cols-[1.2fr_1.4fr_60px] md:grid-cols-[1.2fr_1.5fr_100px] gap-2 md:gap-6 items-center w-full">
                                 <div className="flex justify-start pl-2 md:pl-3">
-                                    <span className="inline-flex items-center justify-center px-3 py-1 md:px-4 md:py-1.5 rounded-xl bg-transparent border-[1.5px] md:border-2 border-slate-900/20 text-slate-900 font-playfair font-black text-[9px] md:text-sm tracking-widest shadow-sm backdrop-blur-sm">PRODUCTS</span>
+                                    <span className="inline-flex items-center justify-center px-3 py-1 md:px-6 md:py-2.5 rounded-xl bg-transparent border-[1.5px] md:border-2 border-slate-900/20 text-slate-900 font-playfair font-black text-[9px] md:text-lg tracking-widest shadow-sm backdrop-blur-sm">PRODUCTS</span>
                                 </div>
                                 <div className="flex justify-center w-full">
-                                    <span className="inline-flex items-center justify-center px-6 py-1 md:px-8 md:py-1.5 rounded-xl bg-transparent border-[1.5px] md:border-2 border-slate-900/20 text-slate-900 font-playfair font-black text-[9px] md:text-sm tracking-widest shadow-sm backdrop-blur-sm">LIVE</span>
+                                    <span className="inline-flex items-center justify-center px-6 py-1 md:px-12 md:py-2.5 rounded-xl bg-transparent border-[1.5px] md:border-2 border-slate-900/20 text-slate-900 font-playfair font-black text-[9px] md:text-lg tracking-widest shadow-sm backdrop-blur-sm">LIVE</span>
                                 </div>
                                 <div className="flex justify-center w-full">
-                                    <span className="inline-flex items-center justify-center px-2 py-1 md:px-3 md:py-1.5 rounded-xl bg-transparent border-[1.5px] md:border-2 border-slate-900/20 text-slate-900 font-playfair font-black text-[9px] md:text-sm tracking-widest shadow-sm backdrop-blur-sm">STATUS</span>
+                                    <span className="inline-flex items-center justify-center px-2 py-1 md:px-5 md:py-2.5 rounded-xl bg-transparent border-[1.5px] md:border-2 border-slate-900/20 text-slate-900 font-playfair font-black text-[9px] md:text-lg tracking-widest shadow-sm backdrop-blur-sm">STATUS</span>
                                 </div>
                             </div>
                         </div>
@@ -72,23 +72,23 @@ const Hero = () => {
                                     transition={{ delay: idx * 0.12 }}
                                     className="bg-white/10 backdrop-blur-sm rounded-[16px] py-2 px-3 md:bg-transparent md:backdrop-blur-none md:rounded-none md:py-2 md:px-0 md:shadow-none md:border-none relative group"
                                 >
-                                    <div className="grid grid-cols-[1.2fr_1.4fr_60px] md:grid-cols-[1.2fr_1.5fr_80px] gap-2 md:gap-4 items-center w-full relative">
+                                    <div className="grid grid-cols-[1.2fr_1.4fr_60px] md:grid-cols-[1.2fr_1.5fr_100px] gap-2 md:gap-6 items-center w-full relative">
                                         <div className="flex flex-col justify-center min-w-0 pl-2 md:pl-3">
-                                            <span className="text-[12px] md:text-lg font-black text-slate-900 font-poppins uppercase tracking-tight leading-tight group-hover:text-magenta-700 transition-colors duration-300">
+                                            <span className="text-[12px] md:text-[24px] font-black text-slate-900 font-poppins uppercase tracking-tight leading-tight group-hover:text-magenta-700 transition-colors duration-300">
                                                 {item.name.split('(')[0]}
                                             </span>
-                                            <span className="text-[9px] md:text-[11px] font-bold text-slate-500 font-poppins uppercase tracking-wider mt-0.5">
+                                            <span className="text-[9px] md:text-[14px] font-bold text-slate-500 font-poppins uppercase tracking-wider mt-0.5 md:mt-1">
                                                 {item.name.toLowerCase().includes('gold') ? '10 Grams' : '30 Kg'}
                                             </span>
                                         </div>
 
                                         <div className="flex justify-center w-full">
                                             <motion.div
-                                                style={{ backgroundColor: bColor, borderColor: '#000000', borderWidth: window.innerWidth >= 768 ? '4px' : '3px' }}
-                                                className="w-full transition-all duration-300 max-w-[140px] md:max-w-[200px] py-2 md:py-1.5 px-2 md:px-4 rounded-[14px] md:rounded-[18px] flex items-center justify-center shadow-md"
+                                                style={{ backgroundColor: bColor, borderColor: '#000000', borderWidth: window.innerWidth >= 768 ? '5px' : '3px' }}
+                                                className="w-full transition-all duration-300 max-w-[140px] md:max-w-[300px] py-2 md:py-3 px-2 md:px-6 rounded-[14px] md:rounded-[24px] flex items-center justify-center shadow-lg hover:scale-105"
                                             >
                                                 <span
-                                                    className={`font-black font-poppins text-center tracking-tighter md:tracking-normal text-[14px] md:text-[22px] leading-none ${bColor === '#FFD700' || bColor === '#CFE9E1' || bColor === '#E5E5E5' ? 'text-slate-900' : 'text-white'}`}
+                                                    className={`font-black font-poppins text-center tracking-tighter md:tracking-normal text-[14px] md:text-[34px] leading-none ${bColor === '#FFD700' || bColor === '#CFE9E1' || bColor === '#E5E5E5' ? 'text-slate-900' : 'text-white'}`}
                                                 >
                                                     {item.sell !== '-' ? <><span style={{ fontFamily: 'Inter, system-ui, sans-serif' }}>₹</span>{fmt(item.sell)}</> : '—'}
                                                 </span>
@@ -96,8 +96,8 @@ const Hero = () => {
                                         </div>
 
                                         <div className="flex justify-center w-full">
-                                            <div className={`flex items-center justify-center w-8 h-8 md:w-10 md:h-10 rounded-full transition-all duration-300 shadow-sm ${effectiveStock ? 'bg-[#e6f9ec] text-[#1c7c3c] border border-[#1c7c3c]/20' : 'bg-red-50 text-red-600 border border-red-200'}`}>
-                                                {effectiveStock ? <Check size={18} strokeWidth={3} /> : <Minus size={18} strokeWidth={3} />}
+                                            <div className={`flex items-center justify-center w-8 h-8 md:w-16 md:h-16 rounded-full transition-all duration-300 shadow-md ${effectiveStock ? 'bg-[#e6f9ec] text-[#1c7c3c] border border-[#1c7c3c]/30' : 'bg-red-50 text-red-600 border border-red-200'}`}>
+                                                {effectiveStock ? <Check className="w-5 h-5 md:w-8 md:h-8" strokeWidth={3} /> : <Minus className="w-5 h-5 md:w-8 md:h-8" strokeWidth={3} />}
                                             </div>
                                         </div>
                                     </div>
@@ -108,12 +108,17 @@ const Hero = () => {
                 </motion.div>
             </section>
 
+            {/* Ticker between Table 1 and Table 2 */}
+            <div className="w-full relative z-20 py-0 mt-10 md:mt-16">
+                <Ticker />
+            </div>
+
             {/* Table 2: Market Rates (Bullion Style) */}
-            <section className="w-full relative z-10 mb-8 md:mb-12">
+            <section className="w-full relative z-10 mt-10 md:mt-20 mb-8 md:mb-12">
                 <div className="max-w-[1600px] mx-auto px-4">
                     <Heading text="GOLD AND SILVER RETAIL RATES" />
                     
-                    <div className="flex flex-col xl:flex-row items-center justify-center gap-4 xl:gap-8 mt-4">
+                    <div className="flex flex-col xl:flex-row items-center justify-center gap-4 xl:gap-8 mt-4 md:mt-6">
                         {/* LEFT IMAGE: Gold Bars (Desktop Only) */}
                         <motion.div 
                             initial={{ opacity: 0, x: -50 }}
@@ -242,10 +247,7 @@ const Hero = () => {
                 </div>
             </section>
 
-            {/* Ticker below Table 2 */}
-            <div className="w-full relative z-20 py-0 my-0">
-                <Ticker />
-            </div>
+
 
             {/* Music Toggle - Mobile Only (below tables) */}
             <div className="flex md:hidden justify-center pt-4 pb-6">

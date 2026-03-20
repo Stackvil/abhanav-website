@@ -6,7 +6,6 @@ import { useRates } from '../context/RateContext';
 const Footer = () => {
     const { isMusicEnabled, toggleMusic } = useRates();
     const location = useLocation();
-    const isRatesPage = location.pathname === '/rates';
     const currentYear = new Date().getFullYear();
 
     return (
