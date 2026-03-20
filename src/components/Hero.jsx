@@ -61,7 +61,7 @@ const Hero = () => {
 
                                         {rawRates.rtgs.filter(item => !(item.name.toLowerCase().includes('silver') && item.name.toLowerCase().includes('10 kg'))).map((item, idx) => {
                             const pClass = getPriceClass('rtgs', item.id, 'sell');
-                            const bColor = pClass === 'price-up' ? '#BBF7D0' : pClass === 'price-down' ? '#FECACA' : pClass === 'gold-default' ? '#FEF08A' : pClass === 'silver-default' ? '#CFE9E1' : '#0f172a';
+                            const bColor = pClass === 'price-up' ? '#86efac' : pClass === 'price-down' ? '#fca5a5' : pClass === 'gold-default' ? '#fde047' : pClass === 'silver-default' ? '#CFE9E1' : '#0f172a';
                             const effectiveStock = adj.stockOverrides?.[item.id] !== undefined ? adj.stockOverrides[item.id] : item.stock;
 
                             return (
@@ -88,7 +88,7 @@ const Hero = () => {
                                                 className="w-full transition-all duration-300 max-w-[140px] md:max-w-[300px] py-2 md:py-3 px-2 md:px-6 rounded-[14px] md:rounded-[24px] flex items-center justify-center shadow-lg hover:scale-105"
                                             >
                                                 <span
-                                                    className={`font-black font-poppins text-center tracking-tighter md:tracking-normal text-[14px] md:text-[34px] leading-none ${bColor === '#FEF08A' || bColor === '#CFE9E1' || bColor === '#E5E5E5' ? 'text-slate-900' : 'text-white'}`}
+                                                    className={`font-black font-poppins text-center tracking-tighter md:tracking-normal text-[14px] md:text-[34px] leading-none ${bColor === '#fde047' || bColor === '#CFE9E1' || bColor === '#E5E5E5' ? 'text-slate-900' : 'text-white'}`}
                                                 >
                                                     {item.sell !== '-' ? <><span style={{ fontFamily: 'Inter, system-ui, sans-serif' }}>₹</span>{fmt(item.sell)}</> : '—'}
                                                 </span>
@@ -187,7 +187,7 @@ const Hero = () => {
                                                 {/* BUY Box */}
                                                 <div className="flex justify-center w-full">
                                                     <motion.div 
-                                                        animate={{ backgroundColor: getPriceClass('rtgs', item.id, 'buy') === 'price-up' ? '#BBF7D0' : getPriceClass('rtgs', item.id, 'buy') === 'price-down' ? '#FECACA' : '#FEF08A' }}
+                                                        animate={{ backgroundColor: getPriceClass('rtgs', item.id, 'buy') === 'price-up' ? '#86efac' : getPriceClass('rtgs', item.id, 'buy') === 'price-down' ? '#fca5a5' : '#fde047' }}
                                                         className="w-full h-8 md:h-12 rounded-lg md:rounded-xl flex items-center justify-center border-[1.5px] md:border-2 border-slate-900 shadow-[2px_2px_0px_#000000] md:shadow-[3px_3px_0px_#000000]"
                                                     >
                                                         <span className="text-[11px] md:text-[21px] font-black font-poppins text-slate-900">
@@ -199,7 +199,7 @@ const Hero = () => {
                                                 {/* SELL Box */}
                                                 <div className="flex justify-center w-full">
                                                     <motion.div 
-                                                        animate={{ backgroundColor: getPriceClass('rtgs', item.id, 'sell') === 'price-up' ? '#BBF7D0' : getPriceClass('rtgs', item.id, 'sell') === 'price-down' ? '#FECACA' : '#FEF08A' }}
+                                                        animate={{ backgroundColor: getPriceClass('rtgs', item.id, 'sell') === 'price-up' ? '#86efac' : getPriceClass('rtgs', item.id, 'sell') === 'price-down' ? '#fca5a5' : '#fde047' }}
                                                         className="w-full h-8 md:h-12 rounded-lg md:rounded-xl flex items-center justify-center border-[1.5px] md:border-2 border-slate-900 shadow-[2px_2px_0px_#000000] md:shadow-[3px_3px_0px_#000000]"
                                                     >
                                                         <span className="text-[11px] md:text-[21px] font-black font-poppins text-slate-900">
@@ -212,14 +212,14 @@ const Hero = () => {
                                                 <div className="flex justify-center w-full">
                                                     <div className="w-full h-8 md:h-12 rounded-lg md:rounded-xl flex flex-col items-center justify-center border-[1.5px] md:border-2 border-slate-900 shadow-[2px_2px_0px_#000000] md:shadow-[3px_3px_0px_#000000] bg-white overflow-hidden">
                                                         <div className="flex-1 w-full flex items-center justify-between px-1.5 md:px-3 border-b-[0.5px] md:border-b border-slate-900/10">
-                                                            <span className="text-[6px] md:text-[9px] font-black text-[#BBF7D0] uppercase">HI</span>
-                                                            <span className="text-[7px] md:text-[13px] font-black text-[#BBF7D0]">
+                                                            <span className="text-[6px] md:text-[9px] font-black text-[#16a34a] uppercase">HI</span>
+                                                            <span className="text-[7px] md:text-[13px] font-black text-[#16a34a]">
                                                                 {item.high !== '-' ? <><span style={{ fontFamily: 'Inter, system-ui, sans-serif' }}>₹</span>{fmt(item.high)}</> : '—'}
                                                             </span>
                                                         </div>
                                                         <div className="flex-1 w-full flex items-center justify-between px-1.5 md:px-3">
-                                                            <span className="text-[6px] md:text-[9px] font-black text-[#FECACA] uppercase">LO</span>
-                                                            <span className="text-[7px] md:text-[13px] font-black text-[#FECACA]">
+                                                            <span className="text-[6px] md:text-[9px] font-black text-[#dc2626] uppercase">LO</span>
+                                                            <span className="text-[7px] md:text-[13px] font-black text-[#dc2626]">
                                                                 {item.low !== '-' ? <><span style={{ fontFamily: 'Inter, system-ui, sans-serif' }}>₹</span>{fmt(item.low)}</> : '—'}
                                                             </span>
                                                         </div>
