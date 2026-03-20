@@ -514,11 +514,11 @@ const AdjustmentCard = ({ label, item, liveRates = [], targetField = 'sell', onC
                                 <div key={i} className="flex flex-col gap-1">
                                     <div className="flex items-center justify-between">
                                         <span className="text-[8px] md:text-[9px] font-bold text-white/40 uppercase tracking-wider">Live:</span>
-                                        <span className="text-[10px] md:text-[11px] font-bold text-white/80 font-poppins">₹{original.toLocaleString('en-IN')}</span>
+                                        <span className="text-[10px] md:text-[11px] font-bold text-white/80 font-poppins"><span style={{ fontFamily: 'Inter, system-ui, sans-serif' }}>₹</span>{original.toLocaleString('en-IN')}</span>
                                     </div>
                                     <div className="flex items-center justify-between">
                                         <span className="text-[8px] md:text-[9px] font-bold text-green-500 uppercase tracking-wider">Alt:</span>
-                                        <span className="text-[11px] md:text-[13px] font-black text-green-500 font-poppins">₹{modified.toLocaleString('en-IN', { maximumFractionDigits: 0 })}</span>
+                                        <span className="text-[11px] md:text-[13px] font-black text-green-500 font-poppins"><span style={{ fontFamily: 'Inter, system-ui, sans-serif' }}>₹</span>{modified.toLocaleString('en-IN', { maximumFractionDigits: 0 })}</span>
                                     </div>
                                     <div className="h-[1px] bg-white/5 w-full mt-0.5"></div>
                                     <span className="text-[7px] md:text-[8px] font-medium text-white/40 font-poppins uppercase tracking-wider truncate max-w-[120px] md:max-w-none">{r.name}</span>
@@ -532,7 +532,7 @@ const AdjustmentCard = ({ label, item, liveRates = [], targetField = 'sell', onC
                         onClick={() => onChange({ ...item, mode: 'amount' })}
                         className={`px-2 md:px-3 py-1 rounded-lg text-[8px] md:text-[9px] font-bold transition-all text-right ${item.mode === 'amount' ? 'text-[#f4cb4c] bg-white/10 shadow-sm' : 'text-white/40'}`}
                     >
-                        ₹ Fixed
+                        <span style={{ fontFamily: 'Inter, system-ui, sans-serif' }}>₹</span> Fixed
                     </button>
                     <button
                         onClick={() => onChange({ ...item, mode: 'percent' })}

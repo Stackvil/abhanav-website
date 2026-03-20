@@ -61,7 +61,7 @@ const RatesPage = () => {
                                                         <span
                                                             className={`font-bold text-[14px] md:text-[32px] ${getKaratClass(gold.key, 'sell')}`}
                                                         >
-                                                            <span className="font-sans">₹</span>{gSellVal}
+                                                            <span style={{ fontFamily: 'Inter, system-ui, sans-serif' }}>₹</span>{gSellVal}
                                                         </span>
                                                     </td>
                                                 </tr>

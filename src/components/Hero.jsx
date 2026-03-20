@@ -191,7 +191,7 @@ const Hero = () => {
                                                         className="w-full h-8 md:h-12 rounded-lg md:rounded-xl flex items-center justify-center border-[1.5px] md:border-2 border-slate-900 shadow-[2px_2px_0px_#000000] md:shadow-[3px_3px_0px_#000000]"
                                                     >
                                                         <span className={`text-[11px] md:text-[21px] font-black font-poppins ${['price-up', 'price-down'].includes(getPriceClass('rtgs', item.id, 'buy')) ? 'text-white' : 'text-slate-900'}`}>
-                                                            {item.buy !== '-' ? <>₹{fmt(item.buy)}</> : '—'}
+                                                            {item.buy !== '-' ? <><span style={{ fontFamily: 'Inter, system-ui, sans-serif' }}>₹</span>{fmt(item.buy)}</> : '—'}
                                                         </span>
                                                     </motion.div>
                                                 </div>
@@ -203,24 +203,26 @@ const Hero = () => {
                                                         className="w-full h-8 md:h-12 rounded-lg md:rounded-xl flex items-center justify-center border-[1.5px] md:border-2 border-slate-900 shadow-[2px_2px_0px_#000000] md:shadow-[3px_3px_0px_#000000]"
                                                     >
                                                         <span className={`text-[11px] md:text-[21px] font-black font-poppins ${['price-up', 'price-down'].includes(getPriceClass('rtgs', item.id, 'sell')) ? 'text-white' : 'text-slate-900'}`}>
-                                                            {item.sell !== '-' ? <>₹{fmt(item.sell)}</> : '—'}
+                                                            {item.sell !== '-' ? <><span style={{ fontFamily: 'Inter, system-ui, sans-serif' }}>₹</span>{fmt(item.sell)}</> : '—'}
                                                         </span>
                                                     </motion.div>
                                                 </div>
 
                                                 {/* HIGH/LOW Box */}
-                                                <div className="flex flex-col gap-0.5 md:gap-1 pr-0.5 md:pr-1">
-                                                    <div className="bg-[#00c853] rounded-md md:rounded-lg py-0.5 md:py-1 px-1.5 md:px-2 flex items-center justify-between shadow-sm">
-                                                        <span className="text-[6px] md:text-[9px] font-black text-white/90 uppercase">HI</span>
-                                                        <span className="text-[8px] md:text-[13px] font-black text-white">
-                                                            {item.high !== '-' ? <>₹{fmt(item.high)}</> : '—'}
-                                                        </span>
-                                                    </div>
-                                                    <div className="bg-[#ff1744] rounded-md md:rounded-lg py-0.5 md:py-1 px-1.5 md:px-2 flex items-center justify-between shadow-sm">
-                                                        <span className="text-[6px] md:text-[9px] font-black text-white/90 uppercase">LO</span>
-                                                        <span className="text-[8px] md:text-[13px] font-black text-white">
-                                                            {item.low !== '-' ? <>₹{fmt(item.low)}</> : '—'}
-                                                        </span>
+                                                <div className="flex justify-center w-full">
+                                                    <div className="w-full h-8 md:h-12 rounded-lg md:rounded-xl flex flex-col items-center justify-center border-[1.5px] md:border-2 border-slate-900 shadow-[2px_2px_0px_#000000] md:shadow-[3px_3px_0px_#000000] bg-white overflow-hidden">
+                                                        <div className="flex-1 w-full flex items-center justify-between px-1.5 md:px-3 border-b-[0.5px] md:border-b border-slate-900/10">
+                                                            <span className="text-[6px] md:text-[9px] font-black text-[#00c853] uppercase">HI</span>
+                                                            <span className="text-[7px] md:text-[13px] font-black text-[#00c853]">
+                                                                {item.high !== '-' ? <><span style={{ fontFamily: 'Inter, system-ui, sans-serif' }}>₹</span>{fmt(item.high)}</> : '—'}
+                                                            </span>
+                                                        </div>
+                                                        <div className="flex-1 w-full flex items-center justify-between px-1.5 md:px-3">
+                                                            <span className="text-[6px] md:text-[9px] font-black text-[#ff1744] uppercase">LO</span>
+                                                            <span className="text-[7px] md:text-[13px] font-black text-[#ff1744]">
+                                                                {item.low !== '-' ? <><span style={{ fontFamily: 'Inter, system-ui, sans-serif' }}>₹</span>{fmt(item.low)}</> : '—'}
+                                                            </span>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>

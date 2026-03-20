@@ -1,6 +1,5 @@
 import React from 'react';
 import { useRates } from '../context/RateContext';
-import { motion } from 'framer-motion';
 
 const SpotBar = () => {
     const { rates, getPriceClass } = useRates();
