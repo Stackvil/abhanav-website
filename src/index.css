@@ -81,17 +81,17 @@
 
   /* Global price movement indicators */
   .price-up {
-    color: #86efac !important;
-    /* Force light green on increase */
+    color: #dcfce7 !important;
+    /* Force ultra-light green on increase */
   }
 
   .price-down {
-    color: #fca5a5 !important;
-    /* Force light red on decrease */
+    color: #fee2e2 !important;
+    /* Force ultra-light red on decrease */
   }
 
   .gold-default {
-    color: #fde047 !important;
+    color: #fef9c3 !important;
   }
 
   .silver-default {
