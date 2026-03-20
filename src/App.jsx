@@ -121,7 +121,7 @@ const AppLayout = () => {
         backgroundColor: isHomePage ? '#FFFFFF' : '#fafafb',
         ...(!isAdminPage ? {
           backgroundImage: isHomePage
-            ? 'url("/Abhinav web.psd.webp")'
+            ? 'url("/gold-texture-bg.jpg")'
             : location.pathname === '/alerts'
               ? 'url("/WhatsApp Image 2026-03-12 at 2.19.24 PM.webp")'
               : location.pathname === '/videos'
